@@ -5,4 +5,9 @@
   </PropertyGroup>
 
 
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.OrmLite.SqlServer" Version="5.8.0" />
+    <PackageReference Include="ServiceStack.OrmLite" Version="5.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
 </Project>
