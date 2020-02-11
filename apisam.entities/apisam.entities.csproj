@@ -9,4 +9,7 @@
     <PackageReference Include="ServiceStack.OrmLite" Version="5.8.0" />
     <PackageReference Include="ServiceStack.OrmLite.SqlServer" Version="5.8.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
 </Project>

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apisam.interfaces", "apisam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apisam.web", "apisam.web\apisam.web.csproj", "{F213DE8E-8952-46CF-A025-8FF9CF28414F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apisam.repos", "apisam.repos\apisam.repos.csproj", "{3BB13A10-990A-4C15-9CC6-F0D5DA5F9C85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F213DE8E-8952-46CF-A025-8FF9CF28414F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F213DE8E-8952-46CF-A025-8FF9CF28414F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F213DE8E-8952-46CF-A025-8FF9CF28414F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BB13A10-990A-4C15-9CC6-F0D5DA5F9C85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BB13A10-990A-4C15-9CC6-F0D5DA5F9C85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BB13A10-990A-4C15-9CC6-F0D5DA5F9C85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BB13A10-990A-4C15-9CC6-F0D5DA5F9C85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
