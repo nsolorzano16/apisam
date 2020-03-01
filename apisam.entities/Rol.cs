@@ -1,4 +1,6 @@
 ﻿using System;
+using ServiceStack.DataAnnotations;
+
 namespace apisam.entities
 {
     public class Rol
@@ -6,8 +8,8 @@ namespace apisam.entities
         public Rol()
         {
         }
-
-        public int RolId { get; set; }
-        public string Descripcion { get; set; }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Nombre { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using ServiceStack.OrmLite;
 using System.Linq;
 using apisam.entities;
 using apisam.entities.ViewModels;
+using apisam.entities.ViewModels.UsuariosTable;
 
 namespace apisam.repositories
 {
@@ -13,8 +14,9 @@ namespace apisam.repositories
     {
 
 
-        private OrmLiteConnectionFactory DbFactory;
+        private readonly OrmLiteConnectionFactory DbFactory;
         private readonly Conexion con = new Conexion();
+
         public UsuariosRepo()
         {
 
@@ -28,6 +30,15 @@ namespace apisam.repositories
             {
                 var _db = DbFactory.Open();
                 return _db.Select<Usuario>().ToList();
+            }
+        }
+
+        public List<Rol> Roles
+        {
+            get
+            {
+                var _db = DbFactory.Open();
+                return _db.Select<Rol>().ToList();
             }
         }
 
@@ -50,6 +61,7 @@ namespace apisam.repositories
                 usuario.ModificadoFecha = DateTime.Now;
                 usuario.Password = "";
                 usuario.Edad = CalculateAge(usuario.FechaNacimiento);
+                usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
 
                 _db.Save<Usuario>(usuario);
                 _flag = true;
@@ -63,16 +75,11 @@ namespace apisam.repositories
 
         public bool UpdateUsuario(Usuario usuario)
         {
-            var _flag = false;
             var _db = DbFactory.Open();
-
-            var usuarioBuscado = _db.Select<Usuario>().FirstOrDefault(x =>
-            x.UserName == usuario.UserName &&
-             x.Identificacion == usuario.Identificacion);
-            if (usuario != null) return _flag;
             usuario.ModificadoFecha = DateTime.Now;
+            usuario.Edad = CalculateAge(usuario.FechaNacimiento);
             _db.Save(usuario);
-            _flag = true;
+            bool _flag = true;
             return _flag;
 
 
@@ -89,7 +96,78 @@ namespace apisam.repositories
             return null;
         }
 
+        public Usuario GerUserById(int id)
+        {
+            var _db = DbFactory.Open();
+            var _user = _db.Select<Usuario>
+                ().FirstOrDefault(x => x.UsuarioId == id);
+            if (_user != null) return _user;
+            return null;
+        }
 
+        public PageResponse<Usuario>
+            GetAsistentes(int pageNo, int limit, string filter, int doctorId)
+        {
+            var _response = new PageResponse<Usuario>();
+            var _skip = limit * (pageNo - 1);
+
+
+            var _qry = $@"SELECT * FROM Usuario u
+                          WHERE u.AsistenteId = {doctorId} ";
+
+            if (!string.IsNullOrEmpty(filter)) _qry += $" AND (u.Nombres LIKE '%{filter}%' " +
+                    $"OR u.PrimerApellido LIKE '%{filter}%' OR u.SegundoApellido LIKE '%{filter}%')";
+
+            var _qry2 = _qry;
+            _qry += " ORDER BY u.UsuarioId DESC";
+            _qry += $" OFFSET {_skip} ROWS";
+            _qry += $" FETCH NEXT {limit} ROWS ONLY";
+
+            using var _db = DbFactory.Open();
+            var _usuarios = _db.Select<Usuario>(_qry).ToList();
+            if (limit > 0)
+            {
+                _response.TotalItems =
+                    _db.Select<Usuario>(_qry2).ToList().Count();
+                _response.TotalPages
+                    = (int)Math.Ceiling((decimal)_response.TotalItems / (decimal)limit);
+
+                if (pageNo < _response.TotalPages)
+                    _response.CurrentPage = pageNo;
+                else
+                    _response.CurrentPage = _response.TotalPages;
+
+                _response.Items = _usuarios;
+                _response.ItemCount = _response.Items.Count;
+            }
+
+            return _response;
+
+        }
+
+
+        public Usuario UpdatePassword(UserChangePassword model)
+        {
+            var _usuario = new Usuario();
+            using (var _db = DbFactory.Open())
+            {
+                _usuario = _db.Select<Usuario>().FirstOrDefault(x => x.UsuarioId == model.Id);
+                if (_usuario != null)
+                {
+                    CreatePasswordHash(model.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
+                    _usuario.PasswordHash = _passwordHash;
+                    _usuario.PasswordSalt = _passwordSalt;
+                    _usuario.ModificadoPor = model.ModificadoPor;
+                    _usuario.ModificadoFecha = DateTime.Now;
+                    _db.Save(_usuario);
+
+
+
+                }
+            }
+
+            return _usuario;
+        }
 
 
 
@@ -101,18 +179,6 @@ namespace apisam.repositories
             pPasswordSalt = hmac.Key;
             pPasswordHash = hmac.ComputeHash(
                 System.Text.Encoding.UTF8.GetBytes(pPassword));
-        }
-
-        private bool VerificarPasswordHash(string password,
-            byte[] passwordHashAlmacenado, byte[] passwordSalt)
-        {
-            var hmac = new
-                  System.Security.Cryptography.HMACSHA512(passwordSalt);
-            var passwordHashNuevo =
-                hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            return new
-                ReadOnlySpan<byte>(passwordHashAlmacenado)
-                .SequenceEqual(new ReadOnlySpan<byte>(passwordHashNuevo));
         }
 
         private int CalculateAge(DateTime dateOfBirth)

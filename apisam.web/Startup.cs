@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using apisam.entities;
+using apisam.entities.ViewModels.UsuariosTable;
 using apisam.interfaces;
 using apisam.repositories;
+using apisam.web.Mapping;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,8 +40,7 @@ namespace apisam.web
             services.AddCors(options =>
             {
                 options.AddPolicy("Todos",
-                builder => builder.AllowAnyMethod().AllowAnyHeader()
-                .WithOrigins("http://localhost:4200").AllowCredentials());
+                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +51,9 @@ namespace apisam.web
             services.AddTransient<IUsuario, UsuariosRepo>();
 
             #endregion
+
+
+            services.AddAutoMapper(typeof(MappinProfile));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
                 AddJwtBearer(options =>
@@ -78,7 +84,6 @@ namespace apisam.web
             }
 
             app.UseHttpsRedirection();
-            app.UseCors("Todos");
             app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -93,6 +98,7 @@ namespace apisam.web
 
 
             app.UseRouting();
+            app.UseCors("Todos");
 
             app.UseAuthorization();
 

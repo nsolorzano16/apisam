@@ -12,13 +12,13 @@ namespace apisam.entities
         [PrimaryKey, AutoIncrement]
         public int UsuarioId { get; set; }
         public int RolId { get; set; }
+        public int AsistenteId { get; set; }
         public string Nombres { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public string Identificacion { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public int Edad { get; set; }
-
         public string Sexo { get; set; }
         public string Telefono1 { get; set; }
         public string Telefono2 { get; set; }
@@ -28,8 +28,20 @@ namespace apisam.entities
         public string Password { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
+        public string FotoUrl { get; set; }
 
 
+
+
+
+    }
+
+
+    public class UserChangePassword
+    {
+        public int Id { get; set; }
+        public string Password { get; set; }
+        public string ModificadoPor { get; set; }
 
 
     }
