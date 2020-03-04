@@ -14,21 +14,21 @@ namespace apisam.repositories
     {
 
 
-        private readonly OrmLiteConnectionFactory DbFactory;
+        private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
 
         public UsuariosRepo()
         {
 
             var _connString = con.GetConnectionString();
-            DbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
         public List<Usuario> Usuarios
         {
             get
             {
-                var _db = DbFactory.Open();
+                var _db = dbFactory.Open();
                 return _db.Select<Usuario>().ToList();
             }
         }
@@ -37,7 +37,7 @@ namespace apisam.repositories
         {
             get
             {
-                var _db = DbFactory.Open();
+                var _db = dbFactory.Open();
                 return _db.Select<Rol>().ToList();
             }
         }
@@ -45,12 +45,12 @@ namespace apisam.repositories
         public bool AddUsuario(Usuario usuario)
         {
             var _flag = false;
-            var _db = DbFactory.Open();
+            var _db = dbFactory.Open();
 
             var usuarioBuscado = _db.Select<Usuario>().FirstOrDefault(x =>
             x.UserName == usuario.UserName &&
              x.Identificacion == usuario.Identificacion);
-            if (usuario != null)
+            if (usuarioBuscado == null)
             {
                 CreatePasswordHash(usuario.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
 
@@ -75,7 +75,7 @@ namespace apisam.repositories
 
         public bool UpdateUsuario(Usuario usuario)
         {
-            var _db = DbFactory.Open();
+            var _db = dbFactory.Open();
             usuario.ModificadoFecha = DateTime.Now;
             usuario.Edad = CalculateAge(usuario.FechaNacimiento);
             _db.Save(usuario);
@@ -87,7 +87,7 @@ namespace apisam.repositories
 
         public Usuario GetUsuarioByUserName(LoginViewModel usuario)
         {
-            var _db = DbFactory.Open();
+            var _db = dbFactory.Open();
             var user = _db.Select<Usuario>().FirstOrDefault(
                 x => x.UserName == usuario.Usuario &&
             x.Activo == true);
@@ -98,7 +98,7 @@ namespace apisam.repositories
 
         public Usuario GerUserById(int id)
         {
-            var _db = DbFactory.Open();
+            var _db = dbFactory.Open();
             var _user = _db.Select<Usuario>
                 ().FirstOrDefault(x => x.UsuarioId == id);
             if (_user != null) return _user;
@@ -123,7 +123,7 @@ namespace apisam.repositories
             _qry += $" OFFSET {_skip} ROWS";
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
-            using var _db = DbFactory.Open();
+            using var _db = dbFactory.Open();
             var _usuarios = _db.Select<Usuario>(_qry).ToList();
             if (limit > 0)
             {
@@ -149,7 +149,7 @@ namespace apisam.repositories
         public Usuario UpdatePassword(UserChangePassword model)
         {
             var _usuario = new Usuario();
-            using (var _db = DbFactory.Open())
+            using (var _db = dbFactory.Open())
             {
                 _usuario = _db.Select<Usuario>().FirstOrDefault(x => x.UsuarioId == model.Id);
                 if (_usuario != null)
