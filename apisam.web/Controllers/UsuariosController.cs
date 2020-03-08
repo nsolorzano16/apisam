@@ -151,11 +151,25 @@ namespace apisam.web.Controllers
                 new Claim(ClaimTypes.Role,usuario.RolId.ToString()),
 
             };
+            var rolDescripcion = "";
+            if (usuario.RolId == 1)
+            {
+                rolDescripcion = "Administrador de Sistema";
+            }
+            else if (usuario.RolId == 2)
+            {
+                rolDescripcion = "Administrador";
+            }
+            else if (usuario.RolId == 3)
+            {
+                rolDescripcion = "Operador";
+            }
             return Ok(
                 new
                 {
                     token = GenerarToken(claims),
-                    usuario
+                    usuario,
+                    rolDescripcion
 
                 });
 

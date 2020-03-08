@@ -48,7 +48,7 @@ namespace apisam.web.Controllers
 
 
         [Authorize(Roles = "2,3")]
-        [HttpGet("/{id}", Name = "GetUserById")]
+        [HttpGet("{id}", Name = "GetUserById")]
         public IActionResult GetUserById([FromRoute]int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -56,7 +56,7 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2,3")]
-        [HttpGet("/{identificacion}", Name = "GetPacienteByIdentificacion")]
+        [HttpGet("identificacion/{identificacion}", Name = "GetPacienteByIdentificacion")]
         public IActionResult GetPacienteByIdentificacion([FromRoute]string identificacion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

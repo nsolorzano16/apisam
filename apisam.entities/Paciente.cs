@@ -1,5 +1,6 @@
 ﻿using System;
-using ServiceStack.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace apisam.entities
 {
@@ -9,7 +10,8 @@ namespace apisam.entities
         {
         }
 
-        [PrimaryKey, AutoIncrement]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int PacienteId { get; set; }
         public string Nombres { get; set; }
         public string PrimerApellido { get; set; }

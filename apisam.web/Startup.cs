@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels.UsuariosTable;
 using apisam.interfaces;
+using apisam.repos;
 using apisam.repositories;
 using apisam.web.Mapping;
 using AutoMapper;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +37,10 @@ namespace apisam.web
         public void ConfigureServices(IServiceCollection services)
         {
 
+            var _conn = Configuration.GetConnectionString("azure_dbcon");
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(_conn)
+            );
 
             services.AddControllers();
             services.AddCors(options =>
@@ -49,6 +55,7 @@ namespace apisam.web
 
             #region
             services.AddTransient<IUsuario, UsuariosRepo>();
+            services.AddTransient<IPaciente, PacientesRepo>();
 
             #endregion
 
