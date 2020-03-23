@@ -34,7 +34,7 @@ namespace apisam.web.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             if (PacienteRepo.AddPaciente(paciente)) return Ok(paciente);
-            return BadRequest("error salvando paciente");
+            return BadRequest("error salvando paciente o el paciente ya existe");
         }
 
         [Authorize(Roles = "2,3")]

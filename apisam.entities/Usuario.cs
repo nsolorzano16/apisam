@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ServiceStack.DataAnnotations;
 
 namespace apisam.entities
@@ -29,6 +30,38 @@ namespace apisam.entities
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
         public string FotoUrl { get; set; }
+
+
+        //[Reference]
+        //public AntecedentesFamiliaresPersonales
+        //    AntecedentesFamiliaresPersonales
+        //{ get; set; }
+
+        //[Reference]
+        //public List<Diagnosticos> Diagnosticos { get; set; }
+
+        //[Reference]
+        //public List<ExamenFisico> ExamenesFisicos { get; set; }
+
+        //[Reference]
+        //public List<ExamenFisicoGinecologico> ExamenesGinecologicos { get; set; }
+
+        //[Reference]
+        //public List<FarmacosUsoActual> Farmacos { get; set; }
+
+        //[Reference]
+        //public Habitos Habito { get; set; }
+
+
+        //[Reference]
+        //public HistorialGinecoObstetra HistorialGinecoObstetra { get; set; }
+
+
+        //[Reference]
+        //public List<Preclinica> Preclinicas { get; set; }
+
+        //[Reference]
+        //public List<Notas> NotasLista { get; set; }
 
 
 

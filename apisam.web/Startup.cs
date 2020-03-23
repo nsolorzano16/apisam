@@ -42,20 +42,43 @@ namespace apisam.web
                 options.UseSqlServer(_conn)
             );
 
+
+
             services.AddControllers();
             services.AddCors(options =>
             {
                 options.AddPolicy("Todos",
                 builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+
+            var _license = @"6543-e1JlZjo2NTQzLE5hbWU6Sm9zZSBCb25pbGxhLFR5cG
+                            U6SW5kaWUsTWV0YTowLEhhc2g6YUhKaXAzVk01V0JuVXZpa
+                            GsxdnU0NVlwMWpHcSswVkpybFU5dUI4Tk85V3VWWkdIcWtu
+                            Y2JqaFBCNHRXMWtobVoyem1wS3ZoWi9lYmVmYlV5WEF4S3d
+                            2clEwSzE2eGRISjlzT0tqSHl1dkg0NkxUbkdEYTV5SUdNMj
+                            FyY1NpalB0MmRRRUovTWtZeUJnc2xpZXRrRW5XQUNKMEZWd
+                            TdyK3pXWTRkd3RrSEQwPSxFeHBpcnk6MjAxOS0wOS0yNH0=";
+            ServiceStack.Licensing.RegisterLicense(_license);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SAM-API", Version = "v1" });
             });
 
+
+
             #region
             services.AddTransient<IUsuario, UsuariosRepo>();
             services.AddTransient<IPaciente, PacientesRepo>();
+            services.AddTransient<IAntecedentesFamiliaresPersonales, AntecedentesRepo>();
+            services.AddTransient<IDiagnosticos, DiagnosticosRepo>();
+            services.AddTransient<IExamenFisico, ExamenFisicoRepo>();
+            services.AddTransient<IExamenFisicoGinecologico, ExamenFisicoGinecologicoRepo>();
+            services.AddTransient<IFarmacosUsoActual, FarmacosRepo>();
+            services.AddTransient<IHabitos, HabitosRepo>();
+            services.AddTransient<IHistorialGinecoObstetra, HistorialGinecoObstetraRepo>();
+            services.AddTransient<IPreclinica, PreclinicaRepo>();
+            services.AddTransient<INotas, NotasRepo>();
+
 
             #endregion
 

@@ -48,8 +48,8 @@ namespace apisam.repositories
             var _db = dbFactory.Open();
 
             var usuarioBuscado = _db.Select<Usuario>().FirstOrDefault(x =>
-            x.UserName == usuario.UserName &&
-             x.Identificacion == usuario.Identificacion);
+            x.UserName == usuario.UserName ||
+             x.Identificacion == usuario.Identificacion || x.Email == usuario.Email);
             if (usuarioBuscado == null)
             {
                 CreatePasswordHash(usuario.Password, out byte[] _passwordHash, out byte[] _passwordSalt);

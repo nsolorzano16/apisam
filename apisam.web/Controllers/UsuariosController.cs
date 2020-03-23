@@ -63,8 +63,7 @@ namespace apisam.web.Controllers
             // obtengo usuario a modificar
             var _user = UsuariosRepo.GerUserById(id);
             if (_user == null) return BadRequest();
-            var _newFileNameLogo = "";
-            _newFileNameLogo = _user.UsuarioId.ToString() + "-";
+            string _newFileNameLogo = _user.UsuarioId.ToString() + "-";
             _newFileNameLogo += DateTime.Now.Ticks.ToString() + "-";
             _newFileNameLogo += Guid.NewGuid().ToString();
             var _connString = _config.GetValue<string>("ConnectionStrings:azure_storage");
@@ -83,14 +82,27 @@ namespace apisam.web.Controllers
             {
                 // Get a reference to a blob named "myblob".
                 var fileExtension = System.IO.Path.GetExtension(logoImage.FileName);
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(_newFileNameLogo + fileExtension);
-                using (var _fileStream = logoImage.OpenReadStream())
+                if (fileExtension.ToLower().Equals(".png")
+                    || fileExtension.ToLower().Equals(".jpg")
+                    || fileExtension.ToLower().Equals(".jpeg"))
                 {
-                    await blockBlob.UploadFromStreamAsync(_fileStream);
-                    flag = true;
+
+                    CloudBlockBlob blockBlob =
+                        container.GetBlockBlobReference(_newFileNameLogo + fileExtension);
+                    using (var _fileStream = logoImage.OpenReadStream())
+                    {
+                        await blockBlob.UploadFromStreamAsync(_fileStream);
+                        flag = true;
+                    }
+                    var _urlStorage = _config.GetValue<string>("UrlsWebSites:urlStorage");
+                    _user.FotoUrl = _urlStorage + blockBlob.Name;
+
                 }
-                var _urlStorage = _config.GetValue<string>("UrlsWebSites:urlStorage");
-                _user.FotoUrl = _urlStorage + blockBlob.Name;
+                else
+                {
+                    return BadRequest("Formato no soportado");
+                }
+
 
 
             }
@@ -118,7 +130,7 @@ namespace apisam.web.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             if (UsuariosRepo.AddUsuario(usuario)) return Ok(usuario);
-            return BadRequest("error salvando usuario");
+            return BadRequest("error salvando usuario o el usuario ya existe");
         }
 
         [Authorize(Roles = "1,2")]
@@ -204,7 +216,7 @@ namespace apisam.web.Controllers
             return BadRequest();
         }
 
-        [Authorize(Roles = "1,2")]
+        [Authorize(Roles = "1,2,3")]
         [HttpGet("info/{id}", Name = "GetUserInfo")]
         public IActionResult GetUserInfo([FromRoute]int id)
         {

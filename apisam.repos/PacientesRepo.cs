@@ -2,6 +2,7 @@
 using System.Linq;
 using apisam.entities;
 using apisam.interfaces;
+using apisam.repositories;
 using Microsoft.EntityFrameworkCore;
 using ServiceStack.OrmLite;
 
@@ -10,10 +11,13 @@ namespace apisam.repos
     public class PacientesRepo : IPaciente
     {
 
-        private readonly AppDbContext _AppDbContext;
+        private readonly OrmLiteConnectionFactory dbFactory;
+        private readonly Conexion con = new Conexion();
+
         public PacientesRepo(AppDbContext appDbContext)
         {
-            _AppDbContext = appDbContext;
+            var _connString = con.GetConnectionString();
+            dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
 
         }
 
@@ -22,9 +26,9 @@ namespace apisam.repos
         {
             var _flag = false;
 
-
-            var pacienteBuscado = _AppDbContext
-                .Paciente.FirstOrDefault(x => x.Identificacion == paciente.Identificacion);
+            using var _db = dbFactory.Open();
+            var pacienteBuscado = _db.Select<Paciente>
+                ().FirstOrDefault(x => x.Identificacion == paciente.Identificacion);
 
 
             if (pacienteBuscado == null)
@@ -33,8 +37,7 @@ namespace apisam.repos
                 paciente.ModificadoFecha = DateTime.Now;
                 paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                 paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
-                _AppDbContext.Paciente.Add(paciente);
-                _AppDbContext.SaveChanges();
+                _db.Save<Paciente>(paciente);
                 _flag = true;
             }
             return _flag;
@@ -47,19 +50,22 @@ namespace apisam.repos
 
         public bool UpdatePaciente(Paciente paciente)
         {
-
+            bool _flag = false;
             paciente.ModificadoFecha = DateTime.Now;
             paciente.Edad = CalculateAge(paciente.FechaNacimiento);
-            _AppDbContext.Paciente.Update(paciente);
-            _AppDbContext.SaveChanges();
-            bool _flag = true;
+            using (var _db = dbFactory.Open())
+            {
+                _db.Save<Paciente>(paciente);
+                _flag = true;
+            }
             return _flag;
         }
 
         public Paciente GetPacienteById(int id)
         {
+            using var _db = dbFactory.Open();
 
-            var _user = _AppDbContext.Paciente.FirstOrDefault<Paciente>(x => x.PacienteId == id);
+            var _user = _db.Select<Paciente>().FirstOrDefault(x => x.PacienteId == id);
             if (_user != null) return _user;
             return null;
         }
@@ -67,7 +73,9 @@ namespace apisam.repos
         public Paciente GetPacienteByIdentificacion(string identificacion)
         {
 
-            var _user = _AppDbContext.Paciente.FirstOrDefault(x => x.Identificacion == identificacion);
+
+            using var _db = dbFactory.Open();
+            var _user = _db.Select<Paciente>().FirstOrDefault(x => x.Identificacion == identificacion);
             if (_user != null) return _user;
             return null;
         }
@@ -75,6 +83,7 @@ namespace apisam.repos
         public PageResponse<Paciente>
             GetPacientes(int pageNo, int limit, string filter)
         {
+            using var _db = dbFactory.Open();
             var _response = new PageResponse<Paciente>();
             var _skip = limit * (pageNo - 1);
 
@@ -90,11 +99,11 @@ namespace apisam.repos
             _qry += $" OFFSET {_skip} ROWS";
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
-            var _pacientes = _AppDbContext.Paciente.FromSqlRaw(_qry).ToList();
+            var _pacientes = _db.Select<Paciente>(_qry).ToList();
+
             if (limit > 0)
             {
-                _response.TotalItems =
-                    _AppDbContext.Paciente.FromSqlRaw(_qry2).ToList().Count();
+                _response.TotalItems = _db.Select<Paciente>(_qry2).ToList().Count();
                 _response.TotalPages
                     = (int)Math.Ceiling((decimal)_response.TotalItems / (decimal)limit);
 
