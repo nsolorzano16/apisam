@@ -78,6 +78,13 @@ namespace apisam.web
             services.AddTransient<IHistorialGinecoObstetra, HistorialGinecoObstetraRepo>();
             services.AddTransient<IPreclinica, PreclinicaRepo>();
             services.AddTransient<INotas, NotasRepo>();
+            services.AddTransient<IDepartamento, DepartamentosRepo>();
+            services.AddTransient<IEscolaridad, EscolaridadRepo>();
+            services.AddTransient<IGrupoEtnico, GrupoEtnicoRepo>();
+            services.AddTransient<IGrupoSanguineo, GrupoSanguineoRepo>();
+            services.AddTransient<IMunicipio, MunicipioRepo>();
+            services.AddTransient<IProfesion, ProfesionRepo>();
+            services.AddTransient<IReligion, ReligionRepo>();
 
 
             #endregion
