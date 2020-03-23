@@ -30,10 +30,10 @@ namespace apisam.repos
 
         }
 
-        public Municipio GetMunicipioById(int id)
+        public List<Municipio> GetMunicipiosByDepartamento(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<Municipio>().FirstOrDefault(x => x.MunicipioId == id);
+            return _db.Select<Municipio>().Where(x => x.DepartamentoId == id).ToList();
         }
     }
 }
