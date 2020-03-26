@@ -1,5 +1,6 @@
 ﻿using System;
 using apisam.entities;
+using apisam.entities.ViewModels;
 
 namespace apisam.interfaces
 {
@@ -10,8 +11,8 @@ namespace apisam.interfaces
         bool UpdatePaciente(Paciente paciente);
         Paciente GetPacienteById(int id);
         Paciente GetPacienteByIdentificacion(string identificacion);
-        PageResponse<Paciente>
-               GetPacientes(int pageNo, int limit, string filter);
+        PageResponse<PacientesViewModel>
+               GetPacientes(int pageNo, int limit, string filter, int doctorId);
     }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using apisam.entities;
+using apisam.entities.ViewModels;
 using apisam.interfaces;
 using apisam.repositories;
 using Microsoft.EntityFrameworkCore;
@@ -80,17 +81,79 @@ namespace apisam.repos
             return null;
         }
 
-        public PageResponse<Paciente>
-            GetPacientes(int pageNo, int limit, string filter)
+        public PageResponse<PacientesViewModel>
+            GetPacientes(int pageNo, int limit, string filter, int doctorId)
         {
             using var _db = dbFactory.Open();
-            var _response = new PageResponse<Paciente>();
+            var _response = new PageResponse<PacientesViewModel>();
             var _skip = limit * (pageNo - 1);
 
 
-            var _qry = $@"SELECT * FROM Paciente p";
+            var _qry = $@"SELECT
+                            p.PacienteId,
+                            p.DoctorId,
+                            p.PaisId,
+                            p.ProfesionId,
+                            p.EscolaridadId,
+                            p.ReligionId,
+                            p.GrupoSanguineoId,
+                            p.GrupoEtnicoId,
+                            p.DepartamentoId,
+                            p.MunicipioId,
+                            p.DepartamentoResidenciaId,
+                            p.MunicipioResidenciaId,
+                            p.Nombres,
+                            p.PrimerApellido,
+                            p.SegundoApellido,
+                            p.Identificacion,
+                            p.Email,
+                            p.Sexo,
+                            p.FechaNacimiento,
+                            p.EstadoCivil,
+                            p.Edad,
+                            p.Direccion,
+                            p.Telefono1,
+                            p.Telefono2,
+                            p.NombreEmergencia,
+                            p.TelefonoEmergencia,
+                            p.Parentesco,
+                            p.MenorDeEdad,
+                            p.NombreMadre,
+                            p.IdentificacionMadre,
+                            p.NombrePadre,
+                            p.IdentificacionPadre,
+                            p.CarneVacuna,
+                            p.FotoUrl,
+                            pa.Nombre as 'Pais',
+                            pr.Nombre as 'Profesion',
+                            e.Nombre as 'Escolaridad',
+                            r.Nombre as 'Religion',
+                            gs.Nombre as 'Grupo Sanguineo',
+                            ge.Nombre as 'Grupo Etnico',
+                            d.Nombre as 'Departamento',
+                            m.Nombre as 'Municipio',
+                            p.Activo,
+                            p.CreadoPor,
+                            p.CreadoFecha,
+                            p.ModificadoPor,
+                            p.ModificadoFecha,
+                            p.Notas
+                        FROM
 
-            if (!string.IsNullOrEmpty(filter)) _qry += $" WHERE (p.Nombres LIKE '%{filter}%' " +
+                            Paciente p INNER JOIN Pais pa ON p.PaisId = pa.PaisId
+                            INNER JOIN Profesion pr ON p.ProfesionId = pr.ProfesionId
+                            INNER JOIN Escolaridad e ON p.EscolaridadId = e.EscolaridadId
+                            INNER JOIN Religion r ON p.ReligionId = r.ReligionId
+                            INNER JOIN GrupoSanguineo gs ON p.GrupoSanguineoId = gs.GrupoSanguineoId
+                            INNER JOIN GrupoEtnico ge ON p.GrupoEtnicoId = ge.GrupoEtnicoId
+                            LEFT JOIN Departamento d ON p.DepartamentoId = d.DepartamentoId
+                            LEFT join Municipio m on p.MunicipioId = m.MunicipioId
+                            LEFT JOIN Departamento dd ON p.DepartamentoResidenciaId = dd.DepartamentoId 
+                            LEFT JOIN Municipio mm on p.MunicipioResidenciaId = mm.MunicipioId
+                            WHERE p.DoctorId = {doctorId}
+                        ";
+
+            if (!string.IsNullOrEmpty(filter)) _qry += $" AND (p.Nombres LIKE '%{filter}%' " +
                     $"OR p.PrimerApellido LIKE '%{filter}%' OR p.SegundoApellido LIKE '%{filter}%' " +
                     $"OR p.Identificacion LIKE '%{filter}%')";
 
@@ -99,11 +162,11 @@ namespace apisam.repos
             _qry += $" OFFSET {_skip} ROWS";
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
-            var _pacientes = _db.Select<Paciente>(_qry).ToList();
+            var _pacientes = _db.Select<PacientesViewModel>(_qry).ToList();
 
             if (limit > 0)
             {
-                _response.TotalItems = _db.Select<Paciente>(_qry2).ToList().Count();
+                _response.TotalItems = _db.Select<PacientesViewModel>(_qry2).ToList().Count();
                 _response.TotalPages
                     = (int)Math.Ceiling((decimal)_response.TotalItems / (decimal)limit);
 

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
+using apisam.entities.ViewModels;
 using apisam.interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -20,12 +22,13 @@ namespace apisam.web.Controllers
     {
         public IPaciente PacienteRepo;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public PacientesController(IPaciente pacienterepository, IConfiguration config)
+        public PacientesController(IPaciente pacienterepository, IConfiguration config, IMapper mapper)
         {
             _config = config;
             PacienteRepo = pacienterepository;
-
+            _mapper = mapper;
         }
 
         [Authorize(Roles = "2,3")]
@@ -39,10 +42,12 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] Paciente paciente)
+        public IActionResult Update([FromBody] PacientesViewModel paciente)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (PacienteRepo.UpdatePaciente(paciente)) return Ok(paciente);
+
+            var _pac = _mapper.Map<PacientesViewModel, Paciente>(paciente);
+            if (PacienteRepo.UpdatePaciente(_pac)) return Ok(paciente);
             return BadRequest("error editando paciente");
         }
 
@@ -65,12 +70,12 @@ namespace apisam.web.Controllers
 
 
         [Authorize(Roles = "2,3")]
-        [HttpGet("page/{pageNo}/limit/{limit}", Name = "GetPacientes")]
-        public IActionResult GetPacientes(int pageNo, int limit, [FromQuery] string filter)
+        [HttpGet("page/{pageNo}/limit/{limit}/doctor/{doctorId}", Name = "GetPacientes")]
+        public IActionResult GetPacientes([FromRoute] int pageNo, [FromRoute] int limit, [FromQuery] string filter, [FromRoute] int doctorId)
         {
             try
             {
-                var _pageResponse = PacienteRepo.GetPacientes(pageNo, limit, filter);
+                var _pageResponse = PacienteRepo.GetPacientes(pageNo, limit, filter, doctorId);
                 return Ok(_pageResponse);
             }
             catch (Exception e)

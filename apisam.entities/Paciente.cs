@@ -21,8 +21,10 @@ namespace apisam.entities
         public int ReligionId { get; set; }
         public int GrupoSanguineoId { get; set; }
         public int GrupoEtnicoId { get; set; }
-        public int DepartamentoId { get; set; }
-        public int MunicipioId { get; set; }
+        public int? DepartamentoId { get; set; }
+        public int? MunicipioId { get; set; }
+        public int? DepartamentoResidenciaId { get; set; }
+        public int? MunicipioResidenciaId { get; set; }
         public string Nombres { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
@@ -31,8 +33,6 @@ namespace apisam.entities
         public string Sexo { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string EstadoCivil { get; set; }
-        public string TipoDeSangre { get; set; }
-        public string LugarNacimiento { get; set; }
         public int? Edad { get; set; }
         public string Direccion { get; set; }
         public string Telefono1 { get; set; }
