@@ -49,6 +49,9 @@ namespace apisam.entities.ViewModels
         public string GrupoEtnico { get; set; }
         public string Departamento { get; set; }
         public string Municipio { get; set; }
+        public string DepartamentoResidencia { get; set; }
+        public string MunicipioResidencia { get; set; }
+
 
     }
 }
