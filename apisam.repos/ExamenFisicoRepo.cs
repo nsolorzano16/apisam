@@ -23,8 +23,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                examen.CreadoFecha = DateTime.Now;
-                examen.ModificadoFecha = DateTime.Now;
+                examen.CreadoFecha = DateTime.Now.ToLocalTime();
+                examen.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<ExamenFisico>(examen);
                 _flag = true;
             }
@@ -37,7 +37,7 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                examen.ModificadoFecha = DateTime.Now;
+                examen.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<ExamenFisico>(examen);
                 _flag = true;
             }

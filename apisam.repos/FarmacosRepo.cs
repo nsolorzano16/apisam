@@ -23,8 +23,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                farmaco.CreadoFecha = DateTime.Now;
-                farmaco.ModificadoFecha = DateTime.Now;
+                farmaco.CreadoFecha = DateTime.Now.ToLocalTime();
+                farmaco.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<FarmacosUsoActual>(farmaco);
                 _flag = true;
             }
@@ -37,8 +37,8 @@ namespace apisam.repos
 
             farmacos.ForEach(x =>
             {
-                x.CreadoFecha = DateTime.Now;
-                x.ModificadoFecha = DateTime.Now;
+                x.CreadoFecha = DateTime.Now.ToLocalTime();
+                x.ModificadoFecha = DateTime.Now.ToLocalTime();
             });
             using (var _db = dbFactory.Open())
             {
@@ -55,7 +55,7 @@ namespace apisam.repos
             using (var _db = dbFactory.Open())
             {
 
-                farmaco.ModificadoFecha = DateTime.Now;
+                farmaco.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<FarmacosUsoActual>(farmaco);
                 _flag = true;
             }

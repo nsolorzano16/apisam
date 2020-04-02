@@ -24,8 +24,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                diagnostico.CreadoFecha = DateTime.Now;
-                diagnostico.ModificadoFecha = DateTime.Now;
+                diagnostico.CreadoFecha = DateTime.Now.ToLocalTime();
+                diagnostico.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Diagnosticos>(diagnostico);
                 _flag = true;
             }
@@ -38,8 +38,8 @@ namespace apisam.repos
             var _flag = false;
             diagnosticos.ForEach(x =>
             {
-                x.CreadoFecha = DateTime.Now;
-                x.ModificadoFecha = DateTime.Now;
+                x.CreadoFecha = DateTime.Now.ToLocalTime();
+                x.ModificadoFecha = DateTime.Now.ToLocalTime();
             });
             using (var _db = dbFactory.Open())
             {
@@ -56,7 +56,7 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                diagnostico.ModificadoFecha = DateTime.Now;
+                diagnostico.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Diagnosticos>(diagnostico);
                 _flag = true;
             }

@@ -10,9 +10,9 @@ namespace apisam.repos
 {
     public class PaisRepo : IPais
     {
-
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+
         public PaisRepo()
         {
             var _connString = con.GetConnectionString();
@@ -22,7 +22,6 @@ namespace apisam.repos
 
 
         public List<Pais> Paises
-
         {
             get
             {
@@ -31,11 +30,13 @@ namespace apisam.repos
             }
 
         }
+
         public Pais GetPaisById(int id)
         {
             using var _db = dbFactory.Open();
             return _db.Select<Pais>().FirstOrDefault(x => x.PaisId == id);
         }
+
+
     }
 }
-

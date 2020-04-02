@@ -24,8 +24,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                antecedente.CreadoFecha = DateTime.Now;
-                antecedente.ModificadoFecha = DateTime.Now;
+                antecedente.CreadoFecha = DateTime.Now.ToLocalTime();
+                antecedente.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<AntecedentesFamiliaresPersonales>(antecedente);
                 _flag = true;
             }
@@ -37,7 +37,7 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                antecedente.ModificadoFecha = DateTime.Now;
+                antecedente.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<AntecedentesFamiliaresPersonales>(antecedente);
                 _flag = true;
             }

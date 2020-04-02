@@ -57,8 +57,8 @@ namespace apisam.repositories
 
                 usuario.PasswordHash = _passwordHash;
                 usuario.PasswordSalt = _passwordSalt;
-                usuario.CreadoFecha = DateTime.Now;
-                usuario.ModificadoFecha = DateTime.Now;
+                usuario.CreadoFecha = DateTime.Now.ToLocalTime();
+                usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
                 usuario.Password = "";
                 usuario.Edad = CalculateAge(usuario.FechaNacimiento);
                 usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
@@ -76,7 +76,7 @@ namespace apisam.repositories
         public bool UpdateUsuario(Usuario usuario)
         {
             var _db = dbFactory.Open();
-            usuario.ModificadoFecha = DateTime.Now;
+            usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
             usuario.Edad = CalculateAge(usuario.FechaNacimiento);
             _db.Save(usuario);
             bool _flag = true;
@@ -158,7 +158,7 @@ namespace apisam.repositories
                     _usuario.PasswordHash = _passwordHash;
                     _usuario.PasswordSalt = _passwordSalt;
                     _usuario.ModificadoPor = model.ModificadoPor;
-                    _usuario.ModificadoFecha = DateTime.Now;
+                    _usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
                     _db.Save(_usuario);
 
 

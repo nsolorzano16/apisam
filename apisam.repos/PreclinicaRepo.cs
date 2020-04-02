@@ -24,8 +24,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                preclinica.CreadoFecha = DateTime.Now;
-                preclinica.ModificadoFecha = DateTime.Now;
+                preclinica.CreadoFecha = DateTime.Now.ToLocalTime();
+                preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Preclinica>(preclinica);
                 _flag = true;
             }
@@ -39,7 +39,7 @@ namespace apisam.repos
             using (var _db = dbFactory.Open())
             {
 
-                preclinica.ModificadoFecha = DateTime.Now;
+                preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Preclinica>(preclinica);
                 _flag = true;
             }

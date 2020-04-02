@@ -23,8 +23,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                nota.CreadoFecha = DateTime.Now;
-                nota.ModificadoFecha = DateTime.Now;
+                nota.CreadoFecha = DateTime.Now.ToLocalTime();
+                nota.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Notas>(nota);
                 _flag = true;
             }
@@ -36,7 +36,7 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                nota.ModificadoFecha = DateTime.Now;
+                nota.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Notas>(nota);
                 _flag = true;
             }
@@ -48,8 +48,8 @@ namespace apisam.repos
             var _flag = false;
             notas.ForEach(x =>
             {
-                x.CreadoFecha = DateTime.Now;
-                x.ModificadoFecha = DateTime.Now;
+                x.CreadoFecha = DateTime.Now.ToLocalTime();
+                x.ModificadoFecha = DateTime.Now.ToLocalTime();
             });
             using (var _db = dbFactory.Open())
             {

@@ -34,8 +34,8 @@ namespace apisam.repos
 
             if (pacienteBuscado == null)
             {
-                paciente.CreadoFecha = DateTime.Now;
-                paciente.ModificadoFecha = DateTime.Now;
+                paciente.CreadoFecha = DateTime.Now.ToLocalTime();
+                paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
                 paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                 paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
                 _db.Save<Paciente>(paciente);
@@ -52,7 +52,7 @@ namespace apisam.repos
         public bool UpdatePaciente(Paciente paciente)
         {
             bool _flag = false;
-            paciente.ModificadoFecha = DateTime.Now;
+            paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
             paciente.Edad = CalculateAge(paciente.FechaNacimiento);
             using (var _db = dbFactory.Open())
             {
@@ -132,6 +132,8 @@ namespace apisam.repos
                             ge.Nombre as 'Grupo Etnico',
                             d.Nombre as 'Departamento',
                             m.Nombre as 'Municipio',
+                            dd.Nombre as 'DepartamentoResidencia',
+                            mm.Nombre as 'MunicipioResidencia',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,

@@ -22,8 +22,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                historial.CreadoFecha = DateTime.Now;
-                historial.ModificadoFecha = DateTime.Now;
+                historial.CreadoFecha = DateTime.Now.ToLocalTime();
+                historial.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<HistorialGinecoObstetra>(historial);
                 _flag = true;
             }
@@ -37,7 +37,7 @@ namespace apisam.repos
             using (var _db = dbFactory.Open())
             {
 
-                historial.ModificadoFecha = DateTime.Now;
+                historial.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<HistorialGinecoObstetra>(historial);
                 _flag = true;
             }
