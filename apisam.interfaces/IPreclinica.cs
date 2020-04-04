@@ -11,5 +11,7 @@ namespace apisam.interfaces
         PageResponse<Preclinica>
             GetPreclinicasPaginado(int pageNo, int limit, int doctorId);
         PageResponse<PreclinicaViewModel> GetPreclinicasSinAtender(int pageNo, int limit, int doctorId);
+
+        PreclinicaViewModel GetInfoPreclinica(int id);
     }
 }

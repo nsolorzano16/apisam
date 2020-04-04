@@ -26,7 +26,7 @@ namespace apisam.entities
         public bool? DolorPresenteLeve { get; set; }
         public bool? DolorPresenteModerado { get; set; }
         public bool? DolorPresenteSevero { get; set; }
-        public Double? Imc { get; set; }
+        public double? Imc { get; set; }
         public int? PesoIdeal { get; set; }
         public string Interpretacion { get; set; }
         public bool? ExcesoDePeso { get; set; }

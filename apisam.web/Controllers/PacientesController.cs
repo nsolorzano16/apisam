@@ -47,7 +47,11 @@ namespace apisam.web.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var _pac = _mapper.Map<PacientesViewModel, Paciente>(paciente);
-            if (PacienteRepo.UpdatePaciente(_pac)) return Ok(paciente);
+            if (PacienteRepo.UpdatePaciente(_pac))
+            {
+                var pacienteRetorno = PacienteRepo.GetInfoPaciente(paciente.PacienteId);
+                return Ok(pacienteRetorno);
+            }
             return BadRequest("error editando paciente");
         }
 

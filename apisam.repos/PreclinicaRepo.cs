@@ -26,6 +26,10 @@ namespace apisam.repos
             {
                 preclinica.CreadoFecha = DateTime.Now.ToLocalTime();
                 preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
+                var kilos = preclinica.Peso / 2.20;
+                var alturaMetros = preclinica.Peso / 100;
+                var alturaCuadrado = Math.Pow(alturaMetros, 2);
+                preclinica.IMC = kilos / alturaCuadrado;
                 _db.Save<Preclinica>(preclinica);
                 _flag = true;
             }
@@ -40,11 +44,61 @@ namespace apisam.repos
             {
 
                 preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
+                var kilos = preclinica.Peso / 2.20;
+                var alturaMetros = preclinica.Peso / 100;
+                var alturaCuadrado = Math.Pow(alturaMetros, 2);
+                preclinica.IMC = kilos / alturaCuadrado;
                 _db.Save<Preclinica>(preclinica);
                 _flag = true;
             }
 
             return _flag;
+        }
+
+        public PreclinicaViewModel GetInfoPreclinica(int id)
+        {
+            using var _db = dbFactory.Open();
+            var _qry = $@"SELECT
+                            p.PreclinicaId,
+                            p.PacienteId,
+                            p.DoctorId,
+                            p.Peso,
+                            p.Altura,
+                            p.FrecuenciaRespiratoria,
+                            p.RitmoCardiaco,
+                            p.PresionSistolica,
+                            p.PresionDiastolica,
+                            p.IMC,
+                            p.Atendida,
+                            p.PesoDescripcion,
+                            p.Activo,
+                            p.CreadoPor,
+                            p.CreadoFecha,
+                            p.ModificadoPor,
+                            p.ModificadoFecha,
+                            p.Notas,
+                            pc.Nombres,
+                            pc.PrimerApellido,
+                            pc.SegundoApellido,
+                            pc.Identificacion,
+                            pc.Sexo,
+                            pc.FechaNacimiento,
+                            pc.EstadoCivil,
+                            pc.Edad,
+                            pc.MenorDeEdad,
+                            pc.NombreMadre,
+                            pc.IdentificacionMadre,
+                            pc.NombrePadre,
+                            pc.IdentificacionPadre,
+                            pc.CarneVacuna,
+                            pc.Notas as 'NotasPaciente',
+                            pc.FotoUrl
+                        FROM Preclinica p
+                            INNER JOIN Paciente pc ON p.PacienteId = pc.PacienteId
+                            WHERE p.PreclinicaId = ${id}";
+            var pre = _db.Select<PreclinicaViewModel>(_qry).Single();
+
+            return pre;
         }
         public PageResponse<Preclinica> GetPreclinicasPaginado
             (int pageNo, int limit, int doctorId)
@@ -92,7 +146,7 @@ namespace apisam.repos
             var _skip = limit * (pageNo - 1);
 
             var _qry = $@"SELECT
-                            p.PreclinicaId,
+                                                        p.PreclinicaId,
                             p.PacienteId,
                             p.DoctorId,
                             p.Peso,
@@ -117,7 +171,6 @@ namespace apisam.repos
                             pc.Sexo,
                             pc.FechaNacimiento,
                             pc.EstadoCivil,
-                            pc.TipoDeSangre,
                             pc.Edad,
                             pc.MenorDeEdad,
                             pc.NombreMadre,

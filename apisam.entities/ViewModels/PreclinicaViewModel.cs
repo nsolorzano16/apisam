@@ -27,7 +27,6 @@ namespace apisam.entities.ViewModels
         public string Sexo { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string EstadoCivil { get; set; }
-        public string TipoDeSangre { get; set; }
         public int? Edad { get; set; }
         public bool MenorDeEdad { get; set; }
         public string NombreMadre { get; set; }

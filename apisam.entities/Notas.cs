@@ -13,7 +13,7 @@ namespace apisam.entities
         public int NotaId { get; set; }
         public int PacienteId { get; set; }
         public int DoctorId { get; set; }
-        public string Descripcion { get; set; }
+
 
     }
 }

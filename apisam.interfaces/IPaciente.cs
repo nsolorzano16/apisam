@@ -13,6 +13,7 @@ namespace apisam.interfaces
         Paciente GetPacienteByIdentificacion(string identificacion);
         PageResponse<PacientesViewModel>
                GetPacientes(int pageNo, int limit, string filter, int doctorId);
+        PacientesViewModel GetInfoPaciente(int pacienteId);
     }
 
 
