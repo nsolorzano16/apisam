@@ -18,6 +18,7 @@ namespace apisam.web.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "2,3")]
     public class PacientesController : ControllerBase
     {
         public IPaciente PacienteRepo;
