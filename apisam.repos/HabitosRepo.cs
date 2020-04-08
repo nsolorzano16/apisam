@@ -22,8 +22,8 @@ namespace apisam.repos
             var _flag = false;
             using (var _db = dbFactory.Open())
             {
-                habito.CreadoFecha = DateTime.Now;
-                habito.ModificadoFecha = DateTime.Now;
+                habito.CreadoFecha = DateTime.Now.ToLocalTime();
+                habito.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Habitos>(habito);
                 _flag = true;
             }
@@ -38,7 +38,7 @@ namespace apisam.repos
             using (var _db = dbFactory.Open())
             {
 
-                habito.ModificadoFecha = DateTime.Now;
+                habito.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Habitos>(habito);
                 _flag = true;
             }

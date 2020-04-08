@@ -25,7 +25,7 @@ namespace apisam.web.Controllers
         {
             AntecedentesRepo = antecedentesRepository;
         }
-        //coronavirus
+
 
         [Authorize(Roles = "2,3")]
         [HttpPost("")]
