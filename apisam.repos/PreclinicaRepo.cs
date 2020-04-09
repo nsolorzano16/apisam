@@ -19,11 +19,12 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddPreclinica(Preclinica preclinica)
+        public RespuestaMetodos AddPreclinica(Preclinica preclinica)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 preclinica.CreadoFecha = DateTime.Now.ToLocalTime();
                 preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
                 var kilos = preclinica.Peso / 2.20;
@@ -31,28 +32,40 @@ namespace apisam.repos
                 var alturaCuadrado = Math.Pow(alturaMetros, 2);
                 preclinica.IMC = kilos / alturaCuadrado;
                 _db.Save<Preclinica>(preclinica);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
-        public bool UpdatePreclinica(Preclinica preclinica)
+        public RespuestaMetodos UpdatePreclinica(Preclinica preclinica)
 
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
-
+                using var _db = dbFactory.Open();
                 preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
                 var kilos = preclinica.Peso / 2.20;
                 var alturaMetros = preclinica.Peso / 100;
                 var alturaCuadrado = Math.Pow(alturaMetros, 2);
                 preclinica.IMC = kilos / alturaCuadrado;
                 _db.Save<Preclinica>(preclinica);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
 
         public PreclinicaViewModel GetInfoPreclinica(int id)

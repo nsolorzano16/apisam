@@ -32,26 +32,45 @@ namespace apisam.repos
 
 
 
-        public bool Add(Religion religion)
+        public RespuestaMetodos Add(Religion religion)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<Religion>(religion);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                using var _db = dbFactory.Open();
+                _db.Save<Religion>(religion);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+
+            }
 
 
-            return _flag;
+
+            return _resp;
 
         }
-        public bool Update(Religion religion)
+        public RespuestaMetodos Update(Religion religion)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<Religion>(religion);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                using var _db = dbFactory.Open();
+                _db.Save<Religion>(religion);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
 
 
-            return _flag;
+
+            return _resp;
 
         }
         public Religion GetReligionById(int id)

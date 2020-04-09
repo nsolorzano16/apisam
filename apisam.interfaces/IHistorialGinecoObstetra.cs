@@ -5,8 +5,8 @@ namespace apisam.interfaces
 {
     public interface IHistorialGinecoObstetra
     {
-        bool AddAHistorial(HistorialGinecoObstetra historial);
-        bool UpdateAHistorial(HistorialGinecoObstetra historial);
+        RespuestaMetodos AddAHistorial(HistorialGinecoObstetra historial);
+        RespuestaMetodos UpdateAHistorial(HistorialGinecoObstetra historial);
         HistorialGinecoObstetra GetHistorial(int pacienteId, int doctorId);
 
     }

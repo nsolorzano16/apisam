@@ -32,26 +32,39 @@ namespace apisam.repos
 
 
 
-        public bool Add(Escolaridad escolaridad)
+        public RespuestaMetodos Add(Escolaridad escolaridad)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<Escolaridad>(escolaridad);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                using var _db = dbFactory.Open();
 
-
-            return _flag;
+                _db.Save<Escolaridad>(escolaridad);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+            return _resp;
 
         }
-        public bool Update(Escolaridad escolaridad)
+        public RespuestaMetodos Update(Escolaridad escolaridad)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<Escolaridad>(escolaridad);
-            _flag = true;
-
-
-            return _flag;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                using var _db = dbFactory.Open();
+                _db.Save<Escolaridad>(escolaridad);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+            return _resp;
 
         }
         public Escolaridad GetEscolaridadById(int id)

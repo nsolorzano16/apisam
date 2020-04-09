@@ -5,8 +5,8 @@ namespace apisam.interfaces
 {
     public interface IHabitos
     {
-        bool AddAHabito(Habitos habito);
-        bool UpdateAHabito(Habitos habito);
+        RespuestaMetodos AddAHabito(Habitos habito);
+        RespuestaMetodos UpdateAHabito(Habitos habito);
         Habitos GetHabito(int pacienteId, int doctorId);
 
     }

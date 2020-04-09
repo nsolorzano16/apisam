@@ -17,32 +17,45 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddAHistorial(HistorialGinecoObstetra historial)
+        public RespuestaMetodos AddAHistorial(HistorialGinecoObstetra historial)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 historial.CreadoFecha = DateTime.Now.ToLocalTime();
                 historial.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<HistorialGinecoObstetra>(historial);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
 
         }
-        public bool UpdateAHistorial(HistorialGinecoObstetra historial)
+        public RespuestaMetodos UpdateAHistorial(HistorialGinecoObstetra historial)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
-
+                using var _db = dbFactory.Open();
                 historial.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<HistorialGinecoObstetra>(historial);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
         public HistorialGinecoObstetra GetHistorial(int pacienteId, int doctorId)
         {

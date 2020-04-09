@@ -19,49 +19,67 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddDiagnostico(Diagnosticos diagnostico)
+        public RespuestaMetodos AddDiagnostico(Diagnosticos diagnostico)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 diagnostico.CreadoFecha = DateTime.Now.ToLocalTime();
                 diagnostico.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Diagnosticos>(diagnostico);
-                _flag = true;
+                _resp.Ok = true;
             }
-
-            return _flag;
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+            return _resp;
 
         }
-        public bool AddDiagnosticoLista(List<Diagnosticos> diagnosticos)
+        public RespuestaMetodos AddDiagnosticoLista(List<Diagnosticos> diagnosticos)
         {
-            var _flag = false;
-            diagnosticos.ForEach(x =>
+            var _resp = new RespuestaMetodos();
+            try
             {
-                x.CreadoFecha = DateTime.Now.ToLocalTime();
-                x.ModificadoFecha = DateTime.Now.ToLocalTime();
-            });
-            using (var _db = dbFactory.Open())
-            {
+                diagnosticos.ForEach(x =>
+                {
+                    x.CreadoFecha = DateTime.Now.ToLocalTime();
+                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                });
+                using var _db = dbFactory.Open();
                 _db.SaveAll<Diagnosticos>(diagnosticos);
-                _flag = true;
+                _resp.Ok = true;
+
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+            return _resp;
 
         }
 
-        public bool UpdateDiagnostico(Diagnosticos diagnostico)
+        public RespuestaMetodos UpdateDiagnostico(Diagnosticos diagnostico)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 diagnostico.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Diagnosticos>(diagnostico);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+            return _resp;
         }
         public List<Diagnosticos> GetDiagnosticos(int pacienteId, int doctorId)
         {

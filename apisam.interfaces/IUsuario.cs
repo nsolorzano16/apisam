@@ -11,8 +11,8 @@ namespace apisam.interfaces
 
         List<Usuario> Usuarios { get; }
         List<Rol> Roles { get; }
-        bool AddUsuario(Usuario usuario);
-        bool UpdateUsuario(Usuario usuario);
+        RespuestaMetodos AddUsuario(Usuario usuario);
+        RespuestaMetodos UpdateUsuario(Usuario usuario);
         Usuario GetUsuarioByUserName(LoginViewModel usuario);
         Usuario GerUserById(int id);
         PageResponse<Usuario>

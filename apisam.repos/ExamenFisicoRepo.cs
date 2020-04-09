@@ -18,31 +18,44 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddExamenFisico(ExamenFisico examen)
+        public RespuestaMetodos AddExamenFisico(ExamenFisico examen)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 examen.CreadoFecha = DateTime.Now.ToLocalTime();
                 examen.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<ExamenFisico>(examen);
-                _flag = true;
+                _resp.Ok = true;
+
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+            return _resp;
 
         }
-        public bool UpdateExamenFisico(ExamenFisico examen)
+        public RespuestaMetodos UpdateExamenFisico(ExamenFisico examen)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 examen.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<ExamenFisico>(examen);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+            return _resp;
 
         }
         public List<ExamenFisico> GetExamenes(int pacienteId, int doctorId)

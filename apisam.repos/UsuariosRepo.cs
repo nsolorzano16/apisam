@@ -42,45 +42,64 @@ namespace apisam.repositories
             }
         }
 
-        public bool AddUsuario(Usuario usuario)
+        public RespuestaMetodos AddUsuario(Usuario usuario)
         {
-            var _flag = false;
+            var _resp = new RespuestaMetodos();
             var _db = dbFactory.Open();
-
-            var usuarioBuscado = _db.Select<Usuario>().FirstOrDefault(x =>
-            x.UserName == usuario.UserName ||
-             x.Identificacion == usuario.Identificacion || x.Email == usuario.Email);
-            if (usuarioBuscado == null)
+            try
             {
-                CreatePasswordHash(usuario.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
+                var usuarioBuscado = _db.Select<Usuario>().FirstOrDefault(x =>
+           x.UserName == usuario.UserName ||
+            x.Identificacion == usuario.Identificacion || x.Email == usuario.Email);
+                if (usuarioBuscado == null)
+                {
+                    CreatePasswordHash(usuario.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
 
 
-                usuario.PasswordHash = _passwordHash;
-                usuario.PasswordSalt = _passwordSalt;
-                usuario.CreadoFecha = DateTime.Now.ToLocalTime();
-                usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
-                usuario.Password = "";
-                usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-                usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
+                    usuario.PasswordHash = _passwordHash;
+                    usuario.PasswordSalt = _passwordSalt;
+                    usuario.CreadoFecha = DateTime.Now.ToLocalTime();
+                    usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    usuario.Password = "";
+                    usuario.Edad = CalculateAge(usuario.FechaNacimiento);
+                    usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
 
-                _db.Save<Usuario>(usuario);
-                _flag = true;
+                    _db.Save<Usuario>(usuario);
+                    _resp.Ok = true;
 
 
+                }
             }
-            return _flag;
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+            return _resp;
 
 
         }
 
-        public bool UpdateUsuario(Usuario usuario)
+        public RespuestaMetodos UpdateUsuario(Usuario usuario)
         {
-            var _db = dbFactory.Open();
-            usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
-            usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-            _db.Save(usuario);
-            bool _flag = true;
-            return _flag;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                var _db = dbFactory.Open();
+                usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
+                usuario.Edad = CalculateAge(usuario.FechaNacimiento);
+                _db.Save(usuario);
+                _resp.Ok = true;
+
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+            return _resp;
 
 
         }

@@ -32,26 +32,44 @@ namespace apisam.repos
 
 
 
-        public bool Add(Profesion profesion)
+        public RespuestaMetodos Add(Profesion profesion)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<Profesion>(profesion);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+
+                using var _db = dbFactory.Open();
+                _db.Save<Profesion>(profesion);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
 
 
-            return _flag;
+            return _resp;
 
         }
-        public bool Update(Profesion profesion)
+        public RespuestaMetodos Update(Profesion profesion)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<Profesion>(profesion);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                using var _db = dbFactory.Open();
+                _db.Save<Profesion>(profesion);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
 
 
-            return _flag;
+
+            return _resp;
 
         }
         public Profesion GetProfesionById(int id)

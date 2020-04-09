@@ -17,33 +17,46 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddAHabito(Habitos habito)
+        public RespuestaMetodos AddAHabito(Habitos habito)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 habito.CreadoFecha = DateTime.Now.ToLocalTime();
                 habito.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Habitos>(habito);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
 
         }
-        public bool UpdateAHabito(Habitos habito)
+        public RespuestaMetodos UpdateAHabito(Habitos habito)
         {
 
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
-
+                using var _db = dbFactory.Open();
                 habito.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Habitos>(habito);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
         public Habitos GetHabito(int pacienteId, int doctorId)
         {

@@ -40,24 +40,20 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public IActionResult Add([FromBody] Escolaridad escolaridad)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (EscolaridadRepo.Add(escolaridad)) return Ok(escolaridad);
-            return BadRequest("error salvando escolaridad");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = EscolaridadRepo.Add(escolaridad);
+            if (_resp.Ok) return Ok(escolaridad);
+            return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
         public IActionResult Update([FromBody] Escolaridad escolaridad)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (EscolaridadRepo.Update(escolaridad)) return Ok(escolaridad);
-            return BadRequest("error actualizando escolaridad");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = EscolaridadRepo.Update(escolaridad);
+            if (_resp.Ok) return Ok(escolaridad);
+            return BadRequest(_resp);
         }
     }
 }

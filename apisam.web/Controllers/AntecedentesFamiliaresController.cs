@@ -32,8 +32,10 @@ namespace apisam.web.Controllers
         public IActionResult Add([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (AntecedentesRepo.AddAntecedentes(antecedentes)) return Ok(antecedentes);
-            return BadRequest("error salvando antecedentes");
+            RespuestaMetodos _resp = AntecedentesRepo.AddAntecedentes(antecedentes);
+            if (_resp.Ok) return Ok(antecedentes);
+            return BadRequest(_resp);
+
         }
 
         [Authorize(Roles = "2,3")]
@@ -41,8 +43,9 @@ namespace apisam.web.Controllers
         public IActionResult Update([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (AntecedentesRepo.UpdateAntecedentes(antecedentes)) return Ok(antecedentes);
-            return BadRequest("error salvando antecedentes");
+            RespuestaMetodos _resp = AntecedentesRepo.UpdateAntecedentes(antecedentes);
+            if (_resp.Ok) return Ok(antecedentes);
+            return BadRequest(_resp);
         }
 
 

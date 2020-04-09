@@ -37,6 +37,7 @@ namespace apisam.web.Controllers
         [HttpGet("page/{pageNo}/limit/{limit}/doctorId/{doctorId}", Name = "GetPreclinicasSinAtender")]
         public IActionResult GetPreclinicasSinAtender(int pageNo, int limit, int doctorId)
         {
+            string a;
             try
             {
                 var _pageResponse = PreclinicaRepo.GetPreclinicasSinAtender(pageNo, limit, doctorId);
@@ -45,10 +46,10 @@ namespace apisam.web.Controllers
             catch (Exception e)
             {
 
-                var a = e.Message;
+                a = e.Message;
             }
 
-            return BadRequest("no se han podido obtener registros");
+            return BadRequest(a);
         }
 
 
@@ -58,8 +59,9 @@ namespace apisam.web.Controllers
         public IActionResult Add([FromBody] Preclinica preclinica)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (PreclinicaRepo.AddPreclinica(preclinica)) return Ok(preclinica);
-            return BadRequest();
+            RespuestaMetodos _resp = PreclinicaRepo.AddPreclinica(preclinica);
+            if (_resp.Ok) return Ok(preclinica);
+            return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2,3")]
@@ -68,12 +70,13 @@ namespace apisam.web.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var _pre = _mapper.Map<PreclinicaViewModel, Preclinica>(preclinica);
-            if (PreclinicaRepo.UpdatePreclinica(_pre))
+            RespuestaMetodos _resp = PreclinicaRepo.UpdatePreclinica(_pre);
+            if (_resp.Ok)
             {
                 var preclinicaRetorno = PreclinicaRepo.GetInfoPreclinica(_pre.PreclinicaId);
                 return Ok(preclinicaRetorno);
             }
-            return BadRequest();
+            return BadRequest(_resp);
         }
 
 

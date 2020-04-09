@@ -40,24 +40,20 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public IActionResult Add([FromBody] GrupoEtnico grupoEtnico)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (GrupoEtnicoRepo.Add(grupoEtnico)) return Ok(grupoEtnico);
-            return BadRequest("error salvando grupoEtnico");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = GrupoEtnicoRepo.Add(grupoEtnico);
+            if (_resp.Ok) return Ok(grupoEtnico);
+            return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
         public IActionResult Update([FromBody] GrupoEtnico grupoEtnico)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (GrupoEtnicoRepo.Update(grupoEtnico)) return Ok(grupoEtnico);
-            return BadRequest("error actualizando grupoEtnico");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = GrupoEtnicoRepo.Update(grupoEtnico);
+            if (_resp.Ok) return Ok(grupoEtnico);
+            return BadRequest(_resp);
         }
     }
 }

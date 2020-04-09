@@ -7,8 +7,8 @@ namespace apisam.interfaces
     public interface IPaciente
     {
 
-        bool AddPaciente(Paciente paciente);
-        bool UpdatePaciente(Paciente paciente);
+        RespuestaMetodos AddPaciente(Paciente paciente);
+        RespuestaMetodos UpdatePaciente(Paciente paciente);
         Paciente GetPacienteById(int id);
         Paciente GetPacienteByIdentificacion(string identificacion);
         PageResponse<PacientesViewModel>

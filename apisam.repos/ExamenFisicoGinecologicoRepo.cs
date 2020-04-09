@@ -19,31 +19,44 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
+        public RespuestaMetodos AddExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 examen.CreadoFecha = DateTime.Now.ToLocalTime();
                 examen.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<ExamenFisicoGinecologico>(examen);
-                _flag = true;
+                _resp.Ok = true;
             }
-
-            return _flag;
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+            return _resp;
         }
-        public bool UpdateExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
+        public RespuestaMetodos UpdateExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
 
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+
+                using var _db = dbFactory.Open();
                 examen.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<ExamenFisicoGinecologico>(examen);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+
             }
 
-            return _flag;
+            return _resp;
         }
         public List<ExamenFisicoGinecologico> GetExamenesGinecologicos(int pacienteId, int doctorId)
 

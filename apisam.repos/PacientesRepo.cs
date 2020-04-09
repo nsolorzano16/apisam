@@ -15,7 +15,7 @@ namespace apisam.repos
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
 
-        public PacientesRepo(AppDbContext appDbContext)
+        public PacientesRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
@@ -23,43 +23,54 @@ namespace apisam.repos
         }
 
 
-        public bool AddPaciente(Paciente paciente)
+        public RespuestaMetodos AddPaciente(Paciente paciente)
         {
-            var _flag = false;
-
-            using var _db = dbFactory.Open();
-            var pacienteBuscado = _db.Select<Paciente>
-                ().FirstOrDefault(x => x.Identificacion == paciente.Identificacion);
-
-
-            if (pacienteBuscado == null)
+            var _resp = new RespuestaMetodos();
+            try
             {
-                paciente.CreadoFecha = DateTime.Now.ToLocalTime();
-                paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
-                paciente.Edad = CalculateAge(paciente.FechaNacimiento);
-                paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
-                _db.Save<Paciente>(paciente);
-                _flag = true;
+                using var _db = dbFactory.Open();
+                var pacienteBuscado = _db.Select<Paciente>
+                    ().FirstOrDefault(x => x.Identificacion == paciente.Identificacion);
+
+                if (pacienteBuscado == null)
+                {
+                    paciente.CreadoFecha = DateTime.Now.ToLocalTime();
+                    paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    paciente.Edad = CalculateAge(paciente.FechaNacimiento);
+                    paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
+                    _db.Save<Paciente>(paciente);
+                    _resp.Ok = true;
+                }
             }
-            return _flag;
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+
+            return _resp;
         }
 
 
-
-
-
-
-        public bool UpdatePaciente(Paciente paciente)
+        public RespuestaMetodos UpdatePaciente(Paciente paciente)
         {
-            bool _flag = false;
-            paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
-            paciente.Edad = CalculateAge(paciente.FechaNacimiento);
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
+                paciente.Edad = CalculateAge(paciente.FechaNacimiento);
+                using var _db = dbFactory.Open();
                 _db.Save<Paciente>(paciente);
-                _flag = true;
+                _resp.Ok = true;
             }
-            return _flag;
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+            return _resp;
         }
 
         public PacientesViewModel GetInfoPaciente(int pacienteId)

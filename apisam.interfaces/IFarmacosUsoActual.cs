@@ -6,9 +6,10 @@ namespace apisam.interfaces
 {
     public interface IFarmacosUsoActual
     {
-        bool AddFarmaco(FarmacosUsoActual farmaco);
-        bool AddFarmacoLista(List<FarmacosUsoActual> farmacos);
-        bool UpdateFarmaco(FarmacosUsoActual farmaco);
+        RespuestaMetodos AddFarmaco(FarmacosUsoActual farmaco);
+        RespuestaMetodos UpdateFarmaco(FarmacosUsoActual farmaco);
+        RespuestaMetodos AddFarmacoLista(List<FarmacosUsoActual> farmacos);
+        RespuestaMetodos UpdateFarmacoLista(List<FarmacosUsoActual> farmacos);
         List<FarmacosUsoActual> GetFarmacos(int pacienteId, int doctorId);
     }
 }

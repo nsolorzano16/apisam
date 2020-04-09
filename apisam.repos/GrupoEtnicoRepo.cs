@@ -32,26 +32,44 @@ namespace apisam.repos
 
 
 
-        public bool Add(GrupoEtnico grupoEtnico)
+        public RespuestaMetodos Add(GrupoEtnico grupoEtnico)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<GrupoEtnico>(grupoEtnico);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+
+                using var _db = dbFactory.Open();
+                _db.Save<GrupoEtnico>(grupoEtnico);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
 
 
-            return _flag;
+            return _resp;
 
         }
-        public bool Update(GrupoEtnico grupoEtnico)
+        public RespuestaMetodos Update(GrupoEtnico grupoEtnico)
         {
-            bool _flag = false;
-            using var _db = dbFactory.Open();
-            _db.Save<GrupoEtnico>(grupoEtnico);
-            _flag = true;
+            var _resp = new RespuestaMetodos();
+            try
+            {
+
+                using var _db = dbFactory.Open();
+                _db.Save<GrupoEtnico>(grupoEtnico);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
 
 
-            return _flag;
+            return _resp;
 
         }
 

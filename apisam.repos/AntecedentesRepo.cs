@@ -19,30 +19,43 @@ namespace apisam.repos
 
 
 
-        public bool AddAntecedentes(AntecedentesFamiliaresPersonales antecedente)
+        public RespuestaMetodos AddAntecedentes(AntecedentesFamiliaresPersonales antecedente)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 antecedente.CreadoFecha = DateTime.Now.ToLocalTime();
                 antecedente.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<AntecedentesFamiliaresPersonales>(antecedente);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+            return _resp;
         }
-        public bool UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedente)
+
+        public RespuestaMetodos UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedente)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 antecedente.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<AntecedentesFamiliaresPersonales>(antecedente);
-                _flag = true;
+                _resp.Ok = true;
             }
-
-            return _flag;
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+            return _resp;
         }
         public AntecedentesFamiliaresPersonales GetAntecedente(int pacienteId, int doctorId)
         {

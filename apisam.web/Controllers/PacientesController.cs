@@ -37,8 +37,9 @@ namespace apisam.web.Controllers
         public IActionResult Add([FromBody] Paciente paciente)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (PacienteRepo.AddPaciente(paciente)) return Ok(paciente);
-            return BadRequest("error salvando paciente o el paciente ya existe");
+            RespuestaMetodos _resp = PacienteRepo.AddPaciente(paciente);
+            if (_resp.Ok) return Ok(paciente);
+            return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2,3")]
@@ -46,14 +47,15 @@ namespace apisam.web.Controllers
         public IActionResult Update([FromBody] PacientesViewModel paciente)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
             var _pac = _mapper.Map<PacientesViewModel, Paciente>(paciente);
-            if (PacienteRepo.UpdatePaciente(_pac))
+            RespuestaMetodos _resp = PacienteRepo.UpdatePaciente(_pac);
+            if (_resp.Ok)
             {
-                var pacienteRetorno = PacienteRepo.GetInfoPaciente(paciente.PacienteId);
-                return Ok(pacienteRetorno);
+                var _pacienteRetorno = PacienteRepo.GetInfoPaciente(paciente.PacienteId);
+                return Ok(_pacienteRetorno);
             }
-            return BadRequest("error editando paciente");
+
+            return BadRequest(_resp);
         }
 
 

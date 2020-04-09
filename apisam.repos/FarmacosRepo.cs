@@ -18,49 +18,91 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddFarmaco(FarmacosUsoActual farmaco)
+        public RespuestaMetodos AddFarmaco(FarmacosUsoActual farmaco)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 farmaco.CreadoFecha = DateTime.Now.ToLocalTime();
                 farmaco.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<FarmacosUsoActual>(farmaco);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
-        public bool AddFarmacoLista(List<FarmacosUsoActual> farmacos)
+        public RespuestaMetodos UpdateFarmaco(FarmacosUsoActual farmaco)
         {
-            var _flag = false;
-
-            farmacos.ForEach(x =>
+            var _resp = new RespuestaMetodos();
+            try
             {
-                x.CreadoFecha = DateTime.Now.ToLocalTime();
-                x.ModificadoFecha = DateTime.Now.ToLocalTime();
-            });
-            using (var _db = dbFactory.Open())
-            {
-
-                _db.SaveAll<FarmacosUsoActual>(farmacos);
-                _flag = true;
-            }
-
-            return _flag;
-        }
-        public bool UpdateFarmaco(FarmacosUsoActual farmaco)
-        {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
-            {
-
+                using var _db = dbFactory.Open();
                 farmaco.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<FarmacosUsoActual>(farmaco);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
+        }
+        public RespuestaMetodos AddFarmacoLista(List<FarmacosUsoActual> farmacos)
+        {
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                farmacos.ForEach(x =>
+                {
+                    x.CreadoFecha = DateTime.Now.ToLocalTime();
+                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                });
+                using var _db = dbFactory.Open();
+                _db.SaveAll<FarmacosUsoActual>(farmacos);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+
+
+            return _resp;
+        }
+        public RespuestaMetodos UpdateFarmacoLista(List<FarmacosUsoActual> farmacos)
+        {
+            var _resp = new RespuestaMetodos();
+            try
+            {
+
+                farmacos.ForEach(f =>
+                {
+                    f.ModificadoFecha = DateTime.Now.ToLocalTime();
+                });
+                using var _db = dbFactory.Open();
+                _db.SaveAll<FarmacosUsoActual>(farmacos);
+                _resp.Ok = true;
+
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+            return _resp;
         }
         public List<FarmacosUsoActual> GetFarmacos(int pacienteId, int doctorId)
         {

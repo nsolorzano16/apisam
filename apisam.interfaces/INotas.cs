@@ -6,9 +6,10 @@ namespace apisam.interfaces
 {
     public interface INotas
     {
-        bool AddNota(Notas nota);
-        bool UpdateNota(Notas nota);
-        bool AddNotaLista(List<Notas> notas);
+        RespuestaMetodos AddNota(Notas nota);
+        RespuestaMetodos UpdateNota(Notas nota);
+        RespuestaMetodos AddNotaLista(List<Notas> notas);
+        RespuestaMetodos UpdateNotaLista(List<Notas> notas);
         List<Notas> GetNotas(int pacienteId, int doctorId);
     }
 }

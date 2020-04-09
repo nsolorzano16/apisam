@@ -28,8 +28,10 @@ namespace apisam.web.Controllers
         public IActionResult Add([FromBody] Habitos habitos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (HabitosRepo.AddAHabito(habitos)) return Ok(habitos);
-            return BadRequest("error salvando habitos");
+            RespuestaMetodos _resp = HabitosRepo.AddAHabito(habitos);
+
+            if (_resp.Ok) return Ok(habitos);
+            return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2,3")]
@@ -37,8 +39,9 @@ namespace apisam.web.Controllers
         public IActionResult Update([FromBody] Habitos habitos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (HabitosRepo.UpdateAHabito(habitos)) return Ok(habitos);
-            return BadRequest("error salvando habitos");
+            RespuestaMetodos _resp = HabitosRepo.UpdateAHabito(habitos);
+            if (_resp.Ok) return Ok(habitos);
+            return BadRequest(_resp);
         }
     }
 }

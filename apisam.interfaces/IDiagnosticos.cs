@@ -7,9 +7,9 @@ namespace apisam.interfaces
     public interface IDiagnosticos
     {
 
-        bool AddDiagnostico(Diagnosticos diagnostico);
-        bool UpdateDiagnostico(Diagnosticos diagnostico);
-        bool AddDiagnosticoLista(List<Diagnosticos> diagnosticos);
+        RespuestaMetodos AddDiagnostico(Diagnosticos diagnostico);
+        RespuestaMetodos UpdateDiagnostico(Diagnosticos diagnostico);
+        RespuestaMetodos AddDiagnosticoLista(List<Diagnosticos> diagnosticos);
         List<Diagnosticos> GetDiagnosticos(int pacienteId, int doctorId);
 
     }

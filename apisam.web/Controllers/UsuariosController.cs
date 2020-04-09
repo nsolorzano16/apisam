@@ -58,7 +58,7 @@ namespace apisam.web.Controllers
         async public Task<IActionResult> SubirFoto([FromRoute] int id, [FromForm]  IFormFile logoImage)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var flag = false;
+            var _resp = new RespuestaMetodos();
 
             // obtengo usuario a modificar
             var _user = UsuariosRepo.GerUserById(id);
@@ -78,46 +78,56 @@ namespace apisam.web.Controllers
             {
                 PublicAccess = BlobContainerPublicAccessType.Blob
             });
-            if (logoImage != null)
+            try
             {
-                // Get a reference to a blob named "myblob".
-                var fileExtension = System.IO.Path.GetExtension(logoImage.FileName);
-                if (fileExtension.ToLower().Equals(".png")
-                    || fileExtension.ToLower().Equals(".jpg")
-                    || fileExtension.ToLower().Equals(".jpeg"))
+                if (logoImage != null)
                 {
-
-                    CloudBlockBlob blockBlob =
-                        container.GetBlockBlobReference(_newFileNameLogo + fileExtension);
-                    using (var _fileStream = logoImage.OpenReadStream())
+                    // Get a reference to a blob named "myblob".
+                    var fileExtension = System.IO.Path.GetExtension(logoImage.FileName);
+                    if (fileExtension.ToLower().Equals(".png")
+                        || fileExtension.ToLower().Equals(".jpg")
+                        || fileExtension.ToLower().Equals(".jpeg"))
                     {
-                        await blockBlob.UploadFromStreamAsync(_fileStream);
-                        flag = true;
+
+                        CloudBlockBlob blockBlob =
+                            container.GetBlockBlobReference(_newFileNameLogo + fileExtension);
+                        using (var _fileStream = logoImage.OpenReadStream())
+                        {
+                            await blockBlob.UploadFromStreamAsync(_fileStream);
+                            _resp.Ok = true;
+                        }
+                        var _urlStorage = _config.GetValue<string>("UrlsWebSites:urlStorage");
+                        _user.FotoUrl = _urlStorage + blockBlob.Name;
+
                     }
-                    var _urlStorage = _config.GetValue<string>("UrlsWebSites:urlStorage");
-                    _user.FotoUrl = _urlStorage + blockBlob.Name;
+                    else
+                    {
+                        return BadRequest("Formato no soportado");
+                    }
+
+
 
                 }
-                else
+                if (_resp.Ok)
                 {
-                    return BadRequest("Formato no soportado");
+                    RespuestaMetodos _resp2 = UsuariosRepo.UpdateUsuario(_user);
+
+                    if (_resp2.Ok) return Ok(_user);
+
+
                 }
-
-
-
             }
-            if (flag)
+            catch (Exception ex)
             {
-                if (UsuariosRepo.UpdateUsuario(_user))
-                {
-
-
-                    return Ok(_user);
-                }
-
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return BadRequest("error al subir archivo");
+
+
+
+
+            return BadRequest(_resp);
 
 
         }
@@ -129,8 +139,10 @@ namespace apisam.web.Controllers
         public IActionResult Add([FromBody] Usuario usuario)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (UsuariosRepo.AddUsuario(usuario)) return Ok(usuario);
-            return BadRequest("error salvando usuario o el usuario ya existe");
+            RespuestaMetodos _resp = UsuariosRepo.AddUsuario(usuario);
+
+            if (_resp.Ok) return Ok(usuario);
+            return BadRequest(_resp);
         }
 
         [Authorize(Roles = "1,2")]
@@ -142,9 +154,10 @@ namespace apisam.web.Controllers
             var user = UsuariosRepo.GerUserById(usuario.UsuarioId);
             if (user == null) return BadRequest("Usuario no existe");
             user = _mapper.Map<UsuarioEditarViewModel, Usuario>(usuario, user);
+            RespuestaMetodos _resp = UsuariosRepo.UpdateUsuario(user);
 
-            if (UsuariosRepo.UpdateUsuario(user)) return Ok(user);
-            return BadRequest("error editando usuario");
+            if (_resp.Ok) return Ok(user);
+            return BadRequest(_resp);
         }
 
         [HttpPost("Login", Name = "Login")]

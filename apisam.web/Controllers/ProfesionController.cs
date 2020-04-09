@@ -40,24 +40,20 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public IActionResult Add([FromBody] Profesion profesion)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (ProfesionRepo.Add(profesion)) return Ok(profesion);
-            return BadRequest("error salvando profesion");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = ProfesionRepo.Add(profesion);
+            if (_resp.Ok) return Ok(profesion);
+            return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
         public IActionResult Update([FromBody] Profesion profesion)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (ProfesionRepo.Update(profesion)) return Ok(profesion);
-            return BadRequest("error actualizando profesion");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = ProfesionRepo.Update(profesion);
+            if (_resp.Ok) return Ok(profesion);
+            return BadRequest(_resp);
         }
     }
 }

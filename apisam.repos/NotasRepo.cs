@@ -18,47 +18,95 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public bool AddNota(Notas nota)
+        public RespuestaMetodos AddNota(Notas nota)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
+                using var _db = dbFactory.Open();
                 nota.CreadoFecha = DateTime.Now.ToLocalTime();
                 nota.ModificadoFecha = DateTime.Now.ToLocalTime();
                 _db.Save<Notas>(nota);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
-        public bool UpdateNota(Notas nota)
+
+        public RespuestaMetodos UpdateNota(Notas nota)
         {
-            var _flag = false;
-            using (var _db = dbFactory.Open())
+            var _resp = new RespuestaMetodos();
+            try
             {
-                nota.ModificadoFecha = DateTime.Now.ToLocalTime();
-                _db.Save<Notas>(nota);
-                _flag = true;
+                using (var _db = dbFactory.Open())
+                {
+                    nota.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    _db.Save<Notas>(nota);
+                    _resp.Ok = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
-        public bool AddNotaLista(List<Notas> notas)
+        public RespuestaMetodos AddNotaLista(List<Notas> notas)
         {
-            var _flag = false;
-            notas.ForEach(x =>
+            var _resp = new RespuestaMetodos();
+            try
             {
-                x.CreadoFecha = DateTime.Now.ToLocalTime();
-                x.ModificadoFecha = DateTime.Now.ToLocalTime();
-            });
-            using (var _db = dbFactory.Open())
-            {
+                notas.ForEach(x =>
+                {
+                    x.CreadoFecha = DateTime.Now.ToLocalTime();
+                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                });
+                using var _db = dbFactory.Open();
                 _db.SaveAll<Notas>(notas);
-                _flag = true;
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
             }
 
-            return _flag;
+
+            return _resp;
         }
+
+        public RespuestaMetodos UpdateNotaLista(List<Notas> notas)
+        {
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                notas.ForEach(x =>
+                {
+                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                });
+                using var _db = dbFactory.Open();
+                _db.SaveAll<Notas>(notas);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+
+            return _resp;
+        }
+
         public List<Notas> GetNotas(int pacienteId, int doctorId)
         {
             using var _db = dbFactory.Open();

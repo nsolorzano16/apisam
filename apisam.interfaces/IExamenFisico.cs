@@ -6,8 +6,8 @@ namespace apisam.interfaces
 {
     public interface IExamenFisico
     {
-        bool AddExamenFisico(ExamenFisico examen);
-        bool UpdateExamenFisico(ExamenFisico examen);
+        RespuestaMetodos AddExamenFisico(ExamenFisico examen);
+        RespuestaMetodos UpdateExamenFisico(ExamenFisico examen);
         List<ExamenFisico> GetExamenes(int pacienteId, int doctorId);
     }
 }

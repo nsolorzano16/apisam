@@ -40,24 +40,20 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public IActionResult Add([FromBody] Religion religion)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (ReligionRepo.Add(religion)) return Ok(religion);
-            return BadRequest("error salvando Religion");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = ReligionRepo.Add(religion);
+            if (_resp.Ok) return Ok(religion);
+            return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
         public IActionResult Update([FromBody] Religion religion)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (ReligionRepo.Update(religion)) return Ok(religion);
-            return BadRequest("error actualizando Religion");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = ReligionRepo.Update(religion);
+            if (_resp.Ok) return Ok(religion);
+            return BadRequest(_resp);
         }
     }
 }

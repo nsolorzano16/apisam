@@ -6,8 +6,8 @@ namespace apisam.interfaces
 {
     public interface IAntecedentesFamiliaresPersonales
     {
-        bool AddAntecedentes(AntecedentesFamiliaresPersonales antecedentes);
-        bool UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedentes);
+        RespuestaMetodos AddAntecedentes(AntecedentesFamiliaresPersonales antecedentes);
+        RespuestaMetodos UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedentes);
         AntecedentesFamiliaresPersonales GetAntecedente(int pacienteId, int doctorId);
     }
 }

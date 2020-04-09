@@ -7,8 +7,8 @@ namespace apisam.interfaces
     public interface IReligion
     {
         List<Religion> Religiones { get; }
-        bool Add(Religion religion);
-        bool Update(Religion religion);
+        RespuestaMetodos Add(Religion religion);
+        RespuestaMetodos Update(Religion religion);
         Religion GetReligionById(int id);
     }
 }

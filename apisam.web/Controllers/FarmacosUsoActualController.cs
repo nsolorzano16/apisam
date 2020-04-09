@@ -15,37 +15,35 @@ namespace apisam.web.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class HistorialGinecoObstetraController : ControllerBase
+    public class FarmacosUsoActualController : ControllerBase
     {
-        public IHistorialGinecoObstetra HistorialRepo;
+        public IFarmacosUsoActual farmacosRepo;
 
-        public HistorialGinecoObstetraController(
-            IHistorialGinecoObstetra historalGinecoRepo)
+        public FarmacosUsoActualController(
+            IFarmacosUsoActual farmacosRepository)
         {
-            HistorialRepo = historalGinecoRepo;
+            farmacosRepo = farmacosRepository;
         }
 
 
         [Authorize(Roles = "2,3")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] HistorialGinecoObstetra historial)
+        public IActionResult Add([FromBody] List<FarmacosUsoActual> farmacos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HistorialRepo.AddAHistorial(historial);
-            if (_resp.Ok) return Ok(historial);
+            RespuestaMetodos _resp = farmacosRepo.AddFarmacoLista(farmacos);
+            if (_resp.Ok) return Ok(farmacos);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2,3")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] HistorialGinecoObstetra historial)
+        public IActionResult Update([FromBody] List<FarmacosUsoActual> farmacos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HistorialRepo.UpdateAHistorial(historial);
-            if (_resp.Ok) return Ok(historial);
+            RespuestaMetodos _resp = farmacosRepo.UpdateFarmacoLista(farmacos);
+            if (_resp.Ok) return Ok(farmacos);
             return BadRequest(_resp);
         }
-
-
     }
 }
