@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using apisam.entities;
 using apisam.interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apisam.web.Controllers
@@ -15,32 +11,35 @@ namespace apisam.web.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class HabitosController : ControllerBase
+    public class ExamenFisicoController : ControllerBase
     {
-        public IHabitos HabitosRepo;
-        public HabitosController(IHabitos habitosrepository)
+        public IExamenFisico ExamenFisicoRepo;
+
+        public ExamenFisicoController(
+            IExamenFisico examenFisicoRepository)
         {
-            HabitosRepo = habitosrepository;
+            ExamenFisicoRepo = examenFisicoRepository;
         }
+
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] Habitos habitos)
+        public IActionResult Add([FromBody] ExamenFisico examenFisico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HabitosRepo.AddAHabito(habitos);
-
-            if (_resp.Ok) return Ok(habitos);
+            RespuestaMetodos _resp = ExamenFisicoRepo.AddExamenFisico(examenFisico);
+            if (_resp.Ok) return Ok(examenFisico);
             return BadRequest(_resp);
+
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] Habitos habitos)
+        public IActionResult Update([FromBody] ExamenFisico examenFisico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HabitosRepo.UpdateAHabito(habitos);
-            if (_resp.Ok) return Ok(habitos);
+            RespuestaMetodos _resp = ExamenFisicoRepo.UpdateExamenFisico(examenFisico);
+            if (_resp.Ok) return Ok(examenFisico);
             return BadRequest(_resp);
         }
     }

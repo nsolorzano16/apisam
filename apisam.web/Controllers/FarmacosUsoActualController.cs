@@ -26,7 +26,7 @@ namespace apisam.web.Controllers
         }
 
 
-        [Authorize(Roles = "2,3")]
+        [Authorize(Roles = "2")]
         [HttpPost("")]
         public IActionResult Add([FromBody] List<FarmacosUsoActual> farmacos)
         {
@@ -36,13 +36,23 @@ namespace apisam.web.Controllers
             return BadRequest(_resp);
         }
 
-        [Authorize(Roles = "2,3")]
+        [Authorize(Roles = "2")]
         [HttpPut("")]
         public IActionResult Update([FromBody] List<FarmacosUsoActual> farmacos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             RespuestaMetodos _resp = farmacosRepo.UpdateFarmacoLista(farmacos);
             if (_resp.Ok) return Ok(farmacos);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPut("desactivar", Name = "Desactivar")]
+        public IActionResult Desactivar([FromBody] FarmacosUsoActual farmaco)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = farmacosRepo.UpdateFarmaco(farmaco);
+            if (_resp.Ok) return Ok(farmaco);
             return BadRequest(_resp);
         }
     }

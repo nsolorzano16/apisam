@@ -27,7 +27,7 @@ namespace apisam.web.Controllers
         }
 
 
-        [Authorize(Roles = "2,3")]
+        [Authorize(Roles = "2")]
         [HttpPost("")]
         public IActionResult Add([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
@@ -38,7 +38,7 @@ namespace apisam.web.Controllers
 
         }
 
-        [Authorize(Roles = "2,3")]
+        [Authorize(Roles = "2")]
         [HttpPut("")]
         public IActionResult Update([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {

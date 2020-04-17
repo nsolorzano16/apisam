@@ -26,7 +26,7 @@ namespace apisam.web.Controllers
         }
 
 
-        [Authorize(Roles = "2,3")]
+        [Authorize(Roles = "2")]
         [HttpPost("")]
         public IActionResult Add([FromBody] HistorialGinecoObstetra historial)
         {
@@ -36,7 +36,7 @@ namespace apisam.web.Controllers
             return BadRequest(_resp);
         }
 
-        [Authorize(Roles = "2,3")]
+        [Authorize(Roles = "2")]
         [HttpPut("")]
         public IActionResult Update([FromBody] HistorialGinecoObstetra historial)
         {

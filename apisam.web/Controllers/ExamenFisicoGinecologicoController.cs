@@ -15,32 +15,35 @@ namespace apisam.web.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class HabitosController : ControllerBase
+    public class ExamenFisicoGinecologicoController : ControllerBase
     {
-        public IHabitos HabitosRepo;
-        public HabitosController(IHabitos habitosrepository)
+        public IExamenFisicoGinecologico ExamenGinecologicoRepo;
+
+        public ExamenFisicoGinecologicoController(
+            IExamenFisicoGinecologico examenRepository)
         {
-            HabitosRepo = habitosrepository;
+            ExamenGinecologicoRepo = examenRepository;
         }
+
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] Habitos habitos)
+        public IActionResult Add([FromBody] ExamenFisicoGinecologico examen)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HabitosRepo.AddAHabito(habitos);
-
-            if (_resp.Ok) return Ok(habitos);
+            RespuestaMetodos _resp = ExamenGinecologicoRepo.AddExamenFisicoGinecologico(examen);
+            if (_resp.Ok) return Ok(examen);
             return BadRequest(_resp);
+
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] Habitos habitos)
+        public IActionResult Update([FromBody] ExamenFisicoGinecologico examen)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HabitosRepo.UpdateAHabito(habitos);
-            if (_resp.Ok) return Ok(habitos);
+            RespuestaMetodos _resp = ExamenGinecologicoRepo.UpdateExamenFisicoGinecologico(examen);
+            if (_resp.Ok) return Ok(examen);
             return BadRequest(_resp);
         }
     }
