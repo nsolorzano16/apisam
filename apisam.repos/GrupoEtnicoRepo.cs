@@ -74,7 +74,7 @@ namespace apisam.repos
         }
 
 
-        public GrupoEtnico GrupoEtnicoById(int id)
+        public GrupoEtnico GetGrupoEtnicoById(int id)
         {
             using var _db = dbFactory.Open();
             return _db.Select<GrupoEtnico>().FirstOrDefault(x => x.GrupoEtnicoId == id);

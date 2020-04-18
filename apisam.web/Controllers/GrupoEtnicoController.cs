@@ -34,7 +34,7 @@ namespace apisam.web.Controllers
         [HttpGet("{id}", Name = "GetGrupoEtnico")]
         public IActionResult GetGrupoEtnico(int id)
         {
-            return Ok(GrupoEtnicoRepo.GrupoEtnicoById(id));
+            return Ok(GrupoEtnicoRepo.GetGrupoEtnicoById(id));
         }
 
         [HttpPost("")]
