@@ -44,12 +44,10 @@ namespace apisam.repos
             var _resp = new RespuestaMetodos();
             try
             {
-                using (var _db = dbFactory.Open())
-                {
-                    nota.ModificadoFecha = DateTime.Now.ToLocalTime();
-                    _db.Save<Notas>(nota);
-                    _resp.Ok = true;
-                }
+                using var _db = dbFactory.Open();
+                nota.ModificadoFecha = DateTime.Now.ToLocalTime();
+                _db.Save<Notas>(nota);
+                _resp.Ok = true;
             }
             catch (Exception ex)
             {
