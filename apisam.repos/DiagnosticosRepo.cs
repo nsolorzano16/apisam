@@ -63,6 +63,30 @@ namespace apisam.repos
 
         }
 
+        public RespuestaMetodos UpdateDiagnosticoLista(List<Diagnosticos> diagnosticos)
+        {
+            var _resp = new RespuestaMetodos();
+            try
+            {
+                diagnosticos.ForEach(x =>
+                {
+                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                });
+                using var _db = dbFactory.Open();
+                _db.SaveAll<Diagnosticos>(diagnosticos);
+                _resp.Ok = true;
+
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+            return _resp;
+
+        }
+
         public RespuestaMetodos UpdateDiagnostico(Diagnosticos diagnostico)
         {
             var _resp = new RespuestaMetodos();
