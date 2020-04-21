@@ -12,6 +12,7 @@ namespace apisam.entities
         [PrimaryKey, AutoIncrement]
         public int NotaId { get; set; }
         public int PacienteId { get; set; }
+        public int? PreclinicaId { get; set; }
         public int DoctorId { get; set; }
 
 

@@ -86,6 +86,7 @@ namespace apisam.web
             services.AddTransient<IProfesion, ProfesionRepo>();
             services.AddTransient<IReligion, ReligionRepo>();
             services.AddTransient<IPais, PaisRepo>();
+            services.AddTransient<IConsulta, ConsultaRepo>();
 
 
             #endregion

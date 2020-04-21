@@ -13,6 +13,7 @@ namespace apisam.entities
         public int HistorialId { get; set; }
         public int PacienteId { get; set; }
         public int DoctorId { get; set; }
+        public int? PreclinicaId { get; set; }
         public DateTime? Menarquia { get; set; }
         public DateTime? Fur { get; set; }
         public string Sg { get; set; }

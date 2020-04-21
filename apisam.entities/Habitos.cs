@@ -13,6 +13,7 @@ namespace apisam.entities
         public int HabitoId { get; set; }
         public int PacienteId { get; set; }
         public int DoctorId { get; set; }
+        public int? PreclinicaId { get; set; }
         public bool? Cafe { get; set; }
         public bool? Cigarrillo { get; set; }
         public int? TazasCafe { get; set; }

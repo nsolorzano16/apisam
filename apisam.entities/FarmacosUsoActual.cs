@@ -13,6 +13,7 @@ namespace apisam.entities
         public int FarmacoId { get; set; }
         public int PacienteId { get; set; }
         public int DoctorId { get; set; }
+        public int? PreclinicaId { get; set; }
         public string Nombre { get; set; }
         public string Concentracion { get; set; }
         public string Dosis { get; set; }
