@@ -12,20 +12,26 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
+
         public FarmacosRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+
         }
+
 
         public RespuestaMetodos AddFarmaco(FarmacosUsoActual farmaco)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                farmaco.CreadoFecha = DateTime.Now.ToLocalTime();
-                farmaco.ModificadoFecha = DateTime.Now.ToLocalTime();
+                farmaco.CreadoFecha = dateTime_HN;
+                farmaco.ModificadoFecha = dateTime_HN;
                 _db.Save<FarmacosUsoActual>(farmaco);
                 _resp.Ok = true;
             }
@@ -41,10 +47,11 @@ namespace apisam.repos
         public RespuestaMetodos UpdateFarmaco(FarmacosUsoActual farmaco)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                farmaco.ModificadoFecha = DateTime.Now.ToLocalTime();
+                farmaco.ModificadoFecha = dateTime_HN;
                 _db.Save<FarmacosUsoActual>(farmaco);
                 _resp.Ok = true;
             }
@@ -60,12 +67,13 @@ namespace apisam.repos
         public RespuestaMetodos AddFarmacoLista(List<FarmacosUsoActual> farmacos)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 farmacos.ForEach(x =>
                 {
-                    x.CreadoFecha = DateTime.Now.ToLocalTime();
-                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    x.CreadoFecha = dateTime_HN;
+                    x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
                 _db.SaveAll<FarmacosUsoActual>(farmacos);
@@ -84,12 +92,13 @@ namespace apisam.repos
         public RespuestaMetodos UpdateFarmacoLista(List<FarmacosUsoActual> farmacos)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
 
                 farmacos.ForEach(f =>
                 {
-                    f.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    f.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
                 _db.SaveAll<FarmacosUsoActual>(farmacos);

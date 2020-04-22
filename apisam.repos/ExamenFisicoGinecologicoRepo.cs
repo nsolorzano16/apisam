@@ -12,21 +12,25 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
 
         public ExamenFisicoGinecologicoRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+
         }
 
         public RespuestaMetodos AddExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                examen.CreadoFecha = DateTime.Now.ToLocalTime();
-                examen.ModificadoFecha = DateTime.Now.ToLocalTime();
+                examen.CreadoFecha = dateTime_HN;
+                examen.ModificadoFecha = dateTime_HN;
                 _db.Save<ExamenFisicoGinecologico>(examen);
                 _resp.Ok = true;
             }
@@ -37,15 +41,17 @@ namespace apisam.repos
             }
             return _resp;
         }
-        public RespuestaMetodos UpdateExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
 
+
+        public RespuestaMetodos UpdateExamenFisicoGinecologico(ExamenFisicoGinecologico examen)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
 
                 using var _db = dbFactory.Open();
-                examen.ModificadoFecha = DateTime.Now.ToLocalTime();
+                examen.ModificadoFecha = dateTime_HN;
                 _db.Save<ExamenFisicoGinecologico>(examen);
                 _resp.Ok = true;
             }

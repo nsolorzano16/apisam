@@ -14,6 +14,7 @@ namespace apisam.repos
 
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
 
         public PacientesRepo()
         {
@@ -26,6 +27,7 @@ namespace apisam.repos
         public RespuestaMetodos AddPaciente(Paciente paciente)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
@@ -34,8 +36,8 @@ namespace apisam.repos
 
                 if (pacienteBuscado == null)
                 {
-                    paciente.CreadoFecha = DateTime.Now.ToLocalTime();
-                    paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    paciente.CreadoFecha = dateTime_HN;
+                    paciente.ModificadoFecha = dateTime_HN;
                     paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                     paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
                     _db.Save<Paciente>(paciente);
@@ -56,9 +58,10 @@ namespace apisam.repos
         public RespuestaMetodos UpdatePaciente(Paciente paciente)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
-                paciente.ModificadoFecha = DateTime.Now.ToLocalTime();
+                paciente.ModificadoFecha = dateTime_HN;
                 paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                 using var _db = dbFactory.Open();
                 _db.Save<Paciente>(paciente);

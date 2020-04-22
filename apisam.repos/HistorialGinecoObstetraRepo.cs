@@ -11,20 +11,24 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
+
         public HistorialGinecoObstetraRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public RespuestaMetodos AddAHistorial(HistorialGinecoObstetra historial)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                historial.CreadoFecha = DateTime.Now.ToLocalTime();
-                historial.ModificadoFecha = DateTime.Now.ToLocalTime();
+                historial.CreadoFecha = dateTime_HN;
+                historial.ModificadoFecha = dateTime_HN;
                 _db.Save<HistorialGinecoObstetra>(historial);
                 _resp.Ok = true;
             }
@@ -41,10 +45,11 @@ namespace apisam.repos
         public RespuestaMetodos UpdateAHistorial(HistorialGinecoObstetra historial)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                historial.ModificadoFecha = DateTime.Now.ToLocalTime();
+                historial.ModificadoFecha = dateTime_HN;
                 _db.Save<HistorialGinecoObstetra>(historial);
                 _resp.Ok = true;
             }

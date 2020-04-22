@@ -12,20 +12,24 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
+
         public NotasRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public RespuestaMetodos AddNota(Notas nota)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                nota.CreadoFecha = DateTime.Now.ToLocalTime();
-                nota.ModificadoFecha = DateTime.Now.ToLocalTime();
+                nota.CreadoFecha = dateTime_HN;
+                nota.ModificadoFecha = dateTime_HN;
                 _db.Save<Notas>(nota);
                 _resp.Ok = true;
             }
@@ -42,10 +46,11 @@ namespace apisam.repos
         public RespuestaMetodos UpdateNota(Notas nota)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                nota.ModificadoFecha = DateTime.Now.ToLocalTime();
+                nota.ModificadoFecha = dateTime_HN;
                 _db.Save<Notas>(nota);
                 _resp.Ok = true;
             }
@@ -61,12 +66,13 @@ namespace apisam.repos
         public RespuestaMetodos AddNotaLista(List<Notas> notas)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 notas.ForEach(x =>
                 {
-                    x.CreadoFecha = DateTime.Now.ToLocalTime();
-                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    x.CreadoFecha = dateTime_HN;
+                    x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
                 _db.SaveAll<Notas>(notas);
@@ -85,11 +91,12 @@ namespace apisam.repos
         public RespuestaMetodos UpdateNotaLista(List<Notas> notas)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 notas.ForEach(x =>
                 {
-                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
                 _db.SaveAll<Notas>(notas);

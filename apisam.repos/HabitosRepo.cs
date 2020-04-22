@@ -11,20 +11,24 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
+
         public HabitosRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public RespuestaMetodos AddAHabito(Habitos habito)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                habito.CreadoFecha = DateTime.Now.ToLocalTime();
-                habito.ModificadoFecha = DateTime.Now.ToLocalTime();
+                habito.CreadoFecha = dateTime_HN;
+                habito.ModificadoFecha = dateTime_HN;
                 _db.Save<Habitos>(habito);
                 _resp.Ok = true;
             }
@@ -42,10 +46,11 @@ namespace apisam.repos
         {
 
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                habito.ModificadoFecha = DateTime.Now.ToLocalTime();
+                habito.ModificadoFecha = dateTime_HN;
                 _db.Save<Habitos>(habito);
                 _resp.Ok = true;
             }

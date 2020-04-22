@@ -12,21 +12,24 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
 
         public PreclinicaRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public RespuestaMetodos AddPreclinica(Preclinica preclinica)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                preclinica.CreadoFecha = DateTime.Now.ToLocalTime();
-                preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
+                preclinica.CreadoFecha = dateTime_HN;
+                preclinica.ModificadoFecha = dateTime_HN;
                 var kilos = preclinica.Peso / 2.20;
                 var alturaMetros = preclinica.Peso / 100;
                 var alturaCuadrado = Math.Pow(alturaMetros, 2);
@@ -47,10 +50,11 @@ namespace apisam.repos
 
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                preclinica.ModificadoFecha = DateTime.Now.ToLocalTime();
+                preclinica.ModificadoFecha = dateTime_HN;
                 var kilos = preclinica.Peso / 2.20;
                 var alturaMetros = preclinica.Peso / 100;
                 var alturaCuadrado = Math.Pow(alturaMetros, 2);

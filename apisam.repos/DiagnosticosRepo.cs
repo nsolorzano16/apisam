@@ -13,20 +13,24 @@ namespace apisam.repos
 
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
+
         public DiagnosticosRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public RespuestaMetodos AddDiagnostico(Diagnosticos diagnostico)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                diagnostico.CreadoFecha = DateTime.Now.ToLocalTime();
-                diagnostico.ModificadoFecha = DateTime.Now.ToLocalTime();
+                diagnostico.CreadoFecha = dateTime_HN;
+                diagnostico.ModificadoFecha = dateTime_HN;
                 _db.Save<Diagnosticos>(diagnostico);
                 _resp.Ok = true;
             }
@@ -41,12 +45,13 @@ namespace apisam.repos
         public RespuestaMetodos AddDiagnosticoLista(List<Diagnosticos> diagnosticos)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 diagnosticos.ForEach(x =>
                 {
-                    x.CreadoFecha = DateTime.Now.ToLocalTime();
-                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    x.CreadoFecha = dateTime_HN;
+                    x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
                 _db.SaveAll<Diagnosticos>(diagnosticos);
@@ -66,11 +71,12 @@ namespace apisam.repos
         public RespuestaMetodos UpdateDiagnosticoLista(List<Diagnosticos> diagnosticos)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 diagnosticos.ForEach(x =>
                 {
-                    x.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
                 _db.SaveAll<Diagnosticos>(diagnosticos);
@@ -90,10 +96,11 @@ namespace apisam.repos
         public RespuestaMetodos UpdateDiagnostico(Diagnosticos diagnostico)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                diagnostico.ModificadoFecha = DateTime.Now.ToLocalTime();
+                diagnostico.ModificadoFecha = dateTime_HN;
                 _db.Save<Diagnosticos>(diagnostico);
                 _resp.Ok = true;
             }

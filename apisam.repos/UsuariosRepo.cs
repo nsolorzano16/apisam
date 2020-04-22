@@ -16,12 +16,14 @@ namespace apisam.repositories
 
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
 
         public UsuariosRepo()
         {
 
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public List<Usuario> Usuarios
@@ -45,6 +47,7 @@ namespace apisam.repositories
         public RespuestaMetodos AddUsuario(Usuario usuario)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             var _db = dbFactory.Open();
             try
             {
@@ -58,8 +61,8 @@ namespace apisam.repositories
 
                     usuario.PasswordHash = _passwordHash;
                     usuario.PasswordSalt = _passwordSalt;
-                    usuario.CreadoFecha = DateTime.Now.ToLocalTime();
-                    usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    usuario.CreadoFecha = dateTime_HN;
+                    usuario.ModificadoFecha = dateTime_HN;
                     usuario.Password = "";
                     usuario.Edad = CalculateAge(usuario.FechaNacimiento);
                     usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
@@ -84,10 +87,11 @@ namespace apisam.repositories
         public RespuestaMetodos UpdateUsuario(Usuario usuario)
         {
             var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 var _db = dbFactory.Open();
-                usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
+                usuario.ModificadoFecha = dateTime_HN;
                 usuario.Edad = CalculateAge(usuario.FechaNacimiento);
                 _db.Save(usuario);
                 _resp.Ok = true;
@@ -168,6 +172,7 @@ namespace apisam.repositories
         public Usuario UpdatePassword(UserChangePassword model)
         {
             var _usuario = new Usuario();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             using (var _db = dbFactory.Open())
             {
                 _usuario = _db.Select<Usuario>().FirstOrDefault(x => x.UsuarioId == model.Id);
@@ -177,7 +182,7 @@ namespace apisam.repositories
                     _usuario.PasswordHash = _passwordHash;
                     _usuario.PasswordSalt = _passwordSalt;
                     _usuario.ModificadoPor = model.ModificadoPor;
-                    _usuario.ModificadoFecha = DateTime.Now.ToLocalTime();
+                    _usuario.ModificadoFecha = dateTime_HN;
                     _db.Save(_usuario);
 
 
@@ -202,10 +207,9 @@ namespace apisam.repositories
 
         private int CalculateAge(DateTime dateOfBirth)
         {
-            int age = 0;
-            age = DateTime.Now.Year - dateOfBirth.Year;
+            int age = DateTime.Now.Year - dateOfBirth.Year;
             if (DateTime.Now.DayOfYear < dateOfBirth.DayOfYear)
-                age = age - 1;
+                age -= 1;
 
             return age;
         }
