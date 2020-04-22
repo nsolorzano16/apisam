@@ -113,6 +113,9 @@ namespace apisam.repos
 
             return pre;
         }
+
+
+
         public PageResponse<Preclinica> GetPreclinicasPaginado
             (int pageNo, int limit, int doctorId)
 
@@ -152,7 +155,8 @@ namespace apisam.repos
             return _response;
         }
 
-        public PageResponse<PreclinicaViewModel> GetPreclinicasSinAtender(int pageNo, int limit, int doctorId)
+        public PageResponse<PreclinicaViewModel>
+            GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
         {
 
             var _response = new PageResponse<PreclinicaViewModel>();
@@ -195,7 +199,7 @@ namespace apisam.repos
                             pc.FotoUrl
                         FROM Preclinica p
                             INNER JOIN Paciente pc ON p.PacienteId = pc.PacienteId
-                            WHERE p.DoctorId = ${doctorId} AND p.Atendida = 0";
+                            WHERE p.DoctorId = ${doctorId} AND p.Atendida = {atendida}";
 
             var _qry2 = _qry;
             _qry += " ORDER BY p.PreclinicaId DESC";

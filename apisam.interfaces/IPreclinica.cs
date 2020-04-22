@@ -8,9 +8,12 @@ namespace apisam.interfaces
     {
         RespuestaMetodos AddPreclinica(Preclinica preclinica);
         RespuestaMetodos UpdatePreclinica(Preclinica preclinica);
+
         PageResponse<Preclinica>
             GetPreclinicasPaginado(int pageNo, int limit, int doctorId);
-        PageResponse<PreclinicaViewModel> GetPreclinicasSinAtender(int pageNo, int limit, int doctorId);
+
+        PageResponse<PreclinicaViewModel> GetPreclinicasSinAtender
+            (int pageNo, int limit, int doctorId, int atendida);
 
         PreclinicaViewModel GetInfoPreclinica(int id);
     }

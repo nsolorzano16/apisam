@@ -14,7 +14,7 @@ namespace apisam.web.Controllers
 {
     [EnableCors("Todos")]
     [Produces("application/json")]
-    //[Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ConsultaController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
-        [HttpGet("pacienteid/{pacienteId}/doctorId/{doctorId}/preclinicaId/{preclinicaId}", Name = "GetDetalleConsulta")]
+        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}/preclinicaId/{preclinicaId}", Name = "GetDetalleConsulta")]
         public IActionResult GetDetalleConsulta([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

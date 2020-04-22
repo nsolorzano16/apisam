@@ -25,7 +25,8 @@ namespace apisam.web.Controllers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
-        public PreclinicaController(IPreclinica preclinicaRepository, IConfiguration config, IMapper mapper)
+        public PreclinicaController(IPreclinica preclinicaRepository,
+            IConfiguration config, IMapper mapper)
         {
             _config = config;
             PreclinicaRepo = preclinicaRepository;
@@ -33,14 +34,17 @@ namespace apisam.web.Controllers
         }
 
 
+
         [Authorize(Roles = "2,3")]
-        [HttpGet("page/{pageNo}/limit/{limit}/doctorId/{doctorId}", Name = "GetPreclinicasSinAtender")]
-        public IActionResult GetPreclinicasSinAtender(int pageNo, int limit, int doctorId)
+        [HttpGet("page/{pageNo}/limit/{limit}/doctorId/{doctorId}/atendida/{atendida}",
+            Name = "GetPreclinicasSinAtender")]
+        public IActionResult GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
         {
             string a;
             try
             {
-                var _pageResponse = PreclinicaRepo.GetPreclinicasSinAtender(pageNo, limit, doctorId);
+                var _pageResponse =
+                    PreclinicaRepo.GetPreclinicasSinAtender(pageNo, limit, doctorId, atendida);
                 return Ok(_pageResponse);
             }
             catch (Exception e)

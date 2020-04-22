@@ -62,6 +62,7 @@ namespace apisam.web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SAM-API", Version = "v1" });
+
             });
 
 
