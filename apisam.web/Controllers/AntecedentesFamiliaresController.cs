@@ -48,6 +48,20 @@ namespace apisam.web.Controllers
             return BadRequest(_resp);
         }
 
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetAntecedente")]
+        public IActionResult GetAntecedente([FromRoute] int pacienteId, int doctorId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _antecedente = AntecedentesRepo.GetAntecedente(pacienteId, doctorId);
+            if (_antecedente != null) return Ok(_antecedente);
+            return Ok();
+
+        }
+
+
+
+
 
     }
 }

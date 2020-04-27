@@ -68,7 +68,7 @@ namespace apisam.repos
             using var _db = dbFactory.Open();
             var antecedente = _db.Select<AntecedentesFamiliaresPersonales>
                 ().FirstOrDefault(x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId);
+                && x.DoctorId == doctorId && x.Activo == true);
             return antecedente;
         }
     }

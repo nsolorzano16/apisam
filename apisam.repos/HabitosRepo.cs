@@ -68,7 +68,7 @@ namespace apisam.repos
             using var _db = dbFactory.Open();
             var habito = _db.Select<Habitos>
                 ().FirstOrDefault(x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId);
+                && x.DoctorId == doctorId && x.Activo == true);
             return habito;
         }
     }

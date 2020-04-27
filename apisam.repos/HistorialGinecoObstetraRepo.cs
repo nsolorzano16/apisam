@@ -67,7 +67,7 @@ namespace apisam.repos
             using var _db = dbFactory.Open();
             var historial = _db.Select<HistorialGinecoObstetra>
                 ().FirstOrDefault(x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId);
+                && x.DoctorId == doctorId && x.Activo == true);
             return historial;
         }
     }

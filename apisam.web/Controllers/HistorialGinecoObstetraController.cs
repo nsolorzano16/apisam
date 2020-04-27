@@ -47,5 +47,18 @@ namespace apisam.web.Controllers
         }
 
 
+
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetHistorialGinecoObstetra")]
+        public IActionResult GetHistorialGinecoObstetra([FromRoute] int pacienteId, int doctorId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _historial = HistorialRepo.GetHistorial(pacienteId, doctorId);
+            if (_historial != null) return Ok(_historial);
+            return Ok();
+
+        }
+
+
     }
 }

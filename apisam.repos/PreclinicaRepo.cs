@@ -30,10 +30,6 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 preclinica.CreadoFecha = dateTime_HN;
                 preclinica.ModificadoFecha = dateTime_HN;
-                var kilos = preclinica.Peso / 2.20;
-                var alturaMetros = preclinica.Peso / 100;
-                var alturaCuadrado = Math.Pow(alturaMetros, 2);
-                preclinica.IMC = kilos / alturaCuadrado;
                 _db.Save<Preclinica>(preclinica);
                 _resp.Ok = true;
             }
@@ -55,10 +51,6 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 preclinica.ModificadoFecha = dateTime_HN;
-                var kilos = preclinica.Peso / 2.20;
-                var alturaMetros = preclinica.Peso / 100;
-                var alturaCuadrado = Math.Pow(alturaMetros, 2);
-                preclinica.IMC = kilos / alturaCuadrado;
                 _db.Save<Preclinica>(preclinica);
                 _resp.Ok = true;
             }
@@ -203,7 +195,7 @@ namespace apisam.repos
                             pc.FotoUrl
                         FROM Preclinica p
                             INNER JOIN Paciente pc ON p.PacienteId = pc.PacienteId
-                            WHERE p.DoctorId = ${doctorId} AND p.Atendida = {atendida}";
+                            WHERE p.DoctorId = ${doctorId} AND p.Atendida = {atendida} AND p.Activo = 1";
 
             var _qry2 = _qry;
             _qry += " ORDER BY p.PreclinicaId DESC";

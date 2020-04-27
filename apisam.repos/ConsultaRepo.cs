@@ -25,21 +25,21 @@ namespace apisam.repos
             using var _db = dbFactory.Open();
             var _preclinica = _db.Single<Preclinica>(x => x.PreclinicaId ==
             preclinicaId && x.PacienteId == pacienteId && x.DoctorId == doctorId
-            && x.Activo == true && x.Atendida == false);
+            && x.Activo == true && x.Atendida == true);
 
             var _antecedentesPersonales = _db.Single<AntecedentesFamiliaresPersonales>
-                (x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
+                (x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
-            var _habitos = _db.Single<Habitos>(x => x.PreclinicaId == preclinicaId && x.PacienteId
+            var _habitos = _db.Single<Habitos>(x => x.PacienteId
             == pacienteId && x.DoctorId == doctorId && x.Activo == true);
 
             var _historialGinecoObstetra = _db.Single<HistorialGinecoObstetra>(
-                x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
+                x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
             var _farmacos = _db.Select<FarmacosUsoActual>
-                (x => x.PreclinicaId == preclinicaId && x.PacienteId ==
+                (x => x.PacienteId ==
                 pacienteId && x.DoctorId == doctorId && x.Activo == true).ToList();
 
             var _examenFisico = _db.Single<ExamenFisico>(

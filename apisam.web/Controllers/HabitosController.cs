@@ -43,5 +43,19 @@ namespace apisam.web.Controllers
             if (_resp.Ok) return Ok(habitos);
             return BadRequest(_resp);
         }
+
+
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetHabito")]
+        public IActionResult GetHabito([FromRoute] int pacienteId, int doctorId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _habito = HabitosRepo.GetHabito(pacienteId, doctorId);
+            if (_habito != null) return Ok(_habito);
+            return Ok();
+
+        }
+
+
     }
 }

@@ -55,5 +55,17 @@ namespace apisam.web.Controllers
             if (_resp.Ok) return Ok(farmaco);
             return BadRequest(_resp);
         }
+
+
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetFarmacos")]
+        public IActionResult GetFarmacos([FromRoute] int pacienteId, int doctorId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _farmacos = farmacosRepo.GetFarmacos(pacienteId, doctorId);
+            if (_farmacos != null) return Ok(_farmacos);
+            return Ok();
+
+        }
     }
 }

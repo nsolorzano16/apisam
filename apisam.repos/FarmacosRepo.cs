@@ -118,7 +118,7 @@ namespace apisam.repos
             using var _db = dbFactory.Open();
             return _db.Select<FarmacosUsoActual>(
                 x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId).ToList();
+                && x.DoctorId == doctorId && x.Activo == true).ToList();
         }
     }
 }
