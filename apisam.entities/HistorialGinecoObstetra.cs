@@ -25,6 +25,7 @@ namespace apisam.entities
         public string Uc { get; set; }
         public DateTime? FechaMenopausia { get; set; }
         public string Anticonceptivo { get; set; }
+        public string Hallazgo { get; set; }
         public string Vacunacion { get; set; }
 
 

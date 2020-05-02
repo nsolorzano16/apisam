@@ -88,6 +88,10 @@ namespace apisam.web
             services.AddTransient<IReligion, ReligionRepo>();
             services.AddTransient<IPais, PaisRepo>();
             services.AddTransient<IConsulta, ConsultaRepo>();
+            services.AddTransient<IExamenCategoria, ExamenCategoriaRepo>();
+            services.AddTransient<IExamenDetalle, ExamenDetalleRepo>();
+            services.AddTransient<IExamenTipo, ExamenTipoRepo>();
+
 
 
             #endregion

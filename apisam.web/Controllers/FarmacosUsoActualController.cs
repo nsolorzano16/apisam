@@ -37,12 +37,32 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
+        [HttpPost("agregar", Name = "AddFarmaco")]
+        public IActionResult AddFarmaco([FromBody] FarmacosUsoActual farmaco)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = farmacosRepo.AddFarmaco(farmaco);
+            if (_resp.Ok) return Ok(farmaco);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
         [HttpPut("")]
         public IActionResult Update([FromBody] List<FarmacosUsoActual> farmacos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             RespuestaMetodos _resp = farmacosRepo.UpdateFarmacoLista(farmacos);
             if (_resp.Ok) return Ok(farmacos);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPut("editar", Name = "UpdateFarmaco")]
+        public IActionResult UpdateFarmaco([FromBody] FarmacosUsoActual farmaco)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = farmacosRepo.UpdateFarmaco(farmaco);
+            if (_resp.Ok) return Ok(farmaco);
             return BadRequest(_resp);
         }
 
