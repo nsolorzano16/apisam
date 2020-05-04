@@ -73,6 +73,11 @@ namespace apisam.repositories
 
 
                 }
+                else
+                {
+                    _resp.Ok = false;
+                    _resp.Mensaje = "El usuario ya existe.";
+                }
             }
             catch (Exception ex)
             {

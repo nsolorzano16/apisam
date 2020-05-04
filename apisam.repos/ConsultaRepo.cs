@@ -12,11 +12,13 @@ namespace apisam.repos
     {
         private readonly OrmLiteConnectionFactory dbFactory;
         private readonly Conexion con = new Conexion();
+        private static TimeZoneInfo hondurasTime;
 
         public ConsultaRepo()
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
+            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
         public ConsultaViewModel GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId)
@@ -69,5 +71,57 @@ namespace apisam.repos
 
             return _resp;
         }
+
+
+
+        public RespuestaMetodos AddConsultaGeneral(ConsultaGeneral consulta)
+        {
+            var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
+            try
+            {
+                using var _db = dbFactory.Open();
+                consulta.CreadoFecha = dateTime_HN;
+                consulta.ModificadoFecha = dateTime_HN;
+                _db.Save<ConsultaGeneral>(consulta);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+
+            return _resp;
+        }
+
+        public RespuestaMetodos UpdateConsultaGeneral(ConsultaGeneral consulta)
+        {
+            var _resp = new RespuestaMetodos();
+            DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
+            try
+            {
+                using var _db = dbFactory.Open();
+                consulta.ModificadoFecha = dateTime_HN;
+                _db.Save<ConsultaGeneral>(consulta);
+                _resp.Ok = true;
+            }
+            catch (Exception ex)
+            {
+                _resp.Ok = false;
+                _resp.Mensaje = ex.Message;
+            }
+            return _resp;
+        }
+
+        public ConsultaGeneral GetConsultaGeneralById(int consultaId)
+        {
+            using var _db = dbFactory.Open();
+            var antecedente = _db.Single<ConsultaGeneral>(x =>
+            x.ConsultaId == consultaId && x.Activo == true);
+            return antecedente;
+        }
+
+
     }
 }

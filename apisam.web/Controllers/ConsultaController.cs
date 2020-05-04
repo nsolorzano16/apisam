@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -33,6 +34,38 @@ namespace apisam.web.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var resp = ConsultaRepo.GetDetalleConsulta(doctorId, pacienteId, preclinicaId);
             return Ok(resp);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPost("")]
+        public IActionResult Add([FromBody] ConsultaGeneral consulta)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = ConsultaRepo.AddConsultaGeneral(consulta);
+            if (_resp.Ok) return Ok(consulta);
+            return BadRequest(_resp);
+
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPut("")]
+        public IActionResult Update([FromBody] ConsultaGeneral consulta)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = ConsultaRepo.UpdateConsultaGeneral(consulta);
+            if (_resp.Ok) return Ok(consulta);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpGet("id/{consultaId}", Name = "GetConsultaGeneralById")]
+        public IActionResult GetConsultaGeneralById([FromRoute] int consultaId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _consultaGeneral = ConsultaRepo.GetConsultaGeneralById(consultaId);
+            if (_consultaGeneral != null) return Ok(_consultaGeneral);
+            return Ok();
+
         }
 
 

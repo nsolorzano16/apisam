@@ -12,6 +12,7 @@ namespace apisam.entities.ViewModels
         public int DoctorId { get; set; }
         public double Peso { get; set; }
         public double Altura { get; set; }
+        public double Temperatura { get; set; }
         public int FrecuenciaRespiratoria { get; set; }
         public int RitmoCardiaco { get; set; }
         public int PresionSistolica { get; set; }
