@@ -59,6 +59,15 @@ namespace apisam.repos
             var _notas = _db.Select<Notas>(x => x.PreclinicaId == preclinicaId
             && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true).ToList();
 
+            var _consultaGeneral = _db.Single<ConsultaGeneral>(x => x.PreclinicaId == preclinicaId
+             && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
+
+            var _listaExamenes = _db.Select<ExamenIndicado>(x => x.PreclinicaId == preclinicaId
+             && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true).ToList();
+
+            var _planTerapeutico = _db.Single<PlanTerapeutico>(x => x.PreclinicaId == preclinicaId
+             && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
+
             _resp.Preclinica = _preclinica;
             _resp.AntecedentesFamiliaresPersonales = _antecedentesPersonales;
             _resp.Habitos = _habitos;
@@ -68,6 +77,9 @@ namespace apisam.repos
             _resp.ExamenFisicoGinecologico = _examenFisicoGinecologico;
             _resp.Diagnosticos = _diagnosticos;
             _resp.Notas = _notas;
+            _resp.ConsultaGeneral = _consultaGeneral;
+            _resp.ExamenesIndicados = _listaExamenes;
+            _resp.PlanTerapeutico = _planTerapeutico;
 
             return _resp;
         }

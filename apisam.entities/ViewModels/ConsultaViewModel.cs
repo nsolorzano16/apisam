@@ -18,6 +18,9 @@ namespace apisam.entities.ViewModels
         public ExamenFisicoGinecologico ExamenFisicoGinecologico { get; set; }
         public List<Diagnosticos> Diagnosticos { get; set; }
         public List<Notas> Notas { get; set; }
+        public ConsultaGeneral ConsultaGeneral { get; set; }
+        public List<ExamenIndicado> ExamenesIndicados { get; set; }
+        public PlanTerapeutico PlanTerapeutico { get; set; }
 
 
 
