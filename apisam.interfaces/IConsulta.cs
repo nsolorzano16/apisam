@@ -9,6 +9,6 @@ namespace apisam.interfaces
         ConsultaViewModel GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId);
         RespuestaMetodos AddConsultaGeneral(ConsultaGeneral consulta);
         RespuestaMetodos UpdateConsultaGeneral(ConsultaGeneral consulta);
-        ConsultaGeneral GetConsultaGeneralById(int consultaId);
+        ConsultaGeneral GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId);
     }
 }

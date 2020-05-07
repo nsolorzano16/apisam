@@ -62,8 +62,31 @@ namespace apisam.repos
             var _consultaGeneral = _db.Single<ConsultaGeneral>(x => x.PreclinicaId == preclinicaId
              && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
 
-            var _listaExamenes = _db.Select<ExamenIndicado>(x => x.PreclinicaId == preclinicaId
-             && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true).ToList();
+            var _qry = $@"SELECT
+                                                ei.ExamenIndicadoId,
+                                                ei.PacienteId,
+                                                ei.DoctorId,
+                                                ei.PreclinicaId,
+                                                ei.ExamenCategoriaId,
+                                                ei.ExamenTipoId,
+                                                ei.ExamenDetalleId,
+                                                ei.Nombre,
+                                                ei.Activo,
+                                                ei.CreadoPor,
+                                                ei.CreadoFecha,
+                                                ei.ModificadoPor,
+                                                ei.ModificadoFecha,
+                                                ei.Notas,
+                                                ec.Nombre as 'ExamenCategoria',
+                                                et.Nombre as 'ExamenTipo',
+                                                ed.Nombre as 'ExamenDetalle'
+                                            FROM ExamenIndicado ei
+                                                INNER JOIN ExamenCategoria ec on ei.ExamenCategoriaId = ec.ExamenCategoriaId
+                                                INNER JOIN ExamenTipo et on ei.ExamenTipoId = et.ExamenTipoId
+                                                INNER JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId";
+
+            var _listaExamenes = _db.Select<ExamenesIndicadosViewModel>(_qry
+                ).ToList();
 
             var _planTerapeutico = _db.Single<PlanTerapeutico>(x => x.PreclinicaId == preclinicaId
              && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
@@ -126,12 +149,12 @@ namespace apisam.repos
             return _resp;
         }
 
-        public ConsultaGeneral GetConsultaGeneralById(int consultaId)
+        public ConsultaGeneral GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            var antecedente = _db.Single<ConsultaGeneral>(x =>
-            x.ConsultaId == consultaId && x.Activo == true);
-            return antecedente;
+            var consulta = _db.Single<ConsultaGeneral>(x => x.PacienteId == pacienteId
+            && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
+            return consulta;
         }
 
 

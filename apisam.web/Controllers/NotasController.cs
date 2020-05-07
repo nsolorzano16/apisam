@@ -55,5 +55,16 @@ namespace apisam.web.Controllers
             if (_resp.Ok) return Ok(nota);
             return BadRequest(_resp);
         }
+
+
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetNotas")]
+        public IActionResult GetNotas([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return Ok(notasRepo.GetNotas(pacienteId, doctorId, preclinicaId));
+
+        }
+
     }
 }

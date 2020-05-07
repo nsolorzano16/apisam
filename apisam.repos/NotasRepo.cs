@@ -112,12 +112,12 @@ namespace apisam.repos
             return _resp;
         }
 
-        public List<Notas> GetNotas(int pacienteId, int doctorId)
+        public List<Notas> GetNotas(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             return _db.Select<Notas>(
                 x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId).ToList();
+                && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true).ToList();
         }
     }
 }

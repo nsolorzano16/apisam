@@ -60,11 +60,11 @@ namespace apisam.repos
             return _resp;
         }
 
-        public PlanTerapeutico GetPlanTerapeuticoById(int planTerapeuticoId)
+        public PlanTerapeutico GetPlanTerapeutico(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             var antecedente = _db.Single<PlanTerapeutico>(x =>
-            x.PlanTerapeuticoId == planTerapeuticoId && x.Activo == true);
+            x.PacienteId == pacienteId && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
             return antecedente;
         }
 

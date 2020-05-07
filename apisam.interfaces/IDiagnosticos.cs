@@ -11,7 +11,7 @@ namespace apisam.interfaces
         RespuestaMetodos UpdateDiagnostico(Diagnosticos diagnostico);
         RespuestaMetodos AddDiagnosticoLista(List<Diagnosticos> diagnosticos);
         RespuestaMetodos UpdateDiagnosticoLista(List<Diagnosticos> diagnosticos);
-        List<Diagnosticos> GetDiagnosticos(int pacienteId, int doctorId);
+        List<Diagnosticos> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId);
 
     }
 }

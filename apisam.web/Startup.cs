@@ -93,6 +93,7 @@ namespace apisam.web
             services.AddTransient<IExamenTipo, ExamenTipoRepo>();
             services.AddTransient<IExamenIndicado, ExamenIndicadoRepo>();
             services.AddTransient<IPlanTerapeutico, PlanTerapeuticoRepo>();
+            services.AddTransient<IViaAdministracion, ViaAdministracionRepo>();
 
 
 

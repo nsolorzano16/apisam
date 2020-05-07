@@ -65,12 +65,21 @@ namespace apisam.repos
             return _resp;
         }
         public List<ExamenFisicoGinecologico> GetExamenesGinecologicos(int pacienteId, int doctorId)
-
         {
+
             using var _db = dbFactory.Open();
             return _db.Select<ExamenFisicoGinecologico>(
                 x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId).ToList();
+        }
+
+
+        public ExamenFisicoGinecologico GetExamenGinecologico(int pacienteId, int doctorId, int preclinicaId)
+        {
+            using var _db = dbFactory.Open();
+            return _db.Single<ExamenFisicoGinecologico>(x => x.PacienteId == pacienteId
+             && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
+
         }
     }
 }

@@ -58,11 +58,11 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
-        [HttpGet("id/{consultaId}", Name = "GetConsultaGeneralById")]
-        public IActionResult GetConsultaGeneralById([FromRoute] int consultaId)
+        [HttpGet("getconsultageneral/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetConsultaGeneral")]
+        public IActionResult GetConsultaGeneral([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _consultaGeneral = ConsultaRepo.GetConsultaGeneralById(consultaId);
+            var _consultaGeneral = ConsultaRepo.GetConsultaGeneral(pacienteId, doctorId, preclinicaId);
             if (_consultaGeneral != null) return Ok(_consultaGeneral);
             return Ok();
 

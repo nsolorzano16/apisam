@@ -55,5 +55,15 @@ namespace apisam.web.Controllers
             if (_resp.Ok) return Ok(diagnostico);
             return BadRequest(_resp);
         }
+
+
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetDiagnosticos")]
+        public IActionResult GetDiagnosticos([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return Ok(diagnosticosRepo.GetDiagnosticos(pacienteId, doctorId, preclinicaId));
+
+        }
     }
 }

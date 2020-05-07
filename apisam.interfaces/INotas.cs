@@ -10,6 +10,6 @@ namespace apisam.interfaces
         RespuestaMetodos UpdateNota(Notas nota);
         RespuestaMetodos AddNotaLista(List<Notas> notas);
         RespuestaMetodos UpdateNotaLista(List<Notas> notas);
-        List<Notas> GetNotas(int pacienteId, int doctorId);
+        List<Notas> GetNotas(int pacienteId, int doctorId, int preclinicaId);
     }
 }

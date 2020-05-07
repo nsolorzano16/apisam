@@ -9,5 +9,6 @@ namespace apisam.interfaces
         RespuestaMetodos AddExamenFisicoGinecologico(ExamenFisicoGinecologico examen);
         RespuestaMetodos UpdateExamenFisicoGinecologico(ExamenFisicoGinecologico examen);
         List<ExamenFisicoGinecologico> GetExamenesGinecologicos(int pacienteId, int doctorId);
+        ExamenFisicoGinecologico GetExamenGinecologico(int pacienteId, int doctorId, int preclinicaId);
     }
 }

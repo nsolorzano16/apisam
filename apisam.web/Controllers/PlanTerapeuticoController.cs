@@ -48,11 +48,11 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
-        [HttpGet("id/{planId}", Name = "GetPlanTerapeuticoById")]
-        public IActionResult GetPlanTerapeuticoById([FromRoute] int planId)
+        [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanTerapeutico")]
+        public IActionResult GetPlanTerapeutico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _planTerapeutico = PlanRepo.GetPlanTerapeuticoById(planId);
+            var _planTerapeutico = PlanRepo.GetPlanTerapeutico(pacienteId, doctorId, preclinicaId);
             if (_planTerapeutico != null) return Ok(_planTerapeutico);
             return Ok();
 
