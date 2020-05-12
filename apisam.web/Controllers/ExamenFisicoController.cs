@@ -42,5 +42,14 @@ namespace apisam.web.Controllers
             if (_resp.Ok) return Ok(examenFisico);
             return BadRequest(_resp);
         }
+
+        [Authorize(Roles = "2")]
+        [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetExamenFisico")]
+        public IActionResult GetExamenFisico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return Ok(ExamenFisicoRepo.GetExamenFisico(pacienteId, doctorId, preclinicaId));
+
+        }
     }
 }

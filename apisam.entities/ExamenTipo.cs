@@ -9,7 +9,7 @@ namespace apisam.entities
 
         public int ExamenTipoId { get; set; }
         public int ExamenCategoriaId { get; set; }
-        public int Nombre { get; set; }
+        public string Nombre { get; set; }
 
 
     }

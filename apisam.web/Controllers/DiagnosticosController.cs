@@ -37,12 +37,32 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
+        [HttpPost("agregar", Name = "AddDiagnostico")]
+        public IActionResult AddDiagnostico([FromBody] Diagnosticos diagnostico)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = diagnosticosRepo.AddDiagnostico(diagnostico);
+            if (_resp.Ok) return Ok(diagnostico);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
         [HttpPut("")]
         public IActionResult Update([FromBody] List<Diagnosticos> diagnosticos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             RespuestaMetodos _resp = diagnosticosRepo.UpdateDiagnosticoLista(diagnosticos);
             if (_resp.Ok) return Ok(diagnosticos);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPut("editar", Name = "UpdateDiagnostico")]
+        public IActionResult UpdateDiagnostico([FromBody] Diagnosticos diagnostico)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = diagnosticosRepo.UpdateDiagnostico(diagnostico);
+            if (_resp.Ok) return Ok(diagnostico);
             return BadRequest(_resp);
         }
 

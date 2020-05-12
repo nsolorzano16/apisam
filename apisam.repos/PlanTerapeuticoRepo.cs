@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -68,6 +70,13 @@ namespace apisam.repos
             return antecedente;
         }
 
+
+        public List<PlanTerapeutico> GetPlanes(int pacienteId, int doctorId, int preclinicaId)
+        {
+            using var _db = dbFactory.Open();
+            return _db.Select<PlanTerapeutico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
+            && x.PreclinicaId == preclinicaId && x.Activo == true).ToList();
+        }
 
     }
 }

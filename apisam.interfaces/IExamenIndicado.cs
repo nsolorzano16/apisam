@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using apisam.entities;
 
 namespace apisam.interfaces
@@ -8,5 +9,6 @@ namespace apisam.interfaces
         RespuestaMetodos AddExamenIndicado(ExamenIndicado examen);
         RespuestaMetodos UpdateExamenIndicado(ExamenIndicado examen);
         ExamenIndicado GetExamenIndicadoById(int examenId);
+        List<ExamenIndicado> GetExamenes(int pacienteId, int doctorId, int preclinicaId);
     }
 }

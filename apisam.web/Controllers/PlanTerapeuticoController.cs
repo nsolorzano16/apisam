@@ -57,5 +57,16 @@ namespace apisam.web.Controllers
             return Ok();
 
         }
+
+        [Authorize(Roles = "2")]
+        [HttpGet("listar/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanes")]
+        public IActionResult GetPlanes([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _planTerapeutico = PlanRepo.GetPlanes(pacienteId, doctorId, preclinicaId);
+            if (_planTerapeutico != null) return Ok(_planTerapeutico);
+            return Ok();
+
+        }
     }
 }

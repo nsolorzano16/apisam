@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -67,6 +68,13 @@ namespace apisam.repos
             var antecedente = _db.Single<ExamenIndicado>(x =>
             x.ExamenIndicadoId == examenId && x.Activo == true);
             return antecedente;
+        }
+
+        public List<ExamenIndicado> GetExamenes(int pacienteId, int doctorId, int preclinicaId)
+        {
+            using var _db = dbFactory.Open();
+            return _db.Select<ExamenIndicado>(x => x.PacienteId == pacienteId &&
+            x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
         }
 
 

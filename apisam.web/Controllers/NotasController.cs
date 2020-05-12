@@ -47,6 +47,28 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
+        [HttpPost("agregar", Name = "AddNota")]
+        public IActionResult AddNota([FromBody] Notas nota)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = notasRepo.AddNota(nota);
+            if (_resp.Ok) return Ok(nota);
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpPut("editar", Name = "UpdateNota")]
+        public IActionResult UpdateNota([FromBody] Notas nota)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = notasRepo.UpdateNota(nota);
+            if (_resp.Ok) return Ok(nota);
+            return BadRequest(_resp);
+        }
+
+
+
+        [Authorize(Roles = "2")]
         [HttpPut("desactivar", Name = "DesactivarNota")]
         public IActionResult DesactivarNota([FromBody] Notas nota)
         {

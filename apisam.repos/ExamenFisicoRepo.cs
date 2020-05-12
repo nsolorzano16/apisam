@@ -70,5 +70,12 @@ namespace apisam.repos
                 x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId).ToList();
         }
+
+        public ExamenFisico GetExamenFisico(int pacienteId, int doctorId, int preclinicaId)
+        {
+            using var _db = dbFactory.Open();
+            return _db.Single<ExamenFisico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
+            && x.PreclinicaId == preclinicaId && x.Activo == true);
+        }
     }
 }

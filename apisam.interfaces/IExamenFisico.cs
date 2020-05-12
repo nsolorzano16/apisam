@@ -9,5 +9,6 @@ namespace apisam.interfaces
         RespuestaMetodos AddExamenFisico(ExamenFisico examen);
         RespuestaMetodos UpdateExamenFisico(ExamenFisico examen);
         List<ExamenFisico> GetExamenes(int pacienteId, int doctorId);
+        ExamenFisico GetExamenFisico(int pacienteId, int doctorId, int preclinicaId);
     }
 }
