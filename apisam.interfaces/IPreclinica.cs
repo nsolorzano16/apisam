@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 
@@ -6,15 +7,15 @@ namespace apisam.interfaces
 {
     public interface IPreclinica
     {
-        RespuestaMetodos AddPreclinica(Preclinica preclinica);
-        RespuestaMetodos UpdatePreclinica(Preclinica preclinica);
+        Task<RespuestaMetodos> AddPreclinica(Preclinica preclinica);
+        Task<RespuestaMetodos> UpdatePreclinica(Preclinica preclinica);
 
-        PageResponse<Preclinica>
+        Task<PageResponse<Preclinica>>
             GetPreclinicasPaginado(int pageNo, int limit, int doctorId);
 
-        PageResponse<PreclinicaViewModel> GetPreclinicasSinAtender
+        Task<PageResponse<PreclinicaViewModel>> GetPreclinicasSinAtender
             (int pageNo, int limit, int doctorId, int atendida);
 
-        PreclinicaViewModel GetInfoPreclinica(int id);
+        Task<PreclinicaViewModel> GetInfoPreclinica(int id);
     }
 }

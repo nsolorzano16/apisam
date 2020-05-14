@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IGrupoEtnico
     {
-        List<GrupoEtnico> GruposEtnicos { get; }
-        RespuestaMetodos Add(GrupoEtnico grupo);
-        RespuestaMetodos Update(GrupoEtnico grupo);
-        GrupoEtnico GetGrupoEtnicoById(int id);
+        Task<List<GrupoEtnico>> GruposEtnicos();
+        Task<RespuestaMetodos> Add(GrupoEtnico grupo);
+        Task<RespuestaMetodos> Update(GrupoEtnico grupo);
+        Task<GrupoEtnico> GetGrupoEtnicoById(int id);
     }
 }

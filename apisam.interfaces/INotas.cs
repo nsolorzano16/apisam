@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface INotas
     {
-        RespuestaMetodos AddNota(Notas nota);
-        RespuestaMetodos UpdateNota(Notas nota);
-        RespuestaMetodos AddNotaLista(List<Notas> notas);
-        RespuestaMetodos UpdateNotaLista(List<Notas> notas);
-        List<Notas> GetNotas(int pacienteId, int doctorId, int preclinicaId);
+        Task<RespuestaMetodos> AddNota(Notas nota);
+        Task<RespuestaMetodos> UpdateNota(Notas nota);
+        Task<RespuestaMetodos> AddNotaLista(List<Notas> notas);
+        Task<RespuestaMetodos> UpdateNotaLista(List<Notas> notas);
+        Task<List<Notas>> GetNotas(int pacienteId, int doctorId, int preclinicaId);
     }
 }

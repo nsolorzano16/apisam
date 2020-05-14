@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IProfesion
     {
-        List<Profesion> Profesiones { get; }
-        RespuestaMetodos Add(Profesion profesion);
-        RespuestaMetodos Update(Profesion profesion);
-        Profesion GetProfesionById(int id);
+        Task<List<Profesion>> Profesiones();
+        Task<RespuestaMetodos> Add(Profesion profesion);
+        Task<RespuestaMetodos> Update(Profesion profesion);
+        Task<Profesion> GetProfesionById(int id);
     }
 }

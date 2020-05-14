@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IEscolaridad
     {
-        List<Escolaridad> Escolaridades { get; }
-        RespuestaMetodos Add(Escolaridad religion);
-        RespuestaMetodos Update(Escolaridad religion);
-        Escolaridad GetEscolaridadById(int id);
+        Task<List<Escolaridad>> Escolaridades();
+        Task<RespuestaMetodos> Add(Escolaridad religion);
+        Task<RespuestaMetodos> Update(Escolaridad religion);
+        Task<Escolaridad> GetEscolaridadById(int id);
     }
 }

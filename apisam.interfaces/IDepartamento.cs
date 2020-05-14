@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IDepartamento
     {
-        List<Departamento> Departamentos { get; }
-        
-        Departamento GetDepartamentoById(int id);
+        Task<List<Departamento>> Departamentos();
+
+        Task<Departamento> GetDepartamentoById(int id);
     }
 }

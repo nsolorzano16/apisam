@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IFarmacosUsoActual
     {
-        RespuestaMetodos AddFarmaco(FarmacosUsoActual farmaco);
-        RespuestaMetodos UpdateFarmaco(FarmacosUsoActual farmaco);
-        RespuestaMetodos AddFarmacoLista(List<FarmacosUsoActual> farmacos);
-        RespuestaMetodos UpdateFarmacoLista(List<FarmacosUsoActual> farmacos);
-        List<FarmacosUsoActual> GetFarmacos(int pacienteId, int doctorId);
+        Task<RespuestaMetodos> AddFarmaco(FarmacosUsoActual farmaco);
+        Task<RespuestaMetodos> UpdateFarmaco(FarmacosUsoActual farmaco);
+        Task<RespuestaMetodos> AddFarmacoLista(List<FarmacosUsoActual> farmacos);
+        Task<RespuestaMetodos> UpdateFarmacoLista(List<FarmacosUsoActual> farmacos);
+        Task<List<FarmacosUsoActual>> GetFarmacos(int pacienteId, int doctorId);
     }
 }

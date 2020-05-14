@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IViaAdministracion
     {
-        List<ViaAdministracion> ListaViaAdministracion { get; }
+        Task<List<ViaAdministracion>> ListaViaAdministracion();
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using apisam.entities;
 
 namespace apisam.interfaces
 {
     public interface IExamenFisico
     {
-        RespuestaMetodos AddExamenFisico(ExamenFisico examen);
-        RespuestaMetodos UpdateExamenFisico(ExamenFisico examen);
-        List<ExamenFisico> GetExamenes(int pacienteId, int doctorId);
-        ExamenFisico GetExamenFisico(int pacienteId, int doctorId, int preclinicaId);
+        Task<RespuestaMetodos> AddExamenFisico(ExamenFisico examen);
+        Task<RespuestaMetodos> UpdateExamenFisico(ExamenFisico examen);
+        Task<List<ExamenFisico>> GetExamenes(int pacienteId, int doctorId);
+        Task<ExamenFisico> GetExamenFisico(int pacienteId, int doctorId, int preclinicaId);
     }
 }
