@@ -26,15 +26,15 @@ namespace apisam.web.Controllers
         }
 
         [HttpGet("")]
-        public IEnumerable<ExamenCategoria> Get()
+        public async Task<IActionResult> GetCategoriasExamenes()
         {
-            return CategoriasRepo.CategoriasExamenes;
+            return Ok(await CategoriasRepo.CategoriasExamenes());
         }
 
         [HttpGet("{id}", Name = "GetExamenCategoriaById")]
-        public IActionResult GetExamenCategoriaById(int id)
+        public async Task<IActionResult> GetExamenCategoriaById(int id)
         {
-            return Ok(CategoriasRepo.GetExamenById(id));
+            return Ok(await CategoriasRepo.GetExamenById(id));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,26 +21,25 @@ namespace apisam.repos
 
 
 
-        public List<Profesion> Profesiones
+        public async Task<List<Profesion>> Profesiones()
         {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<Profesion>().ToList();
-            }
+
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<Profesion>();
+
 
         }
 
 
 
-        public RespuestaMetodos Add(Profesion profesion)
+        public async Task<RespuestaMetodos> Add(Profesion profesion)
         {
             var _resp = new RespuestaMetodos();
             try
             {
 
                 using var _db = dbFactory.Open();
-                _db.Save<Profesion>(profesion);
+                await _db.SaveAsync<Profesion>(profesion);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -52,13 +52,13 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos Update(Profesion profesion)
+        public async Task<RespuestaMetodos> Update(Profesion profesion)
         {
             var _resp = new RespuestaMetodos();
             try
             {
                 using var _db = dbFactory.Open();
-                _db.Save<Profesion>(profesion);
+                await _db.SaveAsync<Profesion>(profesion);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -72,10 +72,10 @@ namespace apisam.repos
             return _resp;
 
         }
-        public Profesion GetProfesionById(int id)
+        public async Task<Profesion> GetProfesionById(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<Profesion>().FirstOrDefault(x => x.ProfesionId == id);
+            return await _db.SingleByIdAsync<Profesion>(id);
         }
     }
 }

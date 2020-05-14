@@ -42,9 +42,9 @@ namespace apisam.web.Controllers
         }
         [Authorize(Roles = "1")]
         [HttpGet("")]
-        public IEnumerable<Usuario> Get()
+        public async Task<IActionResult> Get()
         {
-            return UsuariosRepo.Usuarios;
+            return Ok(await UsuariosRepo.Usuarios());
         }
 
         [HttpGet("roles", Name = "GetRoles")]
@@ -55,13 +55,13 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2,3")]
         [HttpPost("profilefoto/{id}", Name = "SubirFoto")]
-        async public Task<IActionResult> SubirFoto([FromRoute] int id, [FromForm]  IFormFile logoImage)
+        public async Task<IActionResult> SubirFoto([FromRoute] int id, [FromForm]  IFormFile logoImage)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var _resp = new RespuestaMetodos();
 
             // obtengo usuario a modificar
-            var _user = UsuariosRepo.GerUserById(id);
+            var _user = await UsuariosRepo.GerUserById(id);
             if (_user == null) return BadRequest();
             string _newFileNameLogo = _user.UsuarioId.ToString() + "-";
             _newFileNameLogo += DateTime.Now.Ticks.ToString() + "-";
@@ -110,7 +110,7 @@ namespace apisam.web.Controllers
                 }
                 if (_resp.Ok)
                 {
-                    RespuestaMetodos _resp2 = UsuariosRepo.UpdateUsuario(_user);
+                    RespuestaMetodos _resp2 = await UsuariosRepo.UpdateUsuario(_user);
 
                     if (_resp2.Ok) return Ok(_user);
 
@@ -136,10 +136,10 @@ namespace apisam.web.Controllers
 
         //[Authorize(Roles = "1")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] Usuario usuario)
+        public async Task<IActionResult> Add([FromBody] Usuario usuario)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = UsuariosRepo.AddUsuario(usuario);
+            RespuestaMetodos _resp = await UsuariosRepo.AddUsuario(usuario);
 
             if (_resp.Ok) return Ok(usuario);
             return BadRequest(_resp);
@@ -147,24 +147,24 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] UsuarioEditarViewModel usuario)
+        public async Task<IActionResult> Update([FromBody] UsuarioEditarViewModel usuario)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var user = UsuariosRepo.GerUserById(usuario.UsuarioId);
+            var user = await UsuariosRepo.GerUserById(usuario.UsuarioId);
             if (user == null) return BadRequest("Usuario no existe");
             user = _mapper.Map<UsuarioEditarViewModel, Usuario>(usuario, user);
-            RespuestaMetodos _resp = UsuariosRepo.UpdateUsuario(user);
+            RespuestaMetodos _resp = await UsuariosRepo.UpdateUsuario(user);
 
             if (_resp.Ok) return Ok(user);
             return BadRequest(_resp);
         }
 
         [HttpPost("Login", Name = "Login")]
-        public IActionResult Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var usuario = UsuariosRepo.GetUsuarioByUserName(model);
+            var usuario = await UsuariosRepo.GetUsuarioByUserName(model);
             if (usuario == null) return NotFound();
             if (!VerificarPasswordHash(model.Password, usuario.PasswordHash, usuario.PasswordSalt))
             {
@@ -202,11 +202,11 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2")]
         [HttpGet("asistentes/page/{pageNo}/limit/{limit}/doctorId/{doctorId}", Name = "GetAsistentes")]
-        public IActionResult GetAsistentes(int pageNo, int limit, [FromQuery] string filter, int doctorId)
+        public async Task<IActionResult> GetAsistentes(int pageNo, int limit, [FromQuery] string filter, int doctorId)
         {
             try
             {
-                var _pageResponse = UsuariosRepo.GetAsistentes(pageNo, limit, filter, doctorId);
+                var _pageResponse = await UsuariosRepo.GetAsistentes(pageNo, limit, filter, doctorId);
                 return Ok(_pageResponse);
             }
             catch (Exception e)
@@ -220,10 +220,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2,3")]
         [HttpPut("changePassword", Name = "ChangePassword")]
-        public IActionResult ChangePassword([FromBody] UserChangePassword model)
+        public async Task<IActionResult> ChangePassword([FromBody] UserChangePassword model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var user = UsuariosRepo.UpdatePassword(model);
+            var user = await UsuariosRepo.UpdatePassword(model);
             if (user != null) return Ok(user);
 
             return BadRequest();
@@ -231,10 +231,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2,3")]
         [HttpGet("info/{id}", Name = "GetUserInfo")]
-        public IActionResult GetUserInfo([FromRoute]int id)
+        public async Task<IActionResult> GetUserInfo([FromRoute]int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(UsuariosRepo.GerUserById(id));
+            return Ok(await UsuariosRepo.GerUserById(id));
         }
 
 

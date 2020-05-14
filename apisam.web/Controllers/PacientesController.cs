@@ -34,21 +34,21 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] Paciente paciente)
+        public async Task<IActionResult> Add([FromBody] Paciente paciente)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = PacienteRepo.AddPaciente(paciente);
+            RespuestaMetodos _resp = await PacienteRepo.AddPaciente(paciente);
             if (_resp.Ok) return Ok(paciente);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2,3")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] PacientesViewModel paciente)
+        public async Task<IActionResult> Update([FromBody] PacientesViewModel paciente)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var _pac = _mapper.Map<PacientesViewModel, Paciente>(paciente);
-            RespuestaMetodos _resp = PacienteRepo.UpdatePaciente(_pac);
+            RespuestaMetodos _resp = await PacienteRepo.UpdatePaciente(_pac);
             if (_resp.Ok)
             {
                 var _pacienteRetorno = PacienteRepo.GetInfoPaciente(paciente.PacienteId);
@@ -61,28 +61,28 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("{id}", Name = "GetUserById")]
-        public IActionResult GetUserById([FromRoute]int id)
+        public async Task<IActionResult> GetUserById([FromRoute]int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(PacienteRepo.GetPacienteById(id));
+            return Ok(await PacienteRepo.GetPacienteById(id));
         }
 
         [Authorize(Roles = "2,3")]
         [HttpGet("identificacion/{identificacion}", Name = "GetPacienteByIdentificacion")]
-        public IActionResult GetPacienteByIdentificacion([FromRoute]string identificacion)
+        public async Task<IActionResult> GetPacienteByIdentificacion([FromRoute]string identificacion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(PacienteRepo.GetPacienteByIdentificacion(identificacion));
+            return Ok(await PacienteRepo.GetPacienteByIdentificacion(identificacion));
         }
 
 
         [Authorize(Roles = "2,3")]
         [HttpGet("page/{pageNo}/limit/{limit}/doctor/{doctorId}", Name = "GetPacientes")]
-        public IActionResult GetPacientes([FromRoute] int pageNo, [FromRoute] int limit, [FromQuery] string filter, [FromRoute] int doctorId)
+        public async Task<IActionResult> GetPacientes([FromRoute] int pageNo, [FromRoute] int limit, [FromQuery] string filter, [FromRoute] int doctorId)
         {
             try
             {
-                var _pageResponse = PacienteRepo.GetPacientes(pageNo, limit, filter, doctorId);
+                var _pageResponse = await PacienteRepo.GetPacientes(pageNo, limit, filter, doctorId);
                 return Ok(_pageResponse);
             }
             catch (Exception e)

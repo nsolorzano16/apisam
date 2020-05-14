@@ -28,50 +28,50 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] List<Diagnosticos> diagnosticos)
+        public async Task<IActionResult> Add([FromBody] List<Diagnosticos> diagnosticos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = diagnosticosRepo.AddDiagnosticoLista(diagnosticos);
+            RespuestaMetodos _resp = await diagnosticosRepo.AddDiagnosticoLista(diagnosticos);
             if (_resp.Ok) return Ok(diagnosticos);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPost("agregar", Name = "AddDiagnostico")]
-        public IActionResult AddDiagnostico([FromBody] Diagnosticos diagnostico)
+        public async Task<IActionResult> AddDiagnostico([FromBody] Diagnosticos diagnostico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = diagnosticosRepo.AddDiagnostico(diagnostico);
+            RespuestaMetodos _resp = await diagnosticosRepo.AddDiagnostico(diagnostico);
             if (_resp.Ok) return Ok(diagnostico);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] List<Diagnosticos> diagnosticos)
+        public async Task<IActionResult> Update([FromBody] List<Diagnosticos> diagnosticos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = diagnosticosRepo.UpdateDiagnosticoLista(diagnosticos);
+            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnosticoLista(diagnosticos);
             if (_resp.Ok) return Ok(diagnosticos);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("editar", Name = "UpdateDiagnostico")]
-        public IActionResult UpdateDiagnostico([FromBody] Diagnosticos diagnostico)
+        public async Task<IActionResult> UpdateDiagnostico([FromBody] Diagnosticos diagnostico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = diagnosticosRepo.UpdateDiagnostico(diagnostico);
+            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnostico(diagnostico);
             if (_resp.Ok) return Ok(diagnostico);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("desactivar", Name = "DesactivarDiagnostico")]
-        public IActionResult DesactivarDiagnostico([FromBody] Diagnosticos diagnostico)
+        public async Task<IActionResult> DesactivarDiagnostico([FromBody] Diagnosticos diagnostico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = diagnosticosRepo.UpdateDiagnostico(diagnostico);
+            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnostico(diagnostico);
             if (_resp.Ok) return Ok(diagnostico);
             return BadRequest(_resp);
         }
@@ -79,10 +79,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetDiagnosticos")]
-        public IActionResult GetDiagnosticos([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetDiagnosticos([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(diagnosticosRepo.GetDiagnosticos(pacienteId, doctorId, preclinicaId));
+            return Ok(await diagnosticosRepo.GetDiagnosticos(pacienteId, doctorId, preclinicaId));
 
         }
     }

@@ -28,40 +28,40 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] List<Notas> notas)
+        public async Task<IActionResult> Add([FromBody] List<Notas> notas)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = notasRepo.AddNotaLista(notas);
+            RespuestaMetodos _resp = await notasRepo.AddNotaLista(notas);
             if (_resp.Ok) return Ok(notas);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] List<Notas> notas)
+        public async Task<IActionResult> Update([FromBody] List<Notas> notas)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = notasRepo.UpdateNotaLista(notas);
+            RespuestaMetodos _resp = await notasRepo.UpdateNotaLista(notas);
             if (_resp.Ok) return Ok(notas);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPost("agregar", Name = "AddNota")]
-        public IActionResult AddNota([FromBody] Notas nota)
+        public async Task<IActionResult> AddNota([FromBody] Notas nota)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = notasRepo.AddNota(nota);
+            RespuestaMetodos _resp = await notasRepo.AddNota(nota);
             if (_resp.Ok) return Ok(nota);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("editar", Name = "UpdateNota")]
-        public IActionResult UpdateNota([FromBody] Notas nota)
+        public async Task<IActionResult> UpdateNota([FromBody] Notas nota)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = notasRepo.UpdateNota(nota);
+            RespuestaMetodos _resp = await notasRepo.UpdateNota(nota);
             if (_resp.Ok) return Ok(nota);
             return BadRequest(_resp);
         }
@@ -70,10 +70,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("desactivar", Name = "DesactivarNota")]
-        public IActionResult DesactivarNota([FromBody] Notas nota)
+        public async Task<IActionResult> DesactivarNota([FromBody] Notas nota)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = notasRepo.UpdateNota(nota);
+            RespuestaMetodos _resp = await notasRepo.UpdateNota(nota);
             if (_resp.Ok) return Ok(nota);
             return BadRequest(_resp);
         }
@@ -81,10 +81,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetNotas")]
-        public IActionResult GetNotas([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetNotas([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(notasRepo.GetNotas(pacienteId, doctorId, preclinicaId));
+            return Ok(await notasRepo.GetNotas(pacienteId, doctorId, preclinicaId));
 
         }
 

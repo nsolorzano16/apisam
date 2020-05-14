@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,26 +21,24 @@ namespace apisam.repos
 
 
 
-        public List<Escolaridad> Escolaridades
+        public async Task<List<Escolaridad>> Escolaridades()
         {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<Escolaridad>().ToList();
-            }
+
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<Escolaridad>();
 
         }
 
 
 
-        public RespuestaMetodos Add(Escolaridad escolaridad)
+        public async Task<RespuestaMetodos> Add(Escolaridad escolaridad)
         {
             var _resp = new RespuestaMetodos();
             try
             {
                 using var _db = dbFactory.Open();
 
-                _db.Save<Escolaridad>(escolaridad);
+                await _db.SaveAsync<Escolaridad>(escolaridad);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -50,13 +49,13 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos Update(Escolaridad escolaridad)
+        public async Task<RespuestaMetodos> Update(Escolaridad escolaridad)
         {
             var _resp = new RespuestaMetodos();
             try
             {
                 using var _db = dbFactory.Open();
-                _db.Save<Escolaridad>(escolaridad);
+                await _db.SaveAsync<Escolaridad>(escolaridad);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -67,10 +66,10 @@ namespace apisam.repos
             return _resp;
 
         }
-        public Escolaridad GetEscolaridadById(int id)
+        public async Task<Escolaridad> GetEscolaridadById(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<Escolaridad>().FirstOrDefault(x => x.EscolaridadId == id);
+            return await _db.SingleAsync<Escolaridad>(x => x.EscolaridadId == id);
         }
     }
 }

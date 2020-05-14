@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
@@ -21,7 +22,7 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public RespuestaMetodos AddPreclinica(Preclinica preclinica)
+        public async Task<RespuestaMetodos> AddPreclinica(Preclinica preclinica)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -30,7 +31,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 preclinica.CreadoFecha = dateTime_HN;
                 preclinica.ModificadoFecha = dateTime_HN;
-                _db.Save<Preclinica>(preclinica);
+                await _db.SaveAsync<Preclinica>(preclinica);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -42,7 +43,7 @@ namespace apisam.repos
 
             return _resp;
         }
-        public RespuestaMetodos UpdatePreclinica(Preclinica preclinica)
+        public async Task<RespuestaMetodos> UpdatePreclinica(Preclinica preclinica)
 
         {
             var _resp = new RespuestaMetodos();
@@ -51,7 +52,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 preclinica.ModificadoFecha = dateTime_HN;
-                _db.Save<Preclinica>(preclinica);
+                await _db.SaveAsync<Preclinica>(preclinica);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -64,7 +65,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public PreclinicaViewModel GetInfoPreclinica(int id)
+        public async Task<PreclinicaViewModel> GetInfoPreclinica(int id)
         {
             using var _db = dbFactory.Open();
             var _qry = $@"SELECT
@@ -106,14 +107,14 @@ namespace apisam.repos
                         FROM Preclinica p
                             INNER JOIN Paciente pc ON p.PacienteId = pc.PacienteId
                             WHERE p.PreclinicaId = ${id}";
-            var pre = _db.Select<PreclinicaViewModel>(_qry).Single();
+            return await _db.SingleAsync<PreclinicaViewModel>(_qry);
 
-            return pre;
+
         }
 
 
 
-        public PageResponse<Preclinica> GetPreclinicasPaginado
+        public async Task<PageResponse<Preclinica>> GetPreclinicasPaginado
             (int pageNo, int limit, int doctorId)
 
         {
@@ -132,7 +133,7 @@ namespace apisam.repos
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
             using var _db = dbFactory.Open();
-            var _usuarios = _db.Select<Preclinica>(_qry).ToList();
+            var _preclinicas = await _db.SelectAsync<Preclinica>(_qry);
             if (limit > 0)
             {
                 _response.TotalItems =
@@ -145,14 +146,14 @@ namespace apisam.repos
                 else
                     _response.CurrentPage = _response.TotalPages;
 
-                _response.Items = _usuarios;
+                _response.Items = _preclinicas;
                 _response.ItemCount = _response.Items.Count;
             }
 
             return _response;
         }
 
-        public PageResponse<PreclinicaViewModel>
+        public async Task<PageResponse<PreclinicaViewModel>>
             GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
         {
 
@@ -205,7 +206,7 @@ namespace apisam.repos
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
             using var _db = dbFactory.Open();
-            var _preclinicas = _db.Select<PreclinicaViewModel>(_qry).ToList();
+            var _preclinicas = await _db.SelectAsync<PreclinicaViewModel>(_qry);
             if (limit > 0)
             {
                 _response.TotalItems =

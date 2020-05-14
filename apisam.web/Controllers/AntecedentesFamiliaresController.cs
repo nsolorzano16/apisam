@@ -29,10 +29,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] AntecedentesFamiliaresPersonales antecedentes)
+        public async Task<IActionResult> Add([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = AntecedentesRepo.AddAntecedentes(antecedentes);
+            RespuestaMetodos _resp = await AntecedentesRepo.AddAntecedentes(antecedentes);
             if (_resp.Ok) return Ok(antecedentes);
             return BadRequest(_resp);
 
@@ -40,20 +40,20 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] AntecedentesFamiliaresPersonales antecedentes)
+        public async Task<IActionResult> Update([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = AntecedentesRepo.UpdateAntecedentes(antecedentes);
+            RespuestaMetodos _resp = await AntecedentesRepo.UpdateAntecedentes(antecedentes);
             if (_resp.Ok) return Ok(antecedentes);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetAntecedente")]
-        public IActionResult GetAntecedente([FromRoute] int pacienteId, int doctorId)
+        public async Task<IActionResult> GetAntecedente([FromRoute] int pacienteId, int doctorId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _antecedente = AntecedentesRepo.GetAntecedente(pacienteId, doctorId);
+            var _antecedente = await AntecedentesRepo.GetAntecedente(pacienteId, doctorId);
             if (_antecedente != null) return Ok(_antecedente);
             return Ok();
 

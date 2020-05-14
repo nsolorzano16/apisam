@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,7 +21,7 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public RespuestaMetodos AddAHabito(Habitos habito)
+        public async Task<RespuestaMetodos> AddAHabito(Habitos habito)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -29,7 +30,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 habito.CreadoFecha = dateTime_HN;
                 habito.ModificadoFecha = dateTime_HN;
-                _db.Save<Habitos>(habito);
+                await _db.SaveAsync<Habitos>(habito);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -42,7 +43,7 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos UpdateAHabito(Habitos habito)
+        public async Task<RespuestaMetodos> UpdateAHabito(Habitos habito)
         {
 
             var _resp = new RespuestaMetodos();
@@ -51,7 +52,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 habito.ModificadoFecha = dateTime_HN;
-                _db.Save<Habitos>(habito);
+                await _db.SaveAsync<Habitos>(habito);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -63,13 +64,13 @@ namespace apisam.repos
 
             return _resp;
         }
-        public Habitos GetHabito(int pacienteId, int doctorId)
+        public async Task<Habitos> GetHabito(int pacienteId, int doctorId)
         {
             using var _db = dbFactory.Open();
-            var habito = _db.Select<Habitos>
-                ().FirstOrDefault(x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true);
-            return habito;
+            return await _db.SingleAsync<Habitos>
+                 (x => x.PacienteId == pacienteId
+                 && x.DoctorId == doctorId && x.Activo == true);
+
         }
     }
 }

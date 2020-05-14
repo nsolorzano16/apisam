@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -23,7 +24,7 @@ namespace apisam.repos
         }
 
 
-        public RespuestaMetodos AddFarmaco(FarmacosUsoActual farmaco)
+        public async Task<RespuestaMetodos> AddFarmaco(FarmacosUsoActual farmaco)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -32,7 +33,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 farmaco.CreadoFecha = dateTime_HN;
                 farmaco.ModificadoFecha = dateTime_HN;
-                _db.Save<FarmacosUsoActual>(farmaco);
+                await _db.SaveAsync<FarmacosUsoActual>(farmaco);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -44,7 +45,7 @@ namespace apisam.repos
 
             return _resp;
         }
-        public RespuestaMetodos UpdateFarmaco(FarmacosUsoActual farmaco)
+        public async Task<RespuestaMetodos> UpdateFarmaco(FarmacosUsoActual farmaco)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -52,7 +53,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 farmaco.ModificadoFecha = dateTime_HN;
-                _db.Save<FarmacosUsoActual>(farmaco);
+                await _db.SaveAsync<FarmacosUsoActual>(farmaco);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -64,7 +65,7 @@ namespace apisam.repos
 
             return _resp;
         }
-        public RespuestaMetodos AddFarmacoLista(List<FarmacosUsoActual> farmacos)
+        public async Task<RespuestaMetodos> AddFarmacoLista(List<FarmacosUsoActual> farmacos)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -76,7 +77,7 @@ namespace apisam.repos
                     x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
-                _db.SaveAll<FarmacosUsoActual>(farmacos);
+                await _db.SaveAllAsync<FarmacosUsoActual>(farmacos);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -89,7 +90,7 @@ namespace apisam.repos
 
             return _resp;
         }
-        public RespuestaMetodos UpdateFarmacoLista(List<FarmacosUsoActual> farmacos)
+        public async Task<RespuestaMetodos> UpdateFarmacoLista(List<FarmacosUsoActual> farmacos)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -101,7 +102,7 @@ namespace apisam.repos
                     f.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
-                _db.SaveAll<FarmacosUsoActual>(farmacos);
+                await _db.SaveAllAsync<FarmacosUsoActual>(farmacos);
                 _resp.Ok = true;
 
             }
@@ -113,12 +114,12 @@ namespace apisam.repos
 
             return _resp;
         }
-        public List<FarmacosUsoActual> GetFarmacos(int pacienteId, int doctorId)
+        public async Task<List<FarmacosUsoActual>> GetFarmacos(int pacienteId, int doctorId)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<FarmacosUsoActual>(
+            return await _db.SelectAsync<FarmacosUsoActual>(
                 x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true).ToList();
+                && x.DoctorId == doctorId && x.Activo == true);
         }
     }
 }

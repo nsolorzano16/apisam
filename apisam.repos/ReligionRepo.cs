@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,25 +21,24 @@ namespace apisam.repos
 
 
 
-        public List<Religion> Religiones
+        public async Task<List<Religion>> Religiones()
         {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<Religion>().ToList();
-            }
+
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<Religion>();
+
 
         }
 
 
 
-        public RespuestaMetodos Add(Religion religion)
+        public async Task<RespuestaMetodos> Add(Religion religion)
         {
             var _resp = new RespuestaMetodos();
             try
             {
                 using var _db = dbFactory.Open();
-                _db.Save<Religion>(religion);
+                await _db.SaveAsync<Religion>(religion);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -53,13 +53,13 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos Update(Religion religion)
+        public async Task<RespuestaMetodos> Update(Religion religion)
         {
             var _resp = new RespuestaMetodos();
             try
             {
                 using var _db = dbFactory.Open();
-                _db.Save<Religion>(religion);
+                await _db.SaveAsync<Religion>(religion);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -73,10 +73,10 @@ namespace apisam.repos
             return _resp;
 
         }
-        public Religion GetReligionById(int id)
+        public async Task<Religion> GetReligionById(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<Religion>().FirstOrDefault(x => x.ReligionId == id);
+            return await _db.SingleByIdAsync<Religion>(id);
         }
     }
 }

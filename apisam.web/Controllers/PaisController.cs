@@ -25,15 +25,15 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<Pais> Get()
+        public async Task<IActionResult> Get()
         {
-            return PaisRepo.Paises;
+            return Ok(await PaisRepo.Paises());
         }
 
         [HttpGet("{id}", Name = "GetPaisById")]
-        public IActionResult GetPaisById(int id)
+        public async Task<IActionResult> GetPaisById(int id)
         {
-            return Ok(PaisRepo.GetPaisById(id));
+            return Ok(await PaisRepo.GetPaisById(id));
         }
     }
 }

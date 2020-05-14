@@ -28,50 +28,50 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] List<FarmacosUsoActual> farmacos)
+        public async Task<IActionResult> Add([FromBody] List<FarmacosUsoActual> farmacos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = farmacosRepo.AddFarmacoLista(farmacos);
+            RespuestaMetodos _resp = await farmacosRepo.AddFarmacoLista(farmacos);
             if (_resp.Ok) return Ok(farmacos);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPost("agregar", Name = "AddFarmaco")]
-        public IActionResult AddFarmaco([FromBody] FarmacosUsoActual farmaco)
+        public async Task<IActionResult> AddFarmaco([FromBody] FarmacosUsoActual farmaco)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = farmacosRepo.AddFarmaco(farmaco);
+            RespuestaMetodos _resp = await farmacosRepo.AddFarmaco(farmaco);
             if (_resp.Ok) return Ok(farmaco);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] List<FarmacosUsoActual> farmacos)
+        public async Task<IActionResult> Update([FromBody] List<FarmacosUsoActual> farmacos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = farmacosRepo.UpdateFarmacoLista(farmacos);
+            RespuestaMetodos _resp = await farmacosRepo.UpdateFarmacoLista(farmacos);
             if (_resp.Ok) return Ok(farmacos);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("editar", Name = "UpdateFarmaco")]
-        public IActionResult UpdateFarmaco([FromBody] FarmacosUsoActual farmaco)
+        public async Task<IActionResult> UpdateFarmaco([FromBody] FarmacosUsoActual farmaco)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = farmacosRepo.UpdateFarmaco(farmaco);
+            RespuestaMetodos _resp = await farmacosRepo.UpdateFarmaco(farmaco);
             if (_resp.Ok) return Ok(farmaco);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("desactivar", Name = "Desactivar")]
-        public IActionResult Desactivar([FromBody] FarmacosUsoActual farmaco)
+        public async Task<IActionResult> Desactivar([FromBody] FarmacosUsoActual farmaco)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = farmacosRepo.UpdateFarmaco(farmaco);
+            RespuestaMetodos _resp = await farmacosRepo.UpdateFarmaco(farmaco);
             if (_resp.Ok) return Ok(farmaco);
             return BadRequest(_resp);
         }
@@ -79,10 +79,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetFarmacos")]
-        public IActionResult GetFarmacos([FromRoute] int pacienteId, int doctorId)
+        public async Task<IActionResult> GetFarmacos([FromRoute] int pacienteId, int doctorId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _farmacos = farmacosRepo.GetFarmacos(pacienteId, doctorId);
+            var _farmacos = await farmacosRepo.GetFarmacos(pacienteId, doctorId);
             if (_farmacos != null) return Ok(_farmacos);
             return Ok();
 

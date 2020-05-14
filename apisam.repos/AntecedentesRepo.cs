@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -23,7 +24,7 @@ namespace apisam.repos
 
 
 
-        public RespuestaMetodos AddAntecedentes(AntecedentesFamiliaresPersonales antecedente)
+        public async Task<RespuestaMetodos> AddAntecedentes(AntecedentesFamiliaresPersonales antecedente)
         {
 
             var _resp = new RespuestaMetodos();
@@ -33,7 +34,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 antecedente.CreadoFecha = dateTime_HN;
                 antecedente.ModificadoFecha = dateTime_HN;
-                _db.Save<AntecedentesFamiliaresPersonales>(antecedente);
+                await _db.SaveAsync<AntecedentesFamiliaresPersonales>(antecedente);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -45,7 +46,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public RespuestaMetodos UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedente)
+        public async Task<RespuestaMetodos> UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedente)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -53,7 +54,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 antecedente.ModificadoFecha = dateTime_HN;
-                _db.Save<AntecedentesFamiliaresPersonales>(antecedente);
+                await _db.SaveAsync<AntecedentesFamiliaresPersonales>(antecedente);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -63,11 +64,12 @@ namespace apisam.repos
             }
             return _resp;
         }
-        public AntecedentesFamiliaresPersonales GetAntecedente(int pacienteId, int doctorId)
+
+        public async Task<AntecedentesFamiliaresPersonales> GetAntecedente(int pacienteId, int doctorId)
         {
             using var _db = dbFactory.Open();
-            var antecedente = _db.Select<AntecedentesFamiliaresPersonales>
-                ().FirstOrDefault(x => x.PacienteId == pacienteId
+            var antecedente = await _db.SingleAsync<AntecedentesFamiliaresPersonales>
+                (x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
             return antecedente;
         }

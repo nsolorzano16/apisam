@@ -26,15 +26,16 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<Departamento> Get()
+        public async Task<IActionResult> GetDepartamentos()
         {
-            return DepartamentosRepo.Departamentos;
+
+            return Ok(await DepartamentosRepo.Departamentos());
         }
 
         [HttpGet("{id}", Name = "GetDepartamento")]
-        public IActionResult GetDepartamento(int id)
+        public async Task<IActionResult> GetDepartamento(int id)
         {
-            return Ok(DepartamentosRepo.GetDepartamentoById(id));
+            return Ok(await DepartamentosRepo.GetDepartamentoById(id));
         }
     }
 }

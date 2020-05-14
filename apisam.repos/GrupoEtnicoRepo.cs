@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,26 +21,25 @@ namespace apisam.repos
 
 
 
-        public List<GrupoEtnico> GruposEtnicos
+        public async Task<List<GrupoEtnico>> GruposEtnicos()
         {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<GrupoEtnico>().ToList();
-            }
+
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<GrupoEtnico>();
+
 
         }
 
 
 
-        public RespuestaMetodos Add(GrupoEtnico grupoEtnico)
+        public async Task<RespuestaMetodos> Add(GrupoEtnico grupoEtnico)
         {
             var _resp = new RespuestaMetodos();
             try
             {
 
                 using var _db = dbFactory.Open();
-                _db.Save<GrupoEtnico>(grupoEtnico);
+                await _db.SaveAsync<GrupoEtnico>(grupoEtnico);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -52,14 +52,14 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos Update(GrupoEtnico grupoEtnico)
+        public async Task<RespuestaMetodos> Update(GrupoEtnico grupoEtnico)
         {
             var _resp = new RespuestaMetodos();
             try
             {
 
                 using var _db = dbFactory.Open();
-                _db.Save<GrupoEtnico>(grupoEtnico);
+                await _db.SaveAsync<GrupoEtnico>(grupoEtnico);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -74,10 +74,10 @@ namespace apisam.repos
         }
 
 
-        public GrupoEtnico GetGrupoEtnicoById(int id)
+        public async Task<GrupoEtnico> GetGrupoEtnicoById(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<GrupoEtnico>().FirstOrDefault(x => x.GrupoEtnicoId == id);
+            return await _db.SingleByIdAsync<GrupoEtnico>(id);
         }
     }
 }

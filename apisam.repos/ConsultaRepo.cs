@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
@@ -21,45 +22,45 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public ConsultaViewModel GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId)
+        public async Task<ConsultaViewModel> GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId)
         {
             ConsultaViewModel _resp = new ConsultaViewModel();
             using var _db = dbFactory.Open();
-            var _preclinica = _db.Single<Preclinica>(x => x.PreclinicaId ==
+            var _preclinica = await _db.SingleAsync<Preclinica>(x => x.PreclinicaId ==
             preclinicaId && x.PacienteId == pacienteId && x.DoctorId == doctorId
             && x.Activo == true && x.Atendida == true);
 
-            var _antecedentesPersonales = _db.Single<AntecedentesFamiliaresPersonales>
+            var _antecedentesPersonales = await _db.SingleAsync<AntecedentesFamiliaresPersonales>
                 (x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
-            var _habitos = _db.Single<Habitos>(x => x.PacienteId
+            var _habitos = await _db.SingleAsync<Habitos>(x => x.PacienteId
             == pacienteId && x.DoctorId == doctorId && x.Activo == true);
 
-            var _historialGinecoObstetra = _db.Single<HistorialGinecoObstetra>(
+            var _historialGinecoObstetra = await _db.SingleAsync<HistorialGinecoObstetra>(
                 x => x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
-            var _farmacos = _db.Select<FarmacosUsoActual>
+            var _farmacos = await _db.SelectAsync<FarmacosUsoActual>
                 (x => x.PacienteId ==
-                pacienteId && x.DoctorId == doctorId && x.Activo == true).ToList();
+                pacienteId && x.DoctorId == doctorId && x.Activo == true);
 
-            var _examenFisico = _db.Single<ExamenFisico>(
+            var _examenFisico = await _db.SingleAsync<ExamenFisico>(
                 x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
-            var _examenFisicoGinecologico = _db.Single<ExamenFisicoGinecologico>(
+            var _examenFisicoGinecologico = await _db.SingleAsync<ExamenFisicoGinecologico>(
                 x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
-            var _diagnosticos = _db.Select<Diagnosticos>(x => x.PreclinicaId == preclinicaId
+            var _diagnosticos = await _db.SelectAsync<Diagnosticos>(x => x.PreclinicaId == preclinicaId
             && x.PacienteId == pacienteId
-            && x.DoctorId == doctorId && x.Activo == true).ToList();
+            && x.DoctorId == doctorId && x.Activo == true);
 
-            var _notas = _db.Select<Notas>(x => x.PreclinicaId == preclinicaId
-            && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true).ToList();
+            var _notas = await _db.SelectAsync<Notas>(x => x.PreclinicaId == preclinicaId
+            && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
 
-            var _consultaGeneral = _db.Single<ConsultaGeneral>(x => x.PreclinicaId == preclinicaId
+            var _consultaGeneral = await _db.SingleAsync<ConsultaGeneral>(x => x.PreclinicaId == preclinicaId
              && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
 
             var _qry = $@"SELECT
@@ -83,10 +84,11 @@ namespace apisam.repos
                                             FROM ExamenIndicado ei
                                                 INNER JOIN ExamenCategoria ec on ei.ExamenCategoriaId = ec.ExamenCategoriaId
                                                 INNER JOIN ExamenTipo et on ei.ExamenTipoId = et.ExamenTipoId
-                                                INNER JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId";
+                                                LEFT JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId
+                                                WHERE ei.PacienteId ={pacienteId} and ei.DoctorId = {doctorId}
+                                                and ei.PreclinicaId = {preclinicaId} and ei.activo = 1";
 
-            var _listaExamenes = _db.Select<ExamenesIndicadosViewModel>(_qry
-                ).ToList();
+            var _listaExamenes = await _db.SelectAsync<ExamenesIndicadosViewModel>(_qry);
 
             var _planTerapeutico = _db.Single<PlanTerapeutico>(x => x.PreclinicaId == preclinicaId
              && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
@@ -109,7 +111,7 @@ namespace apisam.repos
 
 
 
-        public RespuestaMetodos AddConsultaGeneral(ConsultaGeneral consulta)
+        public async Task<RespuestaMetodos> AddConsultaGeneral(ConsultaGeneral consulta)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -118,7 +120,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 consulta.CreadoFecha = dateTime_HN;
                 consulta.ModificadoFecha = dateTime_HN;
-                _db.Save<ConsultaGeneral>(consulta);
+                await _db.SaveAsync<ConsultaGeneral>(consulta);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -130,7 +132,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public RespuestaMetodos UpdateConsultaGeneral(ConsultaGeneral consulta)
+        public async Task<RespuestaMetodos> UpdateConsultaGeneral(ConsultaGeneral consulta)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -138,7 +140,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 consulta.ModificadoFecha = dateTime_HN;
-                _db.Save<ConsultaGeneral>(consulta);
+                await _db.SaveAsync<ConsultaGeneral>(consulta);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -149,10 +151,10 @@ namespace apisam.repos
             return _resp;
         }
 
-        public ConsultaGeneral GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            var consulta = _db.Single<ConsultaGeneral>(x => x.PacienteId == pacienteId
+            var consulta = await _db.SingleAsync<ConsultaGeneral>(x => x.PacienteId == pacienteId
             && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
             return consulta;
         }

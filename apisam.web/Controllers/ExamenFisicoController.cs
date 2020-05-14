@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -24,10 +25,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] ExamenFisico examenFisico)
+        public async Task<IActionResult> Add([FromBody] ExamenFisico examenFisico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ExamenFisicoRepo.AddExamenFisico(examenFisico);
+            RespuestaMetodos _resp = await ExamenFisicoRepo.AddExamenFisico(examenFisico);
             if (_resp.Ok) return Ok(examenFisico);
             return BadRequest(_resp);
 
@@ -35,20 +36,20 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] ExamenFisico examenFisico)
+        public async Task<IActionResult> Update([FromBody] ExamenFisico examenFisico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ExamenFisicoRepo.UpdateExamenFisico(examenFisico);
+            RespuestaMetodos _resp = await ExamenFisicoRepo.UpdateExamenFisico(examenFisico);
             if (_resp.Ok) return Ok(examenFisico);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetExamenFisico")]
-        public IActionResult GetExamenFisico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetExamenFisico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(ExamenFisicoRepo.GetExamenFisico(pacienteId, doctorId, preclinicaId));
+            return Ok(await ExamenFisicoRepo.GetExamenFisico(pacienteId, doctorId, preclinicaId));
 
         }
     }

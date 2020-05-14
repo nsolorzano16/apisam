@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -22,20 +23,19 @@ namespace apisam.repos
         }
 
 
-        public List<ExamenCategoria> CategoriasExamenes
-        {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<ExamenCategoria>().ToList();
-            }
-        }
-
-        public ExamenCategoria GetExamenById(int examenId)
+        public async Task<List<ExamenCategoria>> CategoriasExamenes()
         {
 
             using var _db = dbFactory.Open();
-            return _db.SingleById<ExamenCategoria>(examenId);
+            return await _db.SelectAsync<ExamenCategoria>();
+
+        }
+
+        public async Task<ExamenCategoria> GetExamenById(int examenId)
+        {
+
+            using var _db = dbFactory.Open();
+            return await _db.SingleByIdAsync<ExamenCategoria>(examenId);
         }
 
 

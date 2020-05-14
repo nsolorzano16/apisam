@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -22,7 +23,7 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public RespuestaMetodos AddDiagnostico(Diagnosticos diagnostico)
+        public async Task<RespuestaMetodos> AddDiagnostico(Diagnosticos diagnostico)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -31,7 +32,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 diagnostico.CreadoFecha = dateTime_HN;
                 diagnostico.ModificadoFecha = dateTime_HN;
-                _db.Save<Diagnosticos>(diagnostico);
+                await _db.SaveAsync<Diagnosticos>(diagnostico);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -42,7 +43,7 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos AddDiagnosticoLista(List<Diagnosticos> diagnosticos)
+        public async Task<RespuestaMetodos> AddDiagnosticoLista(List<Diagnosticos> diagnosticos)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -54,7 +55,7 @@ namespace apisam.repos
                     x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
-                _db.SaveAll<Diagnosticos>(diagnosticos);
+                await _db.SaveAllAsync<Diagnosticos>(diagnosticos);
                 _resp.Ok = true;
 
             }
@@ -68,7 +69,7 @@ namespace apisam.repos
 
         }
 
-        public RespuestaMetodos UpdateDiagnosticoLista(List<Diagnosticos> diagnosticos)
+        public async Task<RespuestaMetodos> UpdateDiagnosticoLista(List<Diagnosticos> diagnosticos)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -79,7 +80,7 @@ namespace apisam.repos
                     x.ModificadoFecha = dateTime_HN;
                 });
                 using var _db = dbFactory.Open();
-                _db.SaveAll<Diagnosticos>(diagnosticos);
+                await _db.SaveAllAsync<Diagnosticos>(diagnosticos);
                 _resp.Ok = true;
 
             }
@@ -93,7 +94,7 @@ namespace apisam.repos
 
         }
 
-        public RespuestaMetodos UpdateDiagnostico(Diagnosticos diagnostico)
+        public async Task<RespuestaMetodos> UpdateDiagnostico(Diagnosticos diagnostico)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -101,7 +102,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 diagnostico.ModificadoFecha = dateTime_HN;
-                _db.Save<Diagnosticos>(diagnostico);
+                await _db.SaveAsync<Diagnosticos>(diagnostico);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -112,12 +113,12 @@ namespace apisam.repos
 
             return _resp;
         }
-        public List<Diagnosticos> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<Diagnosticos>> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<Diagnosticos>(
+            return await _db.SelectAsync<Diagnosticos>(
                 x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true).ToList();
+                && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
 
         }
     }

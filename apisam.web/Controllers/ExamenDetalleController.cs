@@ -26,15 +26,15 @@ namespace apisam.web.Controllers
         }
 
         [HttpGet("examentipoid/{examenTipoId}/examencategoriaid/{examenCategoriaId}", Name = "GetDetalleExamenes")]
-        public IActionResult GetDetalleExamenes([FromRoute] int examenTipoId, [FromRoute] int examenCategoriaId)
+        public async Task<IActionResult> GetDetalleExamenes([FromRoute] int examenTipoId, [FromRoute] int examenCategoriaId)
         {
-            return Ok(DetalleRepo.GetDetalleExamenes(examenTipoId, examenCategoriaId));
+            return Ok(await DetalleRepo.GetDetalleExamenes(examenTipoId, examenCategoriaId));
         }
 
         [HttpGet("{id}", Name = "GetExamenDetalleById")]
-        public IActionResult GetExamenDetalleById([FromRoute] int id)
+        public async Task<IActionResult> GetExamenDetalleById([FromRoute] int id)
         {
-            return Ok(DetalleRepo.GetExamenDetalleById(id));
+            return Ok(await DetalleRepo.GetExamenDetalleById(id));
         }
     }
 }

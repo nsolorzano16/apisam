@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,7 +21,7 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public RespuestaMetodos AddAHistorial(HistorialGinecoObstetra historial)
+        public async Task<RespuestaMetodos> AddAHistorial(HistorialGinecoObstetra historial)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -29,7 +30,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 historial.CreadoFecha = dateTime_HN;
                 historial.ModificadoFecha = dateTime_HN;
-                _db.Save<HistorialGinecoObstetra>(historial);
+                await _db.SaveAsync<HistorialGinecoObstetra>(historial);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -42,7 +43,7 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos UpdateAHistorial(HistorialGinecoObstetra historial)
+        public async Task<RespuestaMetodos> UpdateAHistorial(HistorialGinecoObstetra historial)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -50,7 +51,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 historial.ModificadoFecha = dateTime_HN;
-                _db.Save<HistorialGinecoObstetra>(historial);
+                await _db.SaveAsync<HistorialGinecoObstetra>(historial);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -62,13 +63,13 @@ namespace apisam.repos
 
             return _resp;
         }
-        public HistorialGinecoObstetra GetHistorial(int pacienteId, int doctorId)
+        public async Task<HistorialGinecoObstetra> GetHistorial(int pacienteId, int doctorId)
         {
             using var _db = dbFactory.Open();
-            var historial = _db.Select<HistorialGinecoObstetra>
-                ().FirstOrDefault(x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true);
-            return historial;
+            return await _db.SingleAsync<HistorialGinecoObstetra>
+                 (x => x.PacienteId == pacienteId
+                 && x.DoctorId == doctorId && x.Activo == true);
+
         }
     }
 }

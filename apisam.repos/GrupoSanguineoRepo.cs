@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,20 +21,19 @@ namespace apisam.repos
 
 
 
-        public List<GrupoSanguineo> GruposSanguineos
+        public async Task<List<GrupoSanguineo>> GruposSanguineos()
 
         {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<GrupoSanguineo>().ToList();
-            }
+
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<GrupoSanguineo>();
+
 
         }
-        public GrupoSanguineo GetGrupoSanguineoById(int id)
+        public async Task<GrupoSanguineo> GetGrupoSanguineoById(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<GrupoSanguineo>().FirstOrDefault(x => x.GrupoSanguineoId == id);
+            return await _db.SingleByIdAsync<GrupoSanguineo>(id);
         }
     }
 }

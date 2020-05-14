@@ -28,10 +28,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] ExamenFisicoGinecologico examen)
+        public async Task<IActionResult> Add([FromBody] ExamenFisicoGinecologico examen)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ExamenGinecologicoRepo.AddExamenFisicoGinecologico(examen);
+            RespuestaMetodos _resp = await ExamenGinecologicoRepo.AddExamenFisicoGinecologico(examen);
             if (_resp.Ok) return Ok(examen);
             return BadRequest(_resp);
 
@@ -39,20 +39,21 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] ExamenFisicoGinecologico examen)
+        public async Task<IActionResult> Update([FromBody] ExamenFisicoGinecologico examen)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ExamenGinecologicoRepo.UpdateExamenFisicoGinecologico(examen);
+            RespuestaMetodos _resp = await ExamenGinecologicoRepo.UpdateExamenFisicoGinecologico(examen);
             if (_resp.Ok) return Ok(examen);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetExamenFisicoGinecologico")]
-        public IActionResult GetExamenFisicoGinecologico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetExamenFisicoGinecologico([FromRoute] int pacienteId,
+            [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _examen = ExamenGinecologicoRepo.GetExamenGinecologico(pacienteId, doctorId, preclinicaId);
+            var _examen = await ExamenGinecologicoRepo.GetExamenGinecologico(pacienteId, doctorId, preclinicaId);
             if (_examen != null) return Ok(_examen);
 
             return Ok();

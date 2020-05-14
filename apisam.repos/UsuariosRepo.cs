@@ -7,6 +7,7 @@ using System.Linq;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.entities.ViewModels.UsuariosTable;
+using System.Threading.Tasks;
 
 namespace apisam.repositories
 {
@@ -27,13 +28,11 @@ namespace apisam.repositories
             //hondurasTime = TimeZoneInfo.Local;
         }
 
-        public List<Usuario> Usuarios
+        public async Task<List<Usuario>> Usuarios()
         {
-            get
-            {
-                var _db = dbFactory.Open();
-                return _db.Select<Usuario>().ToList();
-            }
+            var _db = dbFactory.Open();
+            return await _db.SelectAsync<Usuario>();
+
         }
 
         public List<Rol> Roles
@@ -45,14 +44,14 @@ namespace apisam.repositories
             }
         }
 
-        public RespuestaMetodos AddUsuario(Usuario usuario)
+        public async Task<RespuestaMetodos> AddUsuario(Usuario usuario)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             var _db = dbFactory.Open();
             try
             {
-                var usuarioBuscado = _db.Select<Usuario>().FirstOrDefault(x =>
+                var usuarioBuscado = await _db.SingleAsync<Usuario>(x =>
            x.UserName == usuario.UserName ||
             x.Identificacion == usuario.Identificacion || x.Email == usuario.Email);
                 if (usuarioBuscado == null)
@@ -68,7 +67,7 @@ namespace apisam.repositories
                     usuario.Edad = CalculateAge(usuario.FechaNacimiento);
                     usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
 
-                    _db.Save<Usuario>(usuario);
+                    await _db.SaveAsync<Usuario>(usuario);
                     _resp.Ok = true;
 
 
@@ -90,7 +89,7 @@ namespace apisam.repositories
 
         }
 
-        public RespuestaMetodos UpdateUsuario(Usuario usuario)
+        public async Task<RespuestaMetodos> UpdateUsuario(Usuario usuario)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -99,7 +98,7 @@ namespace apisam.repositories
                 var _db = dbFactory.Open();
                 usuario.ModificadoFecha = dateTime_HN;
                 usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-                _db.Save(usuario);
+                await _db.SaveAsync(usuario);
                 _resp.Ok = true;
 
             }
@@ -114,27 +113,24 @@ namespace apisam.repositories
 
         }
 
-        public Usuario GetUsuarioByUserName(LoginViewModel usuario)
+        public async Task<Usuario> GetUsuarioByUserName(LoginViewModel usuario)
         {
             var _db = dbFactory.Open();
-            var user = _db.Select<Usuario>().FirstOrDefault(
+            return await _db.SingleAsync<Usuario>(
                 x => x.UserName == usuario.Usuario &&
             x.Activo == true);
-            if (user != null) return user;
 
-            return null;
+
         }
 
-        public Usuario GerUserById(int id)
+        public async Task<Usuario> GerUserById(int id)
         {
             var _db = dbFactory.Open();
-            var _user = _db.Select<Usuario>
-                ().FirstOrDefault(x => x.UsuarioId == id);
-            if (_user != null) return _user;
-            return null;
+            return await _db.SingleByIdAsync<Usuario>(id);
+
         }
 
-        public PageResponse<Usuario>
+        public async Task<PageResponse<Usuario>>
             GetAsistentes(int pageNo, int limit, string filter, int doctorId)
         {
             var _response = new PageResponse<Usuario>();
@@ -153,7 +149,7 @@ namespace apisam.repositories
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
             using var _db = dbFactory.Open();
-            var _usuarios = _db.Select<Usuario>(_qry).ToList();
+            var _usuarios = await _db.SelectAsync<Usuario>(_qry);
             if (limit > 0)
             {
                 _response.TotalItems =
@@ -175,13 +171,13 @@ namespace apisam.repositories
         }
 
 
-        public Usuario UpdatePassword(UserChangePassword model)
+        public async Task<Usuario> UpdatePassword(UserChangePassword model)
         {
             var _usuario = new Usuario();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             using (var _db = dbFactory.Open())
             {
-                _usuario = _db.Select<Usuario>().FirstOrDefault(x => x.UsuarioId == model.Id);
+                _usuario = await _db.SingleAsync<Usuario>(x => x.UsuarioId == model.Id);
                 if (_usuario != null)
                 {
                     CreatePasswordHash(model.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
@@ -189,10 +185,7 @@ namespace apisam.repositories
                     _usuario.PasswordSalt = _passwordSalt;
                     _usuario.ModificadoPor = model.ModificadoPor;
                     _usuario.ModificadoFecha = dateTime_HN;
-                    _db.Save(_usuario);
-
-
-
+                    await _db.SaveAsync(_usuario);
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -21,7 +22,7 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public RespuestaMetodos AddExamenFisico(ExamenFisico examen)
+        public async Task<RespuestaMetodos> AddExamenFisico(ExamenFisico examen)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -30,7 +31,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 examen.CreadoFecha = dateTime_HN;
                 examen.ModificadoFecha = dateTime_HN;
-                _db.Save<ExamenFisico>(examen);
+                await _db.SaveAsync<ExamenFisico>(examen);
                 _resp.Ok = true;
 
             }
@@ -43,7 +44,7 @@ namespace apisam.repos
             return _resp;
 
         }
-        public RespuestaMetodos UpdateExamenFisico(ExamenFisico examen)
+        public async Task<RespuestaMetodos> UpdateExamenFisico(ExamenFisico examen)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -51,7 +52,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 examen.ModificadoFecha = dateTime_HN;
-                _db.Save<ExamenFisico>(examen);
+                await _db.SaveAsync<ExamenFisico>(examen);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -63,18 +64,18 @@ namespace apisam.repos
             return _resp;
 
         }
-        public List<ExamenFisico> GetExamenes(int pacienteId, int doctorId)
+        public async Task<List<ExamenFisico>> GetExamenes(int pacienteId, int doctorId)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<ExamenFisico>(
+            return await _db.SelectAsync<ExamenFisico>(
                 x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId).ToList();
+                && x.DoctorId == doctorId);
         }
 
-        public ExamenFisico GetExamenFisico(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<ExamenFisico> GetExamenFisico(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            return _db.Single<ExamenFisico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
+            return await _db.SingleAsync<ExamenFisico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
             && x.PreclinicaId == preclinicaId && x.Activo == true);
         }
     }

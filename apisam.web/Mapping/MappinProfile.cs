@@ -13,6 +13,7 @@ namespace apisam.web.Mapping
             CreateMap<UsuarioEditarViewModel, Usuario>();
             CreateMap<PacientesViewModel, Paciente>();
             CreateMap<PreclinicaViewModel, Preclinica>();
+            CreateMap<ExamenesIndicadosViewModel, ExamenIndicado>();
         }
     }
 }

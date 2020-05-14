@@ -25,9 +25,9 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<ViaAdministracion> Get()
+        public async Task<IActionResult> Get()
         {
-            return ViaRepo.ListaViaAdministracion;
+            return Ok(await ViaRepo.ListaViaAdministracion());
         }
     }
 }

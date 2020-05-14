@@ -26,9 +26,9 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<Religion> Get()
+        public async Task<IActionResult> Get()
         {
-            return ReligionRepo.Religiones;
+            return Ok(await ReligionRepo.Religiones());
         }
 
         [HttpGet("{id}", Name = "GetReligion")]
@@ -38,20 +38,20 @@ namespace apisam.web.Controllers
         }
 
         [HttpPost("")]
-        public IActionResult Add([FromBody] Religion religion)
+        public async Task<IActionResult> Add([FromBody] Religion religion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ReligionRepo.Add(religion);
+            RespuestaMetodos _resp = await ReligionRepo.Add(religion);
             if (_resp.Ok) return Ok(religion);
             return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
-        public IActionResult Update([FromBody] Religion religion)
+        public async Task<IActionResult> Update([FromBody] Religion religion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ReligionRepo.Update(religion);
+            RespuestaMetodos _resp = await ReligionRepo.Update(religion);
             if (_resp.Ok) return Ok(religion);
             return BadRequest(_resp);
         }

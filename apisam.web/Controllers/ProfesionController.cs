@@ -26,32 +26,32 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<Profesion> Get()
+        public async Task<IActionResult> Get()
         {
-            return ProfesionRepo.Profesiones;
+            return Ok(await ProfesionRepo.Profesiones());
         }
 
         [HttpGet("{id}", Name = "GetProfesion")]
-        public IActionResult GetProfesion(int id)
+        public async Task<IActionResult> GetProfesion(int id)
         {
-            return Ok(ProfesionRepo.GetProfesionById(id));
+            return Ok(await ProfesionRepo.GetProfesionById(id));
         }
 
         [HttpPost("")]
-        public IActionResult Add([FromBody] Profesion profesion)
+        public async Task<IActionResult> Add([FromBody] Profesion profesion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ProfesionRepo.Add(profesion);
+            RespuestaMetodos _resp = await ProfesionRepo.Add(profesion);
             if (_resp.Ok) return Ok(profesion);
             return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
-        public IActionResult Update([FromBody] Profesion profesion)
+        public async Task<IActionResult> Update([FromBody] Profesion profesion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ProfesionRepo.Update(profesion);
+            RespuestaMetodos _resp = await ProfesionRepo.Update(profesion);
             if (_resp.Ok) return Ok(profesion);
             return BadRequest(_resp);
         }

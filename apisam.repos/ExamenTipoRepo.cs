@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -19,17 +20,17 @@ namespace apisam.repos
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
         }
 
-        public List<ExamenTipo> GetTipoExamenes(int examenCategoriaId)
+        public async Task<List<ExamenTipo>> GetTipoExamenes(int examenCategoriaId)
         {
 
             using var _db = dbFactory.Open();
-            return _db.Select<ExamenTipo>(x => x.ExamenCategoriaId == examenCategoriaId).ToList();
+            return await _db.SelectAsync<ExamenTipo>(x => x.ExamenCategoriaId == examenCategoriaId);
         }
 
-        public ExamenTipo GetExamenTipoById(int examenId)
+        public async Task<ExamenTipo> GetExamenTipoById(int examenId)
         {
             using var _db = dbFactory.Open();
-            return _db.SingleById<ExamenTipo>(examenId);
+            return await _db.SingleByIdAsync<ExamenTipo>(examenId);
         }
 
 

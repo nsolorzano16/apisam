@@ -28,20 +28,20 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] HistorialGinecoObstetra historial)
+        public async Task<IActionResult> Add([FromBody] HistorialGinecoObstetra historial)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HistorialRepo.AddAHistorial(historial);
+            RespuestaMetodos _resp = await HistorialRepo.AddAHistorial(historial);
             if (_resp.Ok) return Ok(historial);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] HistorialGinecoObstetra historial)
+        public async Task<IActionResult> Update([FromBody] HistorialGinecoObstetra historial)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HistorialRepo.UpdateAHistorial(historial);
+            RespuestaMetodos _resp = await HistorialRepo.UpdateAHistorial(historial);
             if (_resp.Ok) return Ok(historial);
             return BadRequest(_resp);
         }
@@ -50,12 +50,11 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetHistorialGinecoObstetra")]
-        public IActionResult GetHistorialGinecoObstetra([FromRoute] int pacienteId, int doctorId)
+        public async Task<IActionResult> GetHistorialGinecoObstetra([FromRoute] int pacienteId, int doctorId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _historial = HistorialRepo.GetHistorial(pacienteId, doctorId);
-            if (_historial != null) return Ok(_historial);
-            return Ok();
+            return Ok(await HistorialRepo.GetHistorial(pacienteId, doctorId));
+
 
         }
 

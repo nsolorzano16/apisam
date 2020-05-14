@@ -26,15 +26,15 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<GrupoSanguineo> Get()
+        public async Task<IActionResult> Get()
         {
-            return GrupoSanguineoRepo.GruposSanguineos;
+            return Ok(await GrupoSanguineoRepo.GruposSanguineos());
         }
 
         [HttpGet("{id}", Name = "GetGrupoSanguineo")]
-        public IActionResult GetGrupoSanguineo(int id)
+        public async Task<IActionResult> GetGrupoSanguineo(int id)
         {
-            return Ok(GrupoSanguineoRepo.GetGrupoSanguineoById(id));
+            return Ok(await GrupoSanguineoRepo.GetGrupoSanguineoById(id));
         }
     }
 }

@@ -38,14 +38,13 @@ namespace apisam.web.Controllers
         [Authorize(Roles = "2,3")]
         [HttpGet("page/{pageNo}/limit/{limit}/doctorId/{doctorId}/atendida/{atendida}",
             Name = "GetPreclinicasSinAtender")]
-        public IActionResult GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
+        public async Task<IActionResult> GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
         {
             string a;
             try
             {
-                var _pageResponse =
-                    PreclinicaRepo.GetPreclinicasSinAtender(pageNo, limit, doctorId, atendida);
-                return Ok(_pageResponse);
+
+                return Ok(await PreclinicaRepo.GetPreclinicasSinAtender(pageNo, limit, doctorId, atendida));
             }
             catch (Exception e)
             {
@@ -60,26 +59,23 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] Preclinica preclinica)
+        public async Task<IActionResult> Add([FromBody] Preclinica preclinica)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = PreclinicaRepo.AddPreclinica(preclinica);
+            RespuestaMetodos _resp = await PreclinicaRepo.AddPreclinica(preclinica);
             if (_resp.Ok) return Ok(preclinica);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2,3")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] PreclinicaViewModel preclinica)
+        public async Task<IActionResult> Update([FromBody] PreclinicaViewModel preclinica)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var _pre = _mapper.Map<PreclinicaViewModel, Preclinica>(preclinica);
-            RespuestaMetodos _resp = PreclinicaRepo.UpdatePreclinica(_pre);
-            if (_resp.Ok)
-            {
-                var preclinicaRetorno = PreclinicaRepo.GetInfoPreclinica(_pre.PreclinicaId);
-                return Ok(preclinicaRetorno);
-            }
+            RespuestaMetodos _resp = await PreclinicaRepo.UpdatePreclinica(_pre);
+            if (_resp.Ok) return Ok(await PreclinicaRepo.GetInfoPreclinica(_pre.PreclinicaId));
+
             return BadRequest(_resp);
         }
 

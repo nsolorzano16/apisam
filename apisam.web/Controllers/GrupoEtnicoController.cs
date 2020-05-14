@@ -26,32 +26,32 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<GrupoEtnico> Get()
+        public async Task<IActionResult> GetGruposEtnicos()
         {
-            return GrupoEtnicoRepo.GruposEtnicos;
+            return Ok(await GrupoEtnicoRepo.GruposEtnicos());
         }
 
         [HttpGet("{id}", Name = "GetGrupoEtnico")]
-        public IActionResult GetGrupoEtnico(int id)
+        public async Task<IActionResult> GetGrupoEtnico(int id)
         {
-            return Ok(GrupoEtnicoRepo.GetGrupoEtnicoById(id));
+            return Ok(await GrupoEtnicoRepo.GetGrupoEtnicoById(id));
         }
 
         [HttpPost("")]
-        public IActionResult Add([FromBody] GrupoEtnico grupoEtnico)
+        public async Task<IActionResult> Add([FromBody] GrupoEtnico grupoEtnico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = GrupoEtnicoRepo.Add(grupoEtnico);
+            RespuestaMetodos _resp = await GrupoEtnicoRepo.Add(grupoEtnico);
             if (_resp.Ok) return Ok(grupoEtnico);
             return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
-        public IActionResult Update([FromBody] GrupoEtnico grupoEtnico)
+        public async Task<IActionResult> Update([FromBody] GrupoEtnico grupoEtnico)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = GrupoEtnicoRepo.Update(grupoEtnico);
+            RespuestaMetodos _resp = await GrupoEtnicoRepo.Update(grupoEtnico);
             if (_resp.Ok) return Ok(grupoEtnico);
             return BadRequest(_resp);
         }

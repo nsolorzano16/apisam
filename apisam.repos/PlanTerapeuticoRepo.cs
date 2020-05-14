@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -22,7 +23,7 @@ namespace apisam.repos
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public RespuestaMetodos AddPlanTerapeutico(PlanTerapeutico planTerapeutico)
+        public async Task<RespuestaMetodos> AddPlanTerapeutico(PlanTerapeutico planTerapeutico)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -31,7 +32,7 @@ namespace apisam.repos
                 using var _db = dbFactory.Open();
                 planTerapeutico.CreadoFecha = dateTime_HN;
                 planTerapeutico.ModificadoFecha = dateTime_HN;
-                _db.Save<PlanTerapeutico>(planTerapeutico);
+                await _db.SaveAsync<PlanTerapeutico>(planTerapeutico);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -43,7 +44,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public RespuestaMetodos UpdatePlanTerapeutico(PlanTerapeutico planTerapeutico)
+        public async Task<RespuestaMetodos> UpdatePlanTerapeutico(PlanTerapeutico planTerapeutico)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -51,7 +52,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 planTerapeutico.ModificadoFecha = dateTime_HN;
-                _db.Save<PlanTerapeutico>(planTerapeutico);
+                await _db.SaveAsync<PlanTerapeutico>(planTerapeutico);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -62,20 +63,20 @@ namespace apisam.repos
             return _resp;
         }
 
-        public PlanTerapeutico GetPlanTerapeutico(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<PlanTerapeutico> GetPlanTerapeutico(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            var antecedente = _db.Single<PlanTerapeutico>(x =>
-            x.PacienteId == pacienteId && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
-            return antecedente;
+            return await _db.SingleAsync<PlanTerapeutico>(x =>
+                  x.PacienteId == pacienteId && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
+
         }
 
 
-        public List<PlanTerapeutico> GetPlanes(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<PlanTerapeutico>> GetPlanes(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<PlanTerapeutico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
-            && x.PreclinicaId == preclinicaId && x.Activo == true).ToList();
+            return await _db.SelectAsync<PlanTerapeutico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
+            && x.PreclinicaId == preclinicaId && x.Activo == true);
         }
 
     }

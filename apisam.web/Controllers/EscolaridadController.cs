@@ -26,32 +26,32 @@ namespace apisam.web.Controllers
 
 
         [HttpGet("")]
-        public IEnumerable<Escolaridad> Get()
+        public async Task<IActionResult> GetEscolaridades()
         {
-            return EscolaridadRepo.Escolaridades;
+            return Ok(await EscolaridadRepo.Escolaridades());
         }
 
         [HttpGet("{id}", Name = "GetEscolaridad")]
-        public IActionResult GetEscolaridad(int id)
+        public async Task<IActionResult> GetEscolaridad(int id)
         {
-            return Ok(EscolaridadRepo.GetEscolaridadById(id));
+            return Ok(await EscolaridadRepo.GetEscolaridadById(id));
         }
 
         [HttpPost("")]
-        public IActionResult Add([FromBody] Escolaridad escolaridad)
+        public async Task<IActionResult> Add([FromBody] Escolaridad escolaridad)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = EscolaridadRepo.Add(escolaridad);
+            RespuestaMetodos _resp = await EscolaridadRepo.Add(escolaridad);
             if (_resp.Ok) return Ok(escolaridad);
             return BadRequest(_resp);
 
         }
 
         [HttpPut("")]
-        public IActionResult Update([FromBody] Escolaridad escolaridad)
+        public async Task<IActionResult> Update([FromBody] Escolaridad escolaridad)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = EscolaridadRepo.Update(escolaridad);
+            RespuestaMetodos _resp = await EscolaridadRepo.Update(escolaridad);
             if (_resp.Ok) return Ok(escolaridad);
             return BadRequest(_resp);
         }

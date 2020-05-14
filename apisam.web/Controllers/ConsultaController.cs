@@ -29,19 +29,19 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}/preclinicaId/{preclinicaId}", Name = "GetDetalleConsulta")]
-        public IActionResult GetDetalleConsulta([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetDetalleConsulta([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var resp = ConsultaRepo.GetDetalleConsulta(doctorId, pacienteId, preclinicaId);
+            var resp = await ConsultaRepo.GetDetalleConsulta(doctorId, pacienteId, preclinicaId);
             return Ok(resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] ConsultaGeneral consulta)
+        public async Task<IActionResult> Add([FromBody] ConsultaGeneral consulta)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ConsultaRepo.AddConsultaGeneral(consulta);
+            RespuestaMetodos _resp = await ConsultaRepo.AddConsultaGeneral(consulta);
             if (_resp.Ok) return Ok(consulta);
             return BadRequest(_resp);
 
@@ -49,20 +49,20 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] ConsultaGeneral consulta)
+        public async Task<IActionResult> Update([FromBody] ConsultaGeneral consulta)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = ConsultaRepo.UpdateConsultaGeneral(consulta);
+            RespuestaMetodos _resp = await ConsultaRepo.UpdateConsultaGeneral(consulta);
             if (_resp.Ok) return Ok(consulta);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("getconsultageneral/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetConsultaGeneral")]
-        public IActionResult GetConsultaGeneral([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetConsultaGeneral([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _consultaGeneral = ConsultaRepo.GetConsultaGeneral(pacienteId, doctorId, preclinicaId);
+            var _consultaGeneral = await ConsultaRepo.GetConsultaGeneral(pacienteId, doctorId, preclinicaId);
             if (_consultaGeneral != null) return Ok(_consultaGeneral);
             return Ok();
 

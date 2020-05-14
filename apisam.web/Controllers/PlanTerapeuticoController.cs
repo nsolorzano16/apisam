@@ -28,10 +28,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] PlanTerapeutico plan)
+        public async Task<IActionResult> Add([FromBody] PlanTerapeutico plan)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = PlanRepo.AddPlanTerapeutico(plan);
+            RespuestaMetodos _resp = await PlanRepo.AddPlanTerapeutico(plan);
             if (_resp.Ok) return Ok(plan);
             return BadRequest(_resp);
 
@@ -39,33 +39,31 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] PlanTerapeutico plan)
+        public async Task<IActionResult> Update([FromBody] PlanTerapeutico plan)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = PlanRepo.UpdatePlanTerapeutico(plan);
+            RespuestaMetodos _resp = await PlanRepo.UpdatePlanTerapeutico(plan);
             if (_resp.Ok) return Ok(plan);
             return BadRequest(_resp);
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanTerapeutico")]
-        public IActionResult GetPlanTerapeutico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetPlanTerapeutico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _planTerapeutico = PlanRepo.GetPlanTerapeutico(pacienteId, doctorId, preclinicaId);
-            if (_planTerapeutico != null) return Ok(_planTerapeutico);
-            return Ok();
+            return Ok(await PlanRepo.GetPlanTerapeutico(pacienteId, doctorId, preclinicaId));
+
+
 
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("listar/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanes")]
-        public IActionResult GetPlanes([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetPlanes([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _planTerapeutico = PlanRepo.GetPlanes(pacienteId, doctorId, preclinicaId);
-            if (_planTerapeutico != null) return Ok(_planTerapeutico);
-            return Ok();
+            return Ok(await PlanRepo.GetPlanes(pacienteId, doctorId, preclinicaId));
 
         }
     }

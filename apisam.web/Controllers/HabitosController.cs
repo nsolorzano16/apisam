@@ -25,10 +25,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("")]
-        public IActionResult Add([FromBody] Habitos habitos)
+        public async Task<IActionResult> Add([FromBody] Habitos habitos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HabitosRepo.AddAHabito(habitos);
+            RespuestaMetodos _resp = await HabitosRepo.AddAHabito(habitos);
 
             if (_resp.Ok) return Ok(habitos);
             return BadRequest(_resp);
@@ -36,10 +36,10 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public IActionResult Update([FromBody] Habitos habitos)
+        public async Task<IActionResult> Update([FromBody] Habitos habitos)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            RespuestaMetodos _resp = HabitosRepo.UpdateAHabito(habitos);
+            RespuestaMetodos _resp = await HabitosRepo.UpdateAHabito(habitos);
             if (_resp.Ok) return Ok(habitos);
             return BadRequest(_resp);
         }
@@ -47,12 +47,11 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetHabito")]
-        public IActionResult GetHabito([FromRoute] int pacienteId, int doctorId)
+        public async Task<IActionResult> GetHabito([FromRoute] int pacienteId, int doctorId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _habito = HabitosRepo.GetHabito(pacienteId, doctorId);
-            if (_habito != null) return Ok(_habito);
-            return Ok();
+            return Ok(await HabitosRepo.GetHabito(pacienteId, doctorId));
+
 
         }
 

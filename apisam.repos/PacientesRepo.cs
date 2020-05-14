@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
@@ -25,15 +26,15 @@ namespace apisam.repos
         }
 
 
-        public RespuestaMetodos AddPaciente(Paciente paciente)
+        public async Task<RespuestaMetodos> AddPaciente(Paciente paciente)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
-                var pacienteBuscado = _db.Select<Paciente>
-                    ().FirstOrDefault(x => x.Identificacion == paciente.Identificacion);
+                var pacienteBuscado = await _db.SingleAsync<Paciente>
+                 (x => x.Identificacion == paciente.Identificacion);
 
                 if (pacienteBuscado == null)
                 {
@@ -41,7 +42,7 @@ namespace apisam.repos
                     paciente.ModificadoFecha = dateTime_HN;
                     paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                     paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
-                    _db.Save<Paciente>(paciente);
+                    await _db.SaveAsync<Paciente>(paciente);
                     _resp.Ok = true;
                 }
             }
@@ -56,7 +57,7 @@ namespace apisam.repos
         }
 
 
-        public RespuestaMetodos UpdatePaciente(Paciente paciente)
+        public async Task<RespuestaMetodos> UpdatePaciente(Paciente paciente)
         {
             var _resp = new RespuestaMetodos();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
@@ -65,7 +66,7 @@ namespace apisam.repos
                 paciente.ModificadoFecha = dateTime_HN;
                 paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                 using var _db = dbFactory.Open();
-                _db.Save<Paciente>(paciente);
+                await _db.SaveAsync<Paciente>(paciente);
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -77,7 +78,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public PacientesViewModel GetInfoPaciente(int pacienteId)
+        public async Task<PacientesViewModel> GetInfoPaciente(int pacienteId)
         {
             var _qry = $@"SELECT
                             p.PacienteId,
@@ -146,31 +147,26 @@ namespace apisam.repos
                         ";
             using var _db = dbFactory.Open();
 
-            var paciente = _db.Select<PacientesViewModel>(_qry).SingleOrDefault();
-            return paciente;
+            return await _db.SingleAsync<PacientesViewModel>(_qry);
+
 
         }
 
-        public Paciente GetPacienteById(int id)
+        public async Task<Paciente> GetPacienteById(int id)
         {
             using var _db = dbFactory.Open();
-
-            var _user = _db.Select<Paciente>().FirstOrDefault(x => x.PacienteId == id);
-            if (_user != null) return _user;
-            return null;
+            return await _db.SingleByIdAsync<Paciente>(id);
         }
 
-        public Paciente GetPacienteByIdentificacion(string identificacion)
+
+
+        public async Task<Paciente> GetPacienteByIdentificacion(string identificacion)
         {
-
-
             using var _db = dbFactory.Open();
-            var _user = _db.Select<Paciente>().FirstOrDefault(x => x.Identificacion == identificacion);
-            if (_user != null) return _user;
-            return null;
+            return await _db.SingleAsync<Paciente>(x => x.Identificacion == identificacion);
         }
 
-        public PageResponse<PacientesViewModel>
+        public async Task<PageResponse<PacientesViewModel>>
             GetPacientes(int pageNo, int limit, string filter, int doctorId)
         {
             using var _db = dbFactory.Open();
@@ -253,11 +249,12 @@ namespace apisam.repos
             _qry += $" OFFSET {_skip} ROWS";
             _qry += $" FETCH NEXT {limit} ROWS ONLY";
 
-            var _pacientes = _db.Select<PacientesViewModel>(_qry).ToList();
+            var _pacientes = await _db.SelectAsync<PacientesViewModel>(_qry);
 
             if (limit > 0)
             {
                 _response.TotalItems = _db.Select<PacientesViewModel>(_qry2).ToList().Count();
+
                 _response.TotalPages
                     = (int)Math.Ceiling((decimal)_response.TotalItems / (decimal)limit);
 

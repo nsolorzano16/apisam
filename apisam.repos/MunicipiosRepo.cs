@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
@@ -20,20 +21,19 @@ namespace apisam.repos
 
 
 
-        public List<Municipio> Municipios
+        public async Task<List<Municipio>> Municipios()
         {
-            get
-            {
-                using var _db = dbFactory.Open();
-                return _db.Select<Municipio>().ToList();
-            }
+
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<Municipio>();
+
 
         }
 
-        public List<Municipio> GetMunicipiosByDepartamento(int id)
+        public async Task<List<Municipio>> GetMunicipiosByDepartamento(int id)
         {
             using var _db = dbFactory.Open();
-            return _db.Select<Municipio>().Where(x => x.DepartamentoId == id).ToList();
+            return await _db.SelectAsync<Municipio>(x => x.DepartamentoId == id);
         }
     }
 }
