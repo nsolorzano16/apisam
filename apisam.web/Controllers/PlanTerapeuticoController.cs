@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
+using apisam.entities.ViewModels;
 using apisam.interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -18,10 +20,12 @@ namespace apisam.web.Controllers
     public class PlanTerapeuticoController : ControllerBase
     {
         public IPlanTerapeutico PlanRepo;
+        private readonly IMapper _mapper;
 
-        public PlanTerapeuticoController(IPlanTerapeutico consultaRepository)
+        public PlanTerapeuticoController(IPlanTerapeutico consultaRepository, IMapper mapper)
         {
             PlanRepo = consultaRepository;
+            _mapper = mapper;
 
         }
 
@@ -48,6 +52,18 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
+        [HttpPut("edit")]
+        public async Task<IActionResult> UpdatePlan([FromBody] PlanTerapeuticoViewModel plan)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var _x = _mapper.Map<PlanTerapeuticoViewModel, PlanTerapeutico>(plan);
+            RespuestaMetodos _resp = await PlanRepo.UpdatePlanTerapeutico(_x);
+            if (_resp.Ok) return Ok(await PlanRepo.GetPlanInfo(_x.PlanTerapeuticoId));
+
+            return BadRequest(_resp);
+        }
+
+        [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanTerapeutico")]
         public async Task<IActionResult> GetPlanTerapeutico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
@@ -64,6 +80,15 @@ namespace apisam.web.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await PlanRepo.GetPlanes(pacienteId, doctorId, preclinicaId));
+
+        }
+
+        [Authorize(Roles = "2")]
+        [HttpGet("movil/listar/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanesLista")]
+        public async Task<IActionResult> GetPlanesLista([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return Ok(await PlanRepo.GetPlanesLista(pacienteId, doctorId, preclinicaId));
 
         }
     }

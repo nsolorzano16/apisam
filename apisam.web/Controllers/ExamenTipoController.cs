@@ -29,6 +29,12 @@ namespace apisam.web.Controllers
             return Ok(await ExamenTipoRepo.GetTipoExamenes(categoriaId));
         }
 
+        [HttpGet("", Name = "GetTipoExamenesAll")]
+        public async Task<IActionResult> GetTipoExamenesAll()
+        {
+            return Ok(await ExamenTipoRepo.GetTipoExamenesAll());
+        }
+
         [HttpGet("{id}", Name = "GetExamenTipoById")]
         public async Task<IActionResult> GetExamenTipoById([FromRoute] int id)
         {

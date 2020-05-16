@@ -9,6 +9,7 @@ namespace apisam.interfaces
     {
         Task<List<ExamenTipo>> GetTipoExamenes(int examenCategoriaId);
         Task<ExamenTipo> GetExamenTipoById(int examenId);
+        Task<List<ExamenTipo>> GetTipoExamenesAll();
 
     }
 }

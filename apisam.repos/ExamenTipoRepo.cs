@@ -33,6 +33,11 @@ namespace apisam.repos
             return await _db.SingleByIdAsync<ExamenTipo>(examenId);
         }
 
+        public async Task<List<ExamenTipo>> GetTipoExamenesAll()
+        {
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<ExamenTipo>();
+        }
 
 
     }

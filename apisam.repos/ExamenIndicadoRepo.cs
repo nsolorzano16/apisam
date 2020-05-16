@@ -21,7 +21,8 @@ namespace apisam.repos
         {
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
-            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            //hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            hondurasTime = TimeZoneInfo.Local;
         }
 
         public async Task<RespuestaMetodos> AddExamenIndicado(ExamenIndicado examen)
@@ -53,7 +54,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 examen.ModificadoFecha = dateTime_HN;
-                await _db.SaveAsync<ExamenIndicado>(examen);
+                await _db.SaveAsync(examen);
                 _resp.Ok = true;
             }
             catch (Exception ex)
