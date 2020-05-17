@@ -89,9 +89,29 @@ namespace apisam.repos
                                                 and ei.PreclinicaId = {preclinicaId} and ei.activo = 1";
 
             var _listaExamenes = await _db.SelectAsync<ExamenesIndicadosViewModel>(_qry);
-
-            var _planTerapeutico = _db.Single<PlanTerapeutico>(x => x.PreclinicaId == preclinicaId
-             && x.PacienteId == pacienteId && x.DoctorId == doctorId && x.Activo == true);
+            var _qryPlanes = $@"SELECT
+                                        p.PlanTerapeuticoId,
+                                        p.PacienteId,
+                                        p.DoctorId,
+                                        p.PreclinicaId,
+                                        p.NombreMedicamento,
+                                        p.Dosis,
+                                        p.ViaAdministracionId,
+                                        p.Horario,
+                                        p.Permanente,
+                                        p.DiasRequeridos,
+                                        p.Activo,
+                                        p.CreadoPor,
+                                        p.CreadoFecha,
+                                        p.ModificadoPor,
+                                        p.ModificadoFecha,
+                                        p.Notas,
+                                        v.Nombre as 'ViaAdministracion'
+                                    FROM PlanTerapeutico p
+                                        INNER JOIN ViaAdministracion v on p.ViaAdministracionId = v.ViaAdministracionId
+                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = {doctorId} AND p.PreclinicaId = {preclinicaId}
+                                          AND p.Activo = 1";
+            var _planTerapeutico = await _db.SelectAsync<PlanTerapeuticoViewModel>(_qryPlanes);
 
             _resp.Preclinica = _preclinica;
             _resp.AntecedentesFamiliaresPersonales = _antecedentesPersonales;
@@ -104,7 +124,7 @@ namespace apisam.repos
             _resp.Notas = _notas;
             _resp.ConsultaGeneral = _consultaGeneral;
             _resp.ExamenesIndicados = _listaExamenes;
-            _resp.PlanTerapeutico = _planTerapeutico;
+            _resp.PlanesTerapeuticos = _planTerapeutico;
 
             return _resp;
         }

@@ -20,7 +20,7 @@ namespace apisam.entities.ViewModels
         public List<Notas> Notas { get; set; }
         public ConsultaGeneral ConsultaGeneral { get; set; }
         public List<ExamenesIndicadosViewModel> ExamenesIndicados { get; set; }
-        public PlanTerapeutico PlanTerapeutico { get; set; }
+        public List<PlanTerapeuticoViewModel> PlanesTerapeuticos { get; set; }
 
 
 

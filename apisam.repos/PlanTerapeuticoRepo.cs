@@ -103,7 +103,8 @@ namespace apisam.repos
                                         v.Nombre as 'ViaAdministracion'
                                     FROM PlanTerapeutico p
                                         INNER JOIN ViaAdministracion v on p.ViaAdministracionId = v.ViaAdministracionId
-                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = {doctorId} AND p.PreclinicaId = {preclinicaId}";
+                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = {doctorId} AND p.PreclinicaId = {preclinicaId}
+                                          AND p.Activo = 1";
 
             return await _db.SelectAsync<PlanTerapeuticoViewModel>(_qry);
 
