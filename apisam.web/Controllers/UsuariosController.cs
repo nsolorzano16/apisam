@@ -7,9 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
-using apisam.entities.ViewModels.UsuariosTable;
+//using apisam.entities.ViewModels.UsuariosTable;
 using apisam.interfaces;
 using AutoMapper;
+using ImageMagick;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -55,7 +56,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2,3")]
         [HttpPost("profilefoto/{id}", Name = "SubirFoto")]
-        public async Task<IActionResult> SubirFoto([FromRoute] int id, [FromForm]  IFormFile logoImage)
+        public async Task<IActionResult> SubirFoto([FromRoute] int id, [FromForm] IFormFile logoImage)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var _resp = new RespuestaMetodos();
@@ -93,7 +94,18 @@ namespace apisam.web.Controllers
                             container.GetBlockBlobReference(_newFileNameLogo + fileExtension);
                         using (var _fileStream = logoImage.OpenReadStream())
                         {
-                            await blockBlob.UploadFromStreamAsync(_fileStream);
+                            using (var image = new MagickImage(_fileStream))
+                            {
+
+                                image.Resize(250, 250);
+                                image.Strip();
+                                image.Quality = 70;
+
+                                await blockBlob.UploadFromByteArrayAsync(image.ToByteArray(), 0, image.ToByteArray().Length);
+                            }
+
+
+
                             _resp.Ok = true;
                         }
                         var _urlStorage = _config.GetValue<string>("UrlsWebSites:urlStorage");
@@ -147,16 +159,12 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2")]
         [HttpPut("")]
-        public async Task<IActionResult> Update([FromBody] UsuarioEditarViewModel usuario)
+        public async Task<IActionResult> Update([FromBody] Usuario usuario)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            RespuestaMetodos _resp = await UsuariosRepo.UpdateUsuario(usuario);
 
-            var user = await UsuariosRepo.GerUserById(usuario.UsuarioId);
-            if (user == null) return BadRequest("Usuario no existe");
-            user = _mapper.Map<UsuarioEditarViewModel, Usuario>(usuario, user);
-            RespuestaMetodos _resp = await UsuariosRepo.UpdateUsuario(user);
-
-            if (_resp.Ok) return Ok(user);
+            if (_resp.Ok) return Ok(usuario);
             return BadRequest(_resp);
         }
 
@@ -218,6 +226,25 @@ namespace apisam.web.Controllers
             return BadRequest("no se han podido obtener registros");
         }
 
+        [Authorize(Roles = "1")]
+        [HttpGet("page/{pageNo}/limit/{limit}", Name = "GetUsuarios")]
+        public async Task<IActionResult> GetUsuarios(int pageNo, int limit, [FromQuery] string filter)
+        {
+            try
+            {
+                var _pageResponse = await UsuariosRepo.GetUsuarios(pageNo, limit, filter);
+                return Ok(_pageResponse);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+
+
+        }
+
+
         [Authorize(Roles = "1,2,3")]
         [HttpPut("changePassword", Name = "ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] UserChangePassword model)
@@ -231,7 +258,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "1,2,3")]
         [HttpGet("info/{id}", Name = "GetUserInfo")]
-        public async Task<IActionResult> GetUserInfo([FromRoute]int id)
+        public async Task<IActionResult> GetUserInfo([FromRoute] int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await UsuariosRepo.GerUserById(id));

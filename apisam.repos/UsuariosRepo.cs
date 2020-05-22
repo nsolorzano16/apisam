@@ -6,7 +6,7 @@ using ServiceStack.OrmLite;
 using System.Linq;
 using apisam.entities;
 using apisam.entities.ViewModels;
-using apisam.entities.ViewModels.UsuariosTable;
+//using apisam.entities.ViewModels.UsuariosTable;
 using System.Threading.Tasks;
 
 namespace apisam.repositories
@@ -168,6 +168,44 @@ namespace apisam.repositories
 
             return _response;
 
+        }
+
+        public async Task<PageResponse<Usuario>>
+       GetUsuarios(int pageNo, int limit, string filter)
+        {
+            var _response = new PageResponse<Usuario>();
+            var _skip = limit * (pageNo - 1);
+
+
+            var _qry = $@"SELECT * FROM Usuario u";
+
+            if (!string.IsNullOrEmpty(filter)) _qry += $"  WHERE (u.Nombres LIKE '%{filter}%' " +
+                    $"OR u.PrimerApellido LIKE '%{filter}%' OR u.SegundoApellido LIKE '%{filter}%')";
+
+            var _qry2 = _qry;
+            _qry += " ORDER BY u.UsuarioId DESC";
+            _qry += $" OFFSET {_skip} ROWS";
+            _qry += $" FETCH NEXT {limit} ROWS ONLY";
+
+            using var _db = dbFactory.Open();
+            var _usuarios = await _db.SelectAsync<Usuario>(_qry);
+            if (limit > 0)
+            {
+                _response.TotalItems =
+                    _db.Select<Usuario>(_qry2).ToList().Count();
+                _response.TotalPages
+                    = (int)Math.Ceiling((decimal)_response.TotalItems / (decimal)limit);
+
+                if (pageNo < _response.TotalPages)
+                    _response.CurrentPage = pageNo;
+                else
+                    _response.CurrentPage = _response.TotalPages;
+
+                _response.Items = _usuarios;
+                _response.ItemCount = _response.Items.Count;
+            }
+
+            return _response;
         }
 
 

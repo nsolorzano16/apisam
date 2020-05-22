@@ -51,7 +51,7 @@ namespace apisam.web.Controllers
             RespuestaMetodos _resp = await PacienteRepo.UpdatePaciente(_pac);
             if (_resp.Ok)
             {
-                var _pacienteRetorno = PacienteRepo.GetInfoPaciente(paciente.PacienteId);
+                var _pacienteRetorno = await PacienteRepo.GetInfoPaciente(paciente.PacienteId);
                 return Ok(_pacienteRetorno);
             }
 
@@ -61,7 +61,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("{id}", Name = "GetUserById")]
-        public async Task<IActionResult> GetUserById([FromRoute]int id)
+        public async Task<IActionResult> GetUserById([FromRoute] int id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await PacienteRepo.GetPacienteById(id));
@@ -69,7 +69,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("identificacion/{identificacion}", Name = "GetPacienteByIdentificacion")]
-        public async Task<IActionResult> GetPacienteByIdentificacion([FromRoute]string identificacion)
+        public async Task<IActionResult> GetPacienteByIdentificacion([FromRoute] string identificacion)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await PacienteRepo.GetPacienteByIdentificacion(identificacion));
@@ -78,7 +78,8 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("page/{pageNo}/limit/{limit}/doctor/{doctorId}", Name = "GetPacientes")]
-        public async Task<IActionResult> GetPacientes([FromRoute] int pageNo, [FromRoute] int limit, [FromQuery] string filter, [FromRoute] int doctorId)
+        public async Task<IActionResult> GetPacientes([FromRoute] int pageNo, [FromRoute]
+        int limit, [FromQuery] string filter, [FromRoute] int doctorId)
         {
             try
             {
@@ -88,10 +89,10 @@ namespace apisam.web.Controllers
             catch (Exception e)
             {
 
-                var a = e.Message;
+                return BadRequest(e.Message);
+
             }
 
-            return BadRequest("no se han podido obtener registros");
         }
     }
 }

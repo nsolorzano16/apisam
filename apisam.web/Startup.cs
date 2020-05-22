@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
-using apisam.entities.ViewModels.UsuariosTable;
+//using apisam.entities.ViewModels.UsuariosTable;
 using apisam.interfaces;
 using apisam.repos;
 using apisam.repositories;
+using apisam.web.Hubs;
 using apisam.web.Mapping;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -95,6 +96,7 @@ namespace apisam.web
             services.AddTransient<IPlanTerapeutico, PlanTerapeuticoRepo>();
             services.AddTransient<IViaAdministracion, ViaAdministracionRepo>();
             services.AddTransient<IAuditoria, AuditoriaRepo>();
+            services.AddTransient<IDevices, DevicesRepo>();
 
 
 
@@ -120,6 +122,8 @@ namespace apisam.web
                             System.Text.Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
+
+            services.AddSignalR();
 
 
         }
@@ -154,6 +158,7 @@ namespace apisam.web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PreclinicaHub>("/preclinicaHub");
             });
         }
     }

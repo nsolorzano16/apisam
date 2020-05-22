@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
-using apisam.entities.ViewModels.UsuariosTable;
+//using apisam.entities.ViewModels.UsuariosTable;
 
 namespace apisam.interfaces
 {
@@ -19,6 +19,8 @@ namespace apisam.interfaces
         Task<PageResponse<Usuario>>
           GetAsistentes(int pageNo, int limit, string filter, int doctorId);
         Task<Usuario> UpdatePassword(UserChangePassword model);
+        Task<PageResponse<Usuario>>
+       GetUsuarios(int pageNo, int limit, string filter);
 
     }
 }

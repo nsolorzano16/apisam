@@ -22,6 +22,7 @@ namespace apisam.repos
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            //hondurasTime = TimeZoneInfo.Local;
 
         }
 

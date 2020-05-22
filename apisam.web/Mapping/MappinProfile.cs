@@ -1,7 +1,7 @@
 ﻿using System;
 using apisam.entities;
 using apisam.entities.ViewModels;
-using apisam.entities.ViewModels.UsuariosTable;
+//using apisam.entities.ViewModels.UsuariosTable;
 using AutoMapper;
 
 namespace apisam.web.Mapping
@@ -10,7 +10,7 @@ namespace apisam.web.Mapping
     {
         public MappinProfile()
         {
-            CreateMap<UsuarioEditarViewModel, Usuario>();
+            // CreateMap<UsuarioEditarViewModel, Usuario>();
             CreateMap<PacientesViewModel, Paciente>();
             CreateMap<PreclinicaViewModel, Preclinica>();
             CreateMap<ExamenesIndicadosViewModel, ExamenIndicado>();

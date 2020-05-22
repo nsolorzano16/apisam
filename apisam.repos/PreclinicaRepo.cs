@@ -32,6 +32,7 @@ namespace apisam.repos
                 preclinica.CreadoFecha = dateTime_HN;
                 preclinica.ModificadoFecha = dateTime_HN;
                 await _db.SaveAsync<Preclinica>(preclinica);
+                // send notificacion 
                 _resp.Ok = true;
             }
             catch (Exception ex)
