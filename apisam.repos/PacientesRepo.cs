@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
@@ -44,7 +45,24 @@ namespace apisam.repos
                     paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                     paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
                     await _db.SaveAsync<Paciente>(paciente);
+
+                    var noti = new NotificacionesRepo();
+                    var lista = await _db.SelectAsync<Devices>(x => x.UsuarioId == paciente.DoctorId);
+
+
+                    if (lista.Count > 0)
+                    {
+                        lista.ForEach(async item =>
+                        {
+                            await noti.SendNoti(item.TokenDevice, "Se han creado nuevos pacientes");
+                        });
+
+                    }
+
                     _resp.Ok = true;
+
+
+
                 }
             }
             catch (Exception ex)

@@ -13,6 +13,7 @@ namespace apisam.entities
         public int DeviceId { get; set; }
         public int UsuarioId { get; set; }
         public string TokenDevice { get; set; }
+        public string Platform { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
@@ -20,6 +21,7 @@ namespace apisam.repos
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            //hondurasTime = TimeZoneInfo.Local;
         }
 
         public async Task<RespuestaMetodos> AddPreclinica(Preclinica preclinica)
@@ -32,7 +34,21 @@ namespace apisam.repos
                 preclinica.CreadoFecha = dateTime_HN;
                 preclinica.ModificadoFecha = dateTime_HN;
                 await _db.SaveAsync<Preclinica>(preclinica);
-                // send notificacion 
+                // send notificacion
+
+                var noti = new NotificacionesRepo();
+                var lista = await _db.SelectAsync<Devices>(x => x.UsuarioId == preclinica.DoctorId);
+
+
+                if (lista.Count > 0)
+                {
+                    lista.ForEach(async item =>
+                    {
+                        await noti.SendNoti(item.TokenDevice, "Preclinicas en lista de espera");
+                    });
+
+                }
+
                 _resp.Ok = true;
             }
             catch (Exception ex)

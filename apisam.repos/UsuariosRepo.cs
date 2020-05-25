@@ -8,6 +8,7 @@ using apisam.entities;
 using apisam.entities.ViewModels;
 //using apisam.entities.ViewModels.UsuariosTable;
 using System.Threading.Tasks;
+using apisam.repos;
 
 namespace apisam.repositories
 {
@@ -130,8 +131,7 @@ namespace apisam.repositories
 
         }
 
-        public async Task<PageResponse<Usuario>>
-            GetAsistentes(int pageNo, int limit, string filter, int doctorId)
+        public async Task<PageResponse<Usuario>> GetAsistentes(int pageNo, int limit, string filter, int doctorId)
         {
             var _response = new PageResponse<Usuario>();
             var _skip = limit * (pageNo - 1);
@@ -150,6 +150,7 @@ namespace apisam.repositories
 
             using var _db = dbFactory.Open();
             var _usuarios = await _db.SelectAsync<Usuario>(_qry);
+
             if (limit > 0)
             {
                 _response.TotalItems =

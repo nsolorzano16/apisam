@@ -38,7 +38,9 @@ namespace apisam.repos
                     {
                         DeviceId = dev.DeviceId,
                         UsuarioId = dev.UsuarioId,
-                        TokenDevice = dev.TokenDevice
+                        TokenDevice = dev.TokenDevice,
+                        Platform = dev.Platform
+
                     };
                     await _db.SaveAsync<Devices>(nuevo);
                 }
