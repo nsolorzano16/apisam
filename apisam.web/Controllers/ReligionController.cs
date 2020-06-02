@@ -32,9 +32,9 @@ namespace apisam.web.Controllers
         }
 
         [HttpGet("{id}", Name = "GetReligion")]
-        public IActionResult GetReligion(int id)
+        public async Task<IActionResult> GetReligion(int id)
         {
-            return Ok(ReligionRepo.GetReligionById(id));
+            return Ok(await ReligionRepo.GetReligionById(id));
         }
 
         [HttpPost("")]

@@ -36,7 +36,7 @@ namespace apisam.repos
             {
                 using var _db = dbFactory.Open();
                 var pacienteBuscado = await _db.SingleAsync<Paciente>
-                 (x => x.Identificacion == paciente.Identificacion);
+                 (x => x.Identificacion == paciente.Identificacion || x.Email == paciente.Email);
 
                 if (pacienteBuscado == null)
                 {
@@ -64,6 +64,11 @@ namespace apisam.repos
 
 
                 }
+                else
+                {
+                    _resp.Ok = false;
+                    _resp.Mensaje = "El paciente ya existe.";
+                }
             }
             catch (Exception ex)
             {
@@ -82,11 +87,37 @@ namespace apisam.repos
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
-                paciente.ModificadoFecha = dateTime_HN;
-                paciente.Edad = CalculateAge(paciente.FechaNacimiento);
+
                 using var _db = dbFactory.Open();
-                await _db.SaveAsync<Paciente>(paciente);
-                _resp.Ok = true;
+                var pacienteComparar = await _db.SingleByIdAsync<Paciente>(paciente.PacienteId);
+                if (HayCambios(paciente, pacienteComparar))
+                {
+                    var existeIdentificacion = _db.Exists<Paciente>(x => x.Identificacion == paciente.Identificacion);
+                    var existeEmail = _db.Exists<Paciente>(x => x.Email == paciente.Email);
+                    if (existeIdentificacion && existeEmail == false)
+                    {
+                        paciente.ModificadoFecha = dateTime_HN;
+                        paciente.Edad = CalculateAge(paciente.FechaNacimiento);
+                        await _db.SaveAsync<Paciente>(paciente);
+                        _resp.Ok = true;
+                    }
+                    else
+                    {
+                        _resp.Ok = false;
+                        _resp.Mensaje = "El usuario ya existe o  hay campos no unicos.";
+                    }
+                }
+                else
+                {
+                    paciente.ModificadoFecha = dateTime_HN;
+                    paciente.Edad = CalculateAge(paciente.FechaNacimiento);
+                    await _db.SaveAsync<Paciente>(paciente);
+                    _resp.Ok = true;
+                }
+
+
+
+
             }
             catch (Exception ex)
             {
@@ -302,6 +333,24 @@ namespace apisam.repos
                 age -= 1;
 
             return age;
+        }
+
+
+        private bool HayCambios(Paciente paciente, Paciente comparar)
+        {
+            var flag = false;
+            if (paciente.Identificacion != comparar.Identificacion)
+            {
+                flag = true;
+            }
+            else if (paciente.Email != comparar.Email)
+            {
+                flag = true;
+            }
+
+            return flag;
+
+
         }
 
     }
