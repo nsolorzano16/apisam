@@ -11,6 +11,7 @@ namespace apisam.web.Controllers
 {
     [Route("/errors")]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorsController : ControllerBase
     {
         [Route("{code}")]
