@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +28,10 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] ExamenFisico examenFisico)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ExamenFisicoRepo.AddExamenFisico(examenFisico);
             if (_resp.Ok) return Ok(examenFisico);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
@@ -38,10 +39,10 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] ExamenFisico examenFisico)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ExamenFisicoRepo.UpdateExamenFisico(examenFisico);
             if (_resp.Ok) return Ok(examenFisico);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]

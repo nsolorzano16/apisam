@@ -28,7 +28,9 @@ namespace apisam.entities
         public string Nombres { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
+        [Unique]
         public string Identificacion { get; set; }
+        [Unique]
         public string Email { get; set; }
         public string Sexo { get; set; }
         public DateTime FechaNacimiento { get; set; }

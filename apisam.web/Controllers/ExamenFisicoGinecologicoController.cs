@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -30,10 +31,10 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] ExamenFisicoGinecologico examen)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ExamenGinecologicoRepo.AddExamenFisicoGinecologico(examen);
             if (_resp.Ok) return Ok(examen);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
@@ -41,10 +42,10 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] ExamenFisicoGinecologico examen)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ExamenGinecologicoRepo.UpdateExamenFisicoGinecologico(examen);
             if (_resp.Ok) return Ok(examen);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
@@ -52,11 +53,9 @@ namespace apisam.web.Controllers
         public async Task<IActionResult> GetExamenFisicoGinecologico([FromRoute] int pacienteId,
             [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _examen = await ExamenGinecologicoRepo.GetExamenGinecologico(pacienteId, doctorId, preclinicaId);
-            if (_examen != null) return Ok(_examen);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
+            return Ok(await ExamenGinecologicoRepo.GetExamenGinecologico(pacienteId, doctorId, preclinicaId));
 
-            return Ok();
 
         }
 

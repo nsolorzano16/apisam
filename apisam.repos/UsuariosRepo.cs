@@ -25,8 +25,8 @@ namespace apisam.repositories
 
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
-            hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
-            // hondurasTime = TimeZoneInfo.Local;
+            //hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            hondurasTime = TimeZoneInfo.Local;
         }
 
         public async Task<List<Usuario>> Usuarios()
@@ -52,34 +52,18 @@ namespace apisam.repositories
             var _db = dbFactory.Open();
             try
             {
-                var usuarioBuscado = await _db.SingleAsync<Usuario>(x =>
-           x.UserName == usuario.UserName ||
-            x.Identificacion == usuario.Identificacion || x.Email == usuario.Email || x.ColegioNumero == usuario.ColegioNumero);
 
+                CreatePasswordHash(usuario.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
+                usuario.PasswordHash = _passwordHash;
+                usuario.PasswordSalt = _passwordSalt;
+                usuario.CreadoFecha = dateTime_HN;
+                usuario.ModificadoFecha = dateTime_HN;
+                usuario.Password = "";
+                usuario.Edad = CalculateAge(usuario.FechaNacimiento);
+                usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
+                await _db.SaveAsync<Usuario>(usuario);
+                _resp.Ok = true;
 
-
-                if (usuarioBuscado == null)
-                {
-
-                    CreatePasswordHash(usuario.Password, out byte[] _passwordHash, out byte[] _passwordSalt);
-                    usuario.PasswordHash = _passwordHash;
-                    usuario.PasswordSalt = _passwordSalt;
-                    usuario.CreadoFecha = dateTime_HN;
-                    usuario.ModificadoFecha = dateTime_HN;
-                    usuario.Password = "";
-                    usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-                    usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
-
-                    await _db.SaveAsync<Usuario>(usuario);
-                    _resp.Ok = true;
-
-
-                }
-                else
-                {
-                    _resp.Ok = false;
-                    _resp.Mensaje = "El usuario ya existe.";
-                }
             }
             catch (Exception ex)
             {
@@ -99,38 +83,10 @@ namespace apisam.repositories
             try
             {
                 var _db = dbFactory.Open();
-                var userComparar = await _db.SingleByIdAsync<Usuario>(usuario.UsuarioId);
-
-                if (HayCambios(usuario, userComparar))
-                {
-                    var existeUsername = _db.Exists<Usuario>(x => x.UserName == usuario.UserName);
-                    var existeIdentificacion = _db.Exists<Usuario>(x => x.Identificacion == usuario.Identificacion);
-                    var existeEmail = _db.Exists<Usuario>(x => x.Email == usuario.Email);
-                    var existeColegioNum = _db.Exists<Usuario>(x => x.ColegioNumero == usuario.ColegioNumero);
-                    if (existeUsername && existeIdentificacion && existeEmail && existeColegioNum == false)
-                    {
-                        usuario.ModificadoFecha = dateTime_HN;
-                        usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-                        await _db.SaveAsync(usuario);
-                        _resp.Ok = true;
-                    }
-                    else
-                    {
-                        _resp.Ok = false;
-                        _resp.Mensaje = "El usuario ya existe o  hay campos no unicos.";
-                    }
-
-                }
-                else
-                {
-                    usuario.ModificadoFecha = dateTime_HN;
-                    usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-                    await _db.SaveAsync(usuario);
-                    _resp.Ok = true;
-                }
-
-
-
+                usuario.ModificadoFecha = dateTime_HN;
+                usuario.Edad = CalculateAge(usuario.FechaNacimiento);
+                await _db.SaveAsync(usuario);
+                _resp.Ok = true;
 
 
             }
@@ -283,30 +239,7 @@ namespace apisam.repositories
             return age;
         }
 
-        private bool HayCambios(Usuario usuario, Usuario comparar)
-        {
-            var flag = false;
-            if (usuario.Identificacion != comparar.Identificacion)
-            {
-                flag = true;
-            }
-            else if (usuario.UserName != comparar.UserName)
-            {
-                flag = true;
-            }
-            else if (usuario.Email != comparar.Email)
-            {
-                flag = true;
-            }
-            else if (usuario.ColegioNumero != comparar.ColegioNumero)
-            {
-                flag = true;
-            }
 
-            return flag;
-
-
-        }
 
 
     }

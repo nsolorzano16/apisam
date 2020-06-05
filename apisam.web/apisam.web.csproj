@@ -38,5 +38,6 @@
   <ItemGroup>
     <Folder Include="Mapping\" />
     <Folder Include="Hubs\" />
+    <Folder Include="HandleErrors\" />
   </ItemGroup>
 </Project>

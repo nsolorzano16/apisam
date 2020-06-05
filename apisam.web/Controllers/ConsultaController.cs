@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -40,10 +41,10 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] ConsultaGeneral consulta)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ConsultaRepo.AddConsultaGeneral(consulta);
             if (_resp.Ok) return Ok(consulta);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
@@ -51,20 +52,19 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] ConsultaGeneral consulta)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ConsultaRepo.UpdateConsultaGeneral(consulta);
             if (_resp.Ok) return Ok(consulta);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("getconsultageneral/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetConsultaGeneral")]
         public async Task<IActionResult> GetConsultaGeneral([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _consultaGeneral = await ConsultaRepo.GetConsultaGeneral(pacienteId, doctorId, preclinicaId);
-            if (_consultaGeneral != null) return Ok(_consultaGeneral);
-            return Ok();
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
+            return Ok(await ConsultaRepo.GetConsultaGeneral(pacienteId, doctorId, preclinicaId));
+
 
         }
 

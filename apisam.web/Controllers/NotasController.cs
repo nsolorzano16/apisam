@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -40,30 +41,30 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] List<Notas> notas)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await notasRepo.UpdateNotaLista(notas);
             if (_resp.Ok) return Ok(notas);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpPost("agregar", Name = "AddNota")]
         public async Task<IActionResult> AddNota([FromBody] Notas nota)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await notasRepo.AddNota(nota);
             if (_resp.Ok) return Ok(nota);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("editar", Name = "UpdateNota")]
         public async Task<IActionResult> UpdateNota([FromBody] Notas nota)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await notasRepo.UpdateNota(nota);
             if (_resp.Ok) return Ok(nota);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
 
@@ -72,10 +73,10 @@ namespace apisam.web.Controllers
         [HttpPut("desactivar", Name = "DesactivarNota")]
         public async Task<IActionResult> DesactivarNota([FromBody] Notas nota)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await notasRepo.UpdateNota(nota);
             if (_resp.Ok) return Ok(nota);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
 

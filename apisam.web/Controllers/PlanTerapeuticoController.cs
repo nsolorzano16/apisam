@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -34,10 +35,10 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] PlanTerapeutico plan)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await PlanRepo.AddPlanTerapeutico(plan);
             if (_resp.Ok) return Ok(plan);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
@@ -45,22 +46,21 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] PlanTerapeutico plan)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await PlanRepo.UpdatePlanTerapeutico(plan);
             if (_resp.Ok) return Ok(plan);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("edit")]
         public async Task<IActionResult> UpdatePlan([FromBody] PlanTerapeuticoViewModel plan)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var _x = _mapper.Map<PlanTerapeuticoViewModel, PlanTerapeutico>(plan);
             RespuestaMetodos _resp = await PlanRepo.UpdatePlanTerapeutico(_x);
             if (_resp.Ok) return Ok(await PlanRepo.GetPlanInfo(_x.PlanTerapeuticoId));
-
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]

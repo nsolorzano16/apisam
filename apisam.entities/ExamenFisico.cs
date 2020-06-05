@@ -18,6 +18,7 @@ namespace apisam.entities
         public string Cabeza { get; set; }
         public string Oidos { get; set; }
         public string Ojos { get; set; }
+        public string Nariz { get; set; }
         public string Boca { get; set; }
         public string Cuello { get; set; }
         public string Torax { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -31,10 +32,10 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await AntecedentesRepo.AddAntecedentes(antecedentes);
             if (_resp.Ok) return Ok(antecedentes);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
@@ -42,21 +43,18 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] AntecedentesFamiliaresPersonales antecedentes)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await AntecedentesRepo.UpdateAntecedentes(antecedentes);
             if (_resp.Ok) return Ok(antecedentes);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetAntecedente")]
         public async Task<IActionResult> GetAntecedente([FromRoute] int pacienteId, int doctorId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _antecedente = await AntecedentesRepo.GetAntecedente(pacienteId, doctorId);
-            if (_antecedente != null) return Ok(_antecedente);
-            return Ok();
-
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
+            return Ok(await AntecedentesRepo.GetAntecedente(pacienteId, doctorId));
         }
 
 

@@ -9,6 +9,7 @@ using apisam.entities;
 using apisam.entities.ViewModels;
 //using apisam.entities.ViewModels.UsuariosTable;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using AutoMapper;
 using ImageMagick;
 using Microsoft.AspNetCore.Authorization;
@@ -58,7 +59,7 @@ namespace apisam.web.Controllers
         [HttpPost("profilefoto/{id}", Name = "SubirFoto")]
         public async Task<IActionResult> SubirFoto([FromRoute] int id, [FromForm] IFormFile logoImage)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var _resp = new RespuestaMetodos();
 
             // obtengo usuario a modificar
@@ -135,10 +136,6 @@ namespace apisam.web.Controllers
                 _resp.Mensaje = ex.Message;
             }
 
-
-
-
-
             return BadRequest(_resp);
 
 
@@ -150,33 +147,33 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] Usuario usuario)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await UsuariosRepo.AddUsuario(usuario);
 
             if (_resp.Ok) return Ok(usuario);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "1,2")]
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] Usuario usuario)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await UsuariosRepo.UpdateUsuario(usuario);
-
             if (_resp.Ok) return Ok(usuario);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
+
         }
 
         [HttpPost("Login", Name = "Login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var usuario = await UsuariosRepo.GetUsuarioByUserName(model);
             if (usuario == null) return NotFound();
             if (!VerificarPasswordHash(model.Password, usuario.PasswordHash, usuario.PasswordSalt))
             {
-                return NotFound();
+                return NotFound(new NotFoundError("Usuario no encontrado"));
             }
             var claims = new List<Claim>
             {
@@ -249,11 +246,11 @@ namespace apisam.web.Controllers
         [HttpPut("changePassword", Name = "ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] UserChangePassword model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var user = await UsuariosRepo.UpdatePassword(model);
             if (user != null) return Ok(user);
 
-            return BadRequest();
+            return BadRequest(new BadRequestError("La contraseña no se pudo cambiar"));
         }
 
         [Authorize(Roles = "1,2,3")]

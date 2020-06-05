@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -61,22 +62,21 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] Preclinica preclinica)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await PreclinicaRepo.AddPreclinica(preclinica);
             if (_resp.Ok) return Ok(preclinica);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2,3")]
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] PreclinicaViewModel preclinica)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var _pre = _mapper.Map<PreclinicaViewModel, Preclinica>(preclinica);
             RespuestaMetodos _resp = await PreclinicaRepo.UpdatePreclinica(_pre);
             if (_resp.Ok) return Ok(await PreclinicaRepo.GetInfoPreclinica(_pre.PreclinicaId));
-
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
 

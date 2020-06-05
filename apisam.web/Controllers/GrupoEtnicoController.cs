@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,20 +41,20 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] GrupoEtnico grupoEtnico)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await GrupoEtnicoRepo.Add(grupoEtnico);
             if (_resp.Ok) return Ok(grupoEtnico);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] GrupoEtnico grupoEtnico)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await GrupoEtnicoRepo.Update(grupoEtnico);
             if (_resp.Ok) return Ok(grupoEtnico);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
     }
 }

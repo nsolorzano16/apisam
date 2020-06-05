@@ -23,6 +23,7 @@ namespace apisam.repos
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            // hondurasTime = TimeZoneInfo.Local;
         }
 
         public async Task<RespuestaMetodos> AddCalendarioFecha(CalendarioFecha evento)
@@ -32,7 +33,11 @@ namespace apisam.repos
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
+
+
                 using var _db = dbFactory.Open();
+                //evento.Inicio = evento.Inicio.ToUniversalTime();
+                //evento.Fin = evento.Fin.ToUniversalTime();
                 evento.CreadoFecha = dateTime_HN;
                 evento.ModificadoFecha = dateTime_HN;
                 await _db.SaveAsync<CalendarioFecha>(evento);
@@ -72,7 +77,7 @@ namespace apisam.repos
         {
 
             using var _db = dbFactory.Open();
-            return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId);
+            return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId && x.Activo == true);
 
         }
 
@@ -81,7 +86,7 @@ namespace apisam.repos
         {
 
             using var _db = dbFactory.Open();
-            var _qry = $@"SELECT DISTINCT c.Inicio from CalendarioFecha c WHERE c.DoctorId = {doctorId}";
+            var _qry = $@"SELECT DISTINCT c.Inicio from CalendarioFecha c WHERE c.DoctorId = {doctorId} AND c.Activo = 1";
             var listCalendario = new List<CalendarioMovilViewModel>();
             var listaFechas = _db.Select<CalendarioFecha>(_qry).ToList();
 

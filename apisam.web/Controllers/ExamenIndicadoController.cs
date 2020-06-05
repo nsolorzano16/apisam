@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -33,10 +34,10 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] ExamenIndicado examen)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ExamenRepo.AddExamenIndicado(examen);
             if (_resp.Ok) return Ok(examen);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
 
         }
 
@@ -44,30 +45,30 @@ namespace apisam.web.Controllers
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] ExamenIndicado examen)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await ExamenRepo.UpdateExamenIndicado(examen);
             if (_resp.Ok) return Ok(examen);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("edit")]
         public async Task<IActionResult> UpdateExamen([FromBody] ExamenesIndicadosViewModel examen)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var ex = _mapper.Map<ExamenesIndicadosViewModel, ExamenIndicado>(examen);
             RespuestaMetodos _resp = await ExamenRepo.UpdateExamenIndicado(ex);
             if (_resp.Ok) return Ok(await ExamenRepo.GetInfoExamenIndicado(ex.ExamenIndicadoId));
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpGet("id/{examenId}", Name = "GetExamenIndicadoById")]
         public async Task<IActionResult> GetExamenIndicadoById([FromRoute] int examenId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var _examenIndicado = await ExamenRepo.GetExamenIndicadoById(examenId);
-            return Ok(_examenIndicado);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
+            return Ok(await ExamenRepo.GetExamenIndicadoById(examenId));
+
 
 
         }
@@ -76,7 +77,7 @@ namespace apisam.web.Controllers
         [HttpGet("listar/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetExamenes")]
         public async Task<IActionResult> GetExamenes([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             return Ok(await ExamenRepo.GetExamenes(pacienteId, doctorId, preclinicaId));
         }
 
@@ -85,7 +86,7 @@ namespace apisam.web.Controllers
         public async Task<IActionResult> GetDetalleExamenesIndicados([FromRoute] int pacienteId,
             [FromRoute] int doctorId, [FromRoute] int preclinicaId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             return Ok(await ExamenRepo.GetDetalleExamenesIndicados(pacienteId, doctorId, preclinicaId));
         }
     }

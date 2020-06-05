@@ -15,8 +15,8 @@ namespace apisam.entities.ViewModels
         public int ReligionId { get; set; }
         public int GrupoSanguineoId { get; set; }
         public int GrupoEtnicoId { get; set; }
-        public int DepartamentoId { get; set; }
-        public int MunicipioId { get; set; }
+        public int? DepartamentoId { get; set; }
+        public int? MunicipioId { get; set; }
         public int? DepartamentoResidenciaId { get; set; }
         public int? MunicipioResidenciaId { get; set; }
         public string Nombres { get; set; }

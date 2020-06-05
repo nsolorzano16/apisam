@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
+using apisam.web.HandleErrors;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -36,17 +37,17 @@ namespace apisam.web.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] Paciente paciente)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             RespuestaMetodos _resp = await PacienteRepo.AddPaciente(paciente);
             if (_resp.Ok) return Ok(paciente);
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2,3")]
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] PacientesViewModel paciente)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var _pac = _mapper.Map<PacientesViewModel, Paciente>(paciente);
             RespuestaMetodos _resp = await PacienteRepo.UpdatePaciente(_pac);
             if (_resp.Ok)
@@ -55,7 +56,7 @@ namespace apisam.web.Controllers
                 return Ok(_pacienteRetorno);
             }
 
-            return BadRequest(_resp);
+            return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
 
