@@ -31,19 +31,18 @@ namespace apisam.repos
             && x.Activo == true && x.Atendida == true);
 
             var _antecedentesPersonales = await _db.SingleAsync<AntecedentesFamiliaresPersonales>
-                (x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true);
+                (x => x.PacienteId == pacienteId && x.Activo == true);
 
             var _habitos = await _db.SingleAsync<Habitos>(x => x.PacienteId
-            == pacienteId && x.DoctorId == doctorId && x.Activo == true);
+            == pacienteId && x.Activo == true);
 
             var _historialGinecoObstetra = await _db.SingleAsync<HistorialGinecoObstetra>(
                 x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true);
+                && x.Activo == true);
 
             var _farmacos = await _db.SelectAsync<FarmacosUsoActual>
                 (x => x.PacienteId ==
-                pacienteId && x.DoctorId == doctorId && x.Activo == true);
+                pacienteId && x.Activo == true);
 
             var _examenFisico = await _db.SingleAsync<ExamenFisico>(
                 x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId

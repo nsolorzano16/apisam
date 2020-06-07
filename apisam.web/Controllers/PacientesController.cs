@@ -78,13 +78,13 @@ namespace apisam.web.Controllers
 
 
         [Authorize(Roles = "2,3")]
-        [HttpGet("page/{pageNo}/limit/{limit}/doctor/{doctorId}", Name = "GetPacientes")]
+        [HttpGet("page/{pageNo}/limit/{limit}", Name = "GetPacientes")]
         public async Task<IActionResult> GetPacientes([FromRoute] int pageNo, [FromRoute]
-        int limit, [FromQuery] string filter, [FromRoute] int doctorId)
+        int limit, [FromQuery] string filter)
         {
             try
             {
-                var _pageResponse = await PacienteRepo.GetPacientes(pageNo, limit, filter, doctorId);
+                var _pageResponse = await PacienteRepo.GetPacientes(pageNo, limit, filter);
                 return Ok(_pageResponse);
             }
             catch (Exception e)

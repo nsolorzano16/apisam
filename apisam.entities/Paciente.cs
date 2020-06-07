@@ -14,7 +14,6 @@ namespace apisam.entities
 
         [PrimaryKey, AutoIncrement]
         public int PacienteId { get; set; }
-        public int DoctorId { get; set; }
         public int PaisId { get; set; }
         public int ProfesionId { get; set; }
         public int EscolaridadId { get; set; }
@@ -51,36 +50,7 @@ namespace apisam.entities
         public string FotoUrl { get; set; }
 
 
-        //[Reference]
-        //public AntecedentesFamiliaresPersonales
-        //    AntecedentesFamiliaresPersonales
-        //{ get; set; }
 
-        //[Reference]
-        //public List<Diagnosticos> Diagnosticos { get; set; }
-
-        //[Reference]
-        //public List<ExamenFisico> ExamenesFisicos { get; set; }
-
-        //[Reference]
-        //public List<ExamenFisicoGinecologico> ExamenesGinecologicos { get; set; }
-
-        //[Reference]
-        //public List<FarmacosUsoActual> Farmacos { get; set; }
-
-        //[Reference]
-        //public Habitos Habito { get; set; }
-
-
-        //[Reference]
-        //public HistorialGinecoObstetra HistorialGinecoObstetra { get; set; }
-
-
-        //[Reference]
-        //public List<Preclinica> Preclinicas { get; set; }
-
-        //[Reference]
-        //public List<Notas> NotasLista { get; set; }
 
     }
 }

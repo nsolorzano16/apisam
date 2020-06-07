@@ -63,12 +63,11 @@ namespace apisam.repos
 
             return _resp;
         }
-        public async Task<HistorialGinecoObstetra> GetHistorial(int pacienteId, int doctorId)
+        public async Task<HistorialGinecoObstetra> GetHistorial(int pacienteId)
         {
             using var _db = dbFactory.Open();
             return await _db.SingleAsync<HistorialGinecoObstetra>
-                 (x => x.PacienteId == pacienteId
-                 && x.DoctorId == doctorId && x.Activo == true);
+                 (x => x.PacienteId == pacienteId && x.Activo == true);
 
         }
     }

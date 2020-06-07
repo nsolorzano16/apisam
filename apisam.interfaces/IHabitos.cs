@@ -8,7 +8,7 @@ namespace apisam.interfaces
     {
         Task<RespuestaMetodos> AddAHabito(Habitos habito);
         Task<RespuestaMetodos> UpdateAHabito(Habitos habito);
-        Task<Habitos> GetHabito(int pacienteId, int doctorId);
+        Task<Habitos> GetHabito(int pacienteId);
 
     }
 }

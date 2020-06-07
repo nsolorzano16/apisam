@@ -12,7 +12,6 @@ namespace apisam.entities
         [PrimaryKey, AutoIncrement]
         public int AntecedentesFamiliaresPersonalesId { get; set; }
         public int PacienteId { get; set; }
-        public int DoctorId { get; set; }
         public int? PreclinicaId { get; set; }
         public string AntecedentesPatologicosFamiliares { get; set; }
         public string AntecedentesPatologicosPersonales { get; set; }

@@ -65,13 +65,12 @@ namespace apisam.repos
             return _resp;
         }
 
-        public async Task<AntecedentesFamiliaresPersonales> GetAntecedente(int pacienteId, int doctorId)
+        public async Task<AntecedentesFamiliaresPersonales> GetAntecedente(int pacienteId)
         {
             using var _db = dbFactory.Open();
-            var antecedente = await _db.SingleAsync<AntecedentesFamiliaresPersonales>
-                (x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true);
-            return antecedente;
+
+
+            return await _db.SingleAsync<AntecedentesFamiliaresPersonales>(x => x.PacienteId == pacienteId);
         }
     }
 }

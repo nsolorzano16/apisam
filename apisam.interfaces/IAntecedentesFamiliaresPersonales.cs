@@ -9,6 +9,6 @@ namespace apisam.interfaces
     {
         Task<RespuestaMetodos> AddAntecedentes(AntecedentesFamiliaresPersonales antecedentes);
         Task<RespuestaMetodos> UpdateAntecedentes(AntecedentesFamiliaresPersonales antecedentes);
-        Task<AntecedentesFamiliaresPersonales> GetAntecedente(int pacienteId, int doctorId);
+        Task<AntecedentesFamiliaresPersonales> GetAntecedente(int pacienteId);
     }
 }

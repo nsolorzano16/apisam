@@ -50,11 +50,11 @@ namespace apisam.web.Controllers
         }
 
         [Authorize(Roles = "2")]
-        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetAntecedente")]
-        public async Task<IActionResult> GetAntecedente([FromRoute] int pacienteId, int doctorId)
+        [HttpGet("pacienteId/{pacienteId}", Name = "GetAntecedente")]
+        public async Task<IActionResult> GetAntecedente([FromRoute] int pacienteId)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
-            return Ok(await AntecedentesRepo.GetAntecedente(pacienteId, doctorId));
+            return Ok(await AntecedentesRepo.GetAntecedente(pacienteId));
         }
 
 

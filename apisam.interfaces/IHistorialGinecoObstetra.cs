@@ -8,7 +8,7 @@ namespace apisam.interfaces
     {
         Task<RespuestaMetodos> AddAHistorial(HistorialGinecoObstetra historial);
         Task<RespuestaMetodos> UpdateAHistorial(HistorialGinecoObstetra historial);
-        Task<HistorialGinecoObstetra> GetHistorial(int pacienteId, int doctorId);
+        Task<HistorialGinecoObstetra> GetHistorial(int pacienteId);
 
     }
 }

@@ -12,7 +12,6 @@ namespace apisam.entities
         [PrimaryKey, AutoIncrement]
         public int HistorialId { get; set; }
         public int PacienteId { get; set; }
-        public int DoctorId { get; set; }
         public DateTime? Fum { get; set; }
         public string G { get; set; }
         public string P { get; set; }
@@ -27,8 +26,8 @@ namespace apisam.entities
         public DateTime Presentacion { get; set; }
         public string MovimientosFetales { get; set; }
         public string Fcf { get; set; }
-
         public int? PreclinicaId { get; set; }
+
 
 
 

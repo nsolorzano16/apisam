@@ -47,11 +47,11 @@ namespace apisam.web.Controllers
 
 
         [Authorize(Roles = "2")]
-        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetHabito")]
-        public async Task<IActionResult> GetHabito([FromRoute] int pacienteId, int doctorId)
+        [HttpGet("pacienteId/{pacienteId}", Name = "GetHabito")]
+        public async Task<IActionResult> GetHabito([FromRoute] int pacienteId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(await HabitosRepo.GetHabito(pacienteId, doctorId));
+            return Ok(await HabitosRepo.GetHabito(pacienteId));
 
 
         }

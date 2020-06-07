@@ -11,8 +11,8 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> AddPaciente(Paciente paciente);
         Task<RespuestaMetodos> UpdatePaciente(Paciente paciente);
         Task<Paciente> GetPacienteById(int id);
-        Task<Paciente> GetPacienteByIdentificacion(string identificacion);
-        Task<PageResponse<PacientesViewModel>> GetPacientes(int pageNo, int limit, string filter, int doctorId);
+        Task<PacientesViewModel> GetPacienteByIdentificacion(string identificacion);
+        Task<PageResponse<PacientesViewModel>> GetPacientes(int pageNo, int limit, string filter);
         Task<PacientesViewModel> GetInfoPaciente(int pacienteId);
     }
 

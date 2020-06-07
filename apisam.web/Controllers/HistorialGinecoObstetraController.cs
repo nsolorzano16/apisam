@@ -50,11 +50,11 @@ namespace apisam.web.Controllers
 
 
         [Authorize(Roles = "2")]
-        [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}", Name = "GetHistorialGinecoObstetra")]
-        public async Task<IActionResult> GetHistorialGinecoObstetra([FromRoute] int pacienteId, int doctorId)
+        [HttpGet("pacienteId/{pacienteId}", Name = "GetHistorialGinecoObstetra")]
+        public async Task<IActionResult> GetHistorialGinecoObstetra([FromRoute] int pacienteId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return Ok(await HistorialRepo.GetHistorial(pacienteId, doctorId));
+            return Ok(await HistorialRepo.GetHistorial(pacienteId));
 
 
         }
