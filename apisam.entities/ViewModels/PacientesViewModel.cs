@@ -8,7 +8,6 @@ namespace apisam.entities.ViewModels
         }
 
         public int PacienteId { get; set; }
-        public int DoctorId { get; set; }
         public int PaisId { get; set; }
         public int ProfesionId { get; set; }
         public int EscolaridadId { get; set; }

@@ -12,14 +12,17 @@ namespace apisam.entities
         [PrimaryKey, AutoIncrement]
         public int HistorialId { get; set; }
         public int PacienteId { get; set; }
+        public int AnticonceptivosId { get; set; }
+        public DateTime? FechaMenarquia { get; set; }
         public DateTime? Fum { get; set; }
         public string G { get; set; }
         public string P { get; set; }
         public string C { get; set; }
         public string Hv { get; set; }
         public string Hm { get; set; }
-        public string Anticonceptivos { get; set; }
+        public string DescripcionAnticonceptivos { get; set; }
         public bool VacunaVph { get; set; }
+        public DateTime? FechaMenopausia { get; set; }
         public bool Embarazo { get; set; }
         public string Fpp { get; set; }
         public string Afu { get; set; }

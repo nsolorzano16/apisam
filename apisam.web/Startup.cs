@@ -100,6 +100,7 @@ namespace apisam.web
             services.AddTransient<IAuditoria, AuditoriaRepo>();
             services.AddTransient<IDevices, DevicesRepo>();
             services.AddTransient<ICalendarioFecha, CalendarioFechaRepo>();
+            services.AddTransient<IAnticonceptivos, AnticonceptivosRepo>();
 
 
 

@@ -299,9 +299,8 @@ namespace apisam.repos
                         ";
 
 
-            if (!string.IsNullOrEmpty(filter)) _qry += $" AND (p.Nombres LIKE '%{filter}%' " +
-                    $"OR p.PrimerApellido LIKE '%{filter}%' OR p.SegundoApellido LIKE '%{filter}%' " +
-                    $"OR p.Identificacion LIKE '%{filter}%')";
+            if (!string.IsNullOrEmpty(filter)) _qry += $" WHERE (p.Identificacion LIKE '%{filter}%' " +
+                    $"OR p.IdentificacionMadre LIKE '%{filter}%' OR p.IdentificacionPadre LIKE '%{filter}%' )";
 
             var _qry2 = _qry;
             _qry += " ORDER BY p.PacienteId DESC";

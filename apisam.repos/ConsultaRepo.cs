@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
@@ -20,6 +21,7 @@ namespace apisam.repos
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
+            // hondurasTime = TimeZoneInfo.Local;
         }
 
         public async Task<ConsultaViewModel> GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId)
@@ -178,6 +180,30 @@ namespace apisam.repos
             return consulta;
         }
 
+
+        public List<ConsultaViewModel> GetExpediente(int pacienteId, int doctorId)
+        {
+            var listaConsultas = new List<ConsultaViewModel>();
+            using var _db = dbFactory.Open();
+            var _qry = $@"
+                                SELECT * from Preclinica 
+                                WHERE PacienteId = {pacienteId} AND DoctorId = {doctorId} and Atendida = 1
+                                ORDER BY CreadoFecha desc";
+
+            var listaPreclinicas = _db.Select<Preclinica>(_qry);
+
+            listaPreclinicas.ForEach(async x =>
+            {
+
+                var detail = await GetDetalleConsulta(doctorId, pacienteId, x.PreclinicaId);
+                listaConsultas.Add(detail);
+            });
+
+
+
+            return listaConsultas;
+
+        }
 
     }
 }
