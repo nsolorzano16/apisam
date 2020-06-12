@@ -6,7 +6,7 @@ namespace apisam.entities
     public class Anticonceptivos
     {
         [PrimaryKey, AutoIncrement]
-        public int AnticonceptivosId { get; set; }
+        public int AnticonceptivoId { get; set; }
         public string Nombre { get; set; }
     }
 }
