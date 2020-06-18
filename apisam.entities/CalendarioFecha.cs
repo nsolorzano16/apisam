@@ -17,6 +17,7 @@ namespace apisam.entities
         public bool TodoElDia { get; set; }
         public string ColorPrimario { get; set; }
         public string ColorSecundario { get; set; }
+        public DateTime FechaFiltro { get; set; }
 
 
 

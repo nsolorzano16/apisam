@@ -33,14 +33,12 @@ namespace apisam.repos
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
-
-
                 using var _db = dbFactory.Open();
-                //evento.Inicio = evento.Inicio.ToUniversalTime();
-                //evento.Fin = evento.Fin.ToUniversalTime();
                 evento.CreadoFecha = dateTime_HN;
                 evento.ModificadoFecha = dateTime_HN;
+                evento.FechaFiltro = evento.Inicio;
                 await _db.SaveAsync<CalendarioFecha>(evento);
+               
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -84,19 +82,19 @@ namespace apisam.repos
 
         public List<CalendarioMovilViewModel> GetEventosMovil(int doctorId)
         {
+            var listCalendario = new List<CalendarioMovilViewModel>();
 
             using var _db = dbFactory.Open();
-            var _qry = $@"SELECT DISTINCT c.Inicio from CalendarioFecha c WHERE c.DoctorId = {doctorId} AND c.Activo = 1";
-            var listCalendario = new List<CalendarioMovilViewModel>();
+            var _qry = $@"SELECT DISTINCT c.FechaFiltro FROM calendariofecha c WHERE c.DoctorId = {doctorId} AND c.Activo = 1 ";
             var listaFechas = _db.Select<CalendarioFecha>(_qry).ToList();
 
             listaFechas.ForEach(x =>
            {
 
-               var listaEvents = _db.Select<CalendarioFecha>(y => y.DoctorId == doctorId && y.Inicio == x.Inicio);
+               var listaEvents = _db.Select<CalendarioFecha>(y => y.DoctorId == doctorId && y.FechaFiltro == x.FechaFiltro && y.Activo == true);
                var itemTemp = new CalendarioMovilViewModel
                {
-                   Date = x.Inicio,
+                   Date = x.FechaFiltro,
                    Events = listaEvents
                };
                listCalendario.Add(itemTemp);

@@ -50,9 +50,9 @@ namespace apisam.repos
                 x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
                 && x.DoctorId == doctorId && x.Activo == true);
 
-            var _examenFisicoGinecologico = await _db.SingleAsync<ExamenFisicoGinecologico>(
-                x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.Activo == true);
+            //var _examenFisicoGinecologico = await _db.SingleAsync<ExamenFisicoGinecologico>(
+            //    x => x.PreclinicaId == preclinicaId && x.PacienteId == pacienteId
+            //    && x.DoctorId == doctorId && x.Activo == true);
 
             var _diagnosticos = await _db.SelectAsync<Diagnosticos>(x => x.PreclinicaId == preclinicaId
             && x.PacienteId == pacienteId
@@ -120,7 +120,7 @@ namespace apisam.repos
             _resp.HistorialGinecoObstetra = _historialGinecoObstetra;
             _resp.FarmacosUsoActual = _farmacos;
             _resp.ExamenFisico = _examenFisico;
-            _resp.ExamenFisicoGinecologico = _examenFisicoGinecologico;
+           // _resp.ExamenFisicoGinecologico = _examenFisicoGinecologico;
             _resp.Diagnosticos = _diagnosticos;
             _resp.Notas = _notas;
             _resp.ConsultaGeneral = _consultaGeneral;
