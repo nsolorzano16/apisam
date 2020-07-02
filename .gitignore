@@ -338,5 +338,3 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-
-/apisam.web/Controllers/WeatherForecastController.cs
