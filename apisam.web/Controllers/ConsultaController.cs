@@ -69,15 +69,15 @@ namespace apisam.web.Controllers
         }
 
 
-        //[Authorize(Roles = "2")]
-        //[HttpGet("expediente/pacienteid/{pacienteId}/doctorid/{doctorId}", Name = "GetExpediente")]
-        //public IActionResult GetExpediente([FromRoute] int pacienteId, [FromRoute] int doctorId)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
-        //    return Ok(ConsultaRepo.GetExpediente(pacienteId, doctorId));
+        [Authorize(Roles = "2")]
+        [HttpGet("expediente/pacienteid/{pacienteId}/doctorid/{doctorId}", Name = "GetExpediente")]
+        public async Task<IActionResult> GetExpediente([FromRoute] int pacienteId, [FromRoute] int doctorId)
+        {
+            if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
+            return Ok(await ConsultaRepo.GetExpediente(pacienteId, doctorId));
 
 
-        //}
+        }
 
 
     }

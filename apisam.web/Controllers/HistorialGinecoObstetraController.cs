@@ -59,6 +59,16 @@ namespace apisam.web.Controllers
 
         }
 
+        [Authorize(Roles = "2")]
+        [HttpGet("detalle/pacienteId/{pacienteId}", Name = "GetDetalleHistorial")]
+        public async Task<IActionResult> GetDetalleHistorial([FromRoute] int pacienteId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return Ok(await HistorialRepo.GetDetalleHistorial(pacienteId));
+
+
+        }
+
 
     }
 }

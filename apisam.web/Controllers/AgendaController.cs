@@ -25,7 +25,7 @@ namespace apisam.web.Controllers
             CalendarioRepo = calendarrepository;
         }
 
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "2,3")]
         [HttpPost("")]
         public async Task<IActionResult> Add([FromBody] CalendarioFecha evento)
         {
@@ -36,7 +36,7 @@ namespace apisam.web.Controllers
 
         }
 
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "2,3")]
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] CalendarioFecha evento)
         {
@@ -46,7 +46,7 @@ namespace apisam.web.Controllers
             return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "2,3")]
         [HttpGet("doctorid/{id}", Name = "GetEventos")]
         public async Task<IActionResult> GetEventos([FromRoute] int id)
         {
@@ -54,7 +54,7 @@ namespace apisam.web.Controllers
             return Ok(await CalendarioRepo.GetEventos(id));
         }
 
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "2,3")]
         [HttpGet("movil/doctorid/{id}", Name = "GetEventosMovil")]
         public IActionResult GetEventosMovil([FromRoute] int id)
         {

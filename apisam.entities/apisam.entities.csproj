@@ -10,7 +10,6 @@
     <PackageReference Include="ServiceStack.OrmLite.SqlServer" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
     <Folder Include="ViewModels\UsuariosTable\" />
   </ItemGroup>
 </Project>

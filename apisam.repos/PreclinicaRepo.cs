@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using apisam.entities;
-using apisam.entities.ViewModels;
-using apisam.interfaces;
-using apisam.repositories;
-using ServiceStack.OrmLite;
-
-namespace apisam.repos
+﻿namespace apisam.repos
 {
+    using apisam.entities;
+    using apisam.entities.ViewModels;
+    using apisam.interfaces;
+    using apisam.repositories;
+    using ServiceStack.OrmLite;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class PreclinicaRepo : IPreclinica
     {
         private readonly OrmLiteConnectionFactory dbFactory;
+
         private readonly Conexion con = new Conexion();
+
         private static TimeZoneInfo hondurasTime;
 
         public PreclinicaRepo()
@@ -21,7 +22,6 @@ namespace apisam.repos
             var _connString = con.GetConnectionString();
             dbFactory = new OrmLiteConnectionFactory(_connString, SqlServerDialect.Provider);
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
-            //hondurasTime = TimeZoneInfo.Local;
         }
 
         public async Task<RespuestaMetodos> AddPreclinica(Preclinica preclinica)
@@ -49,6 +49,25 @@ namespace apisam.repos
 
                 }
 
+                var _flag = await noti.Exists(preclinica.DoctorId, 1);
+                if (_flag)
+                {
+                    //actualiza si es true
+                    await noti.SumaNotificacion(preclinica.DoctorId, 1);
+
+                }
+                {
+                    // crea si es false 
+                    var model = new CrearNotificacionModel()
+                    {
+                        id = preclinica.DoctorId,
+                        doctorId = preclinica.DoctorId,
+                        total = 1
+                    };
+                    await noti.CrearNotificacion(model, 1);
+                }
+
+
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -60,16 +79,21 @@ namespace apisam.repos
 
             return _resp;
         }
-        public async Task<RespuestaMetodos> UpdatePreclinica(Preclinica preclinica)
 
+        public async Task<RespuestaMetodos> UpdatePreclinica(Preclinica preclinica)
         {
             var _resp = new RespuestaMetodos();
+            var noti = new NotificacionesRepo();
             DateTime dateTime_HN = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, hondurasTime);
             try
             {
                 using var _db = dbFactory.Open();
                 preclinica.ModificadoFecha = dateTime_HN;
                 await _db.SaveAsync<Preclinica>(preclinica);
+                if (preclinica.Activo == false)
+                {
+                    await noti.RestaNotificacion(preclinica.DoctorId, 1);
+                }
                 _resp.Ok = true;
             }
             catch (Exception ex)
@@ -125,15 +149,10 @@ namespace apisam.repos
                             INNER JOIN Paciente pc ON p.PacienteId = pc.PacienteId
                             WHERE p.PreclinicaId = ${id}";
             return await _db.SingleAsync<PreclinicaViewModel>(_qry);
-
-
         }
-
-
 
         public async Task<PageResponse<Preclinica>> GetPreclinicasPaginado
             (int pageNo, int limit, int doctorId)
-
         {
             var _response = new PageResponse<Preclinica>();
             var _skip = limit * (pageNo - 1);
@@ -242,6 +261,5 @@ namespace apisam.repos
 
             return _response;
         }
-
     }
 }

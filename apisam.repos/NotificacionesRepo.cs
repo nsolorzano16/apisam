@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using apisam.entities;
-using FirebaseAdmin;
-using FirebaseAdmin.Auth;
-using FirebaseAdmin.Messaging;
-using Google.Apis.Auth.OAuth2;
-
-namespace apisam.repos
+﻿namespace apisam.repos
 {
+    using apisam.entities;
+    using Newtonsoft.Json.Linq;
+    using ServiceStack;
+    using System;
+    using System.Net.Http;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public class NotificacionesRepo
     {
-
-
-
         //public async Task SendNotifications(List<string> registrationTokens, string body)
         //{
 
@@ -82,9 +76,6 @@ namespace apisam.repos
         //        var a = ex.Message;
         //    }
         //}
-
-
-
         public async Task SendNoti(string token, string body)
         {
             var hhtp = new HttpClient();
@@ -119,12 +110,140 @@ namespace apisam.repos
             {
                 var a = ex.Message;
             }
-
-
-
-
         }
 
+        public async Task<bool> Exists(int doctorId, int esPreclinica)
+        {
+            try
+            {
+                var hhtp = new HttpClient();
+                var _url = "";
+                //preclinica 1 agenda 0
+                if(esPreclinica ==1)
+                {
+                    _url = $"https://us-central1-sam-app-446ee.cloudfunctions.net/api/consulta/{doctorId}";
+                }
+                else
+                {
+                    _url = $"https://us-central1-sam-app-446ee.cloudfunctions.net/api/agenda/{doctorId}";
+                }
+              
+
+                var _resp = await hhtp.GetAsync(_url);
+
+                if (_resp.IsSuccessStatusCode)
+                {
+                    var result = await _resp.Content.ReadAsStringAsync();
+                    dynamic json = JObject.Parse(result);
+                    var st = json.status;
+                    if (st == 404)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            
+        }
+
+        public async Task CrearNotificacion(CrearNotificacionModel model,int esPreclinica)
+        {
+            var hhtp = new HttpClient();
+            string _url;
+            if (esPreclinica == 1)
+            {
+                _url = "https://us-central1-sam-app-446ee.cloudfunctions.net/api/consulta";
+            }
+            else
+            {
+                _url = "https://us-central1-sam-app-446ee.cloudfunctions.net/api/agenda";
+            }
+
+            try
+            {
+                var json = model.ToJson();
+                var data = new StringContent(json, Encoding.UTF8, "application/json");
+                var resp = await hhtp.PostAsync(_url, data);
+
+                var status = resp.StatusCode;
+            }
+            catch (Exception )
+            {
+
+                throw;
+            }
+        }
+
+        public async Task SumaNotificacion(int doctorId, int esPreclinica)
+        {
+            var hhtp = new HttpClient();
+            string _url;
+            if (esPreclinica == 1)
+            {
+                _url = $"https://us-central1-sam-app-446ee.cloudfunctions.net/api/consulta/suma/{doctorId}";
+            }
+            else
+            {
+                _url = $"https://us-central1-sam-app-446ee.cloudfunctions.net/api/agenda/suma/{doctorId}";
+            }
+
+            try
+            {
+                var menti = "";
+                      var data = new StringContent(menti, Encoding.UTF8, "application/json");
+
+                var resp = await hhtp.PostAsync(_url,data);
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task RestaNotificacion(int doctorId, int esPreclinica)
+        {
+            var hhtp = new HttpClient();
+            string _url;
+            if (esPreclinica == 1)
+            {
+                _url = $"https://us-central1-sam-app-446ee.cloudfunctions.net/api/consulta/resta/{doctorId}";
+            }
+            else
+            {
+                _url = $"https://us-central1-sam-app-446ee.cloudfunctions.net/api/agenda/resta/{doctorId}";
+            }
+
+            try
+            {
+                var menti = "";
+                var data = new StringContent(menti, Encoding.UTF8, "application/json");
+
+                var resp = await hhtp.PostAsync(_url, data);
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
 }

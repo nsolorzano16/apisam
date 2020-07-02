@@ -12,6 +12,6 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> AddConsultaGeneral(ConsultaGeneral consulta);
         Task<RespuestaMetodos> UpdateConsultaGeneral(ConsultaGeneral consulta);
         Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId);
-        List<ConsultaViewModel> GetExpediente(int pacienteId, int doctorId);
+       Task<ExpedienteViewModel> GetExpediente(int pacienteId, int doctorId);
     }
 }

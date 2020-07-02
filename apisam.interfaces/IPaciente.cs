@@ -14,6 +14,8 @@ namespace apisam.interfaces
         Task<PacientesViewModel> GetPacienteByIdentificacion(string identificacion);
         Task<PageResponse<PacientesViewModel>> GetPacientes(int pageNo, int limit, string filter);
         Task<PacientesViewModel> GetInfoPaciente(int pacienteId);
+        bool ExistsPaciente(Paciente paciente);
+
     }
 
 

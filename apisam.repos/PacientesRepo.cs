@@ -39,8 +39,18 @@ namespace apisam.repos
                 paciente.ModificadoFecha = dateTime_HN;
                 paciente.Edad = CalculateAge(paciente.FechaNacimiento);
                 paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
-                await _db.SaveAsync<Paciente>(paciente);
-                _resp.Ok = true;
+
+                if (!ExistsPaciente(paciente))
+                {
+                    await _db.SaveAsync<Paciente>(paciente);
+                    _resp.Ok = true;
+                }
+                else
+                {
+                    _resp.Ok = false;
+                    _resp.Mensaje = "Existe un paciente registrado con esa identificacion";
+                }
+
             }
             catch (Exception ex)
             {
@@ -121,6 +131,8 @@ namespace apisam.repos
                             m.Nombre as 'Municipio',
                             dd.Nombre as 'DepartamentoResidencia',
                             mm.Nombre as 'MunicipioResidencia',
+							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId) AS 'PreclinicasPendientes',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,
@@ -128,7 +140,6 @@ namespace apisam.repos
                             p.ModificadoFecha,
                             p.Notas
                         FROM
-
                             Paciente p INNER JOIN Pais pa ON p.PaisId = pa.PaisId
                             INNER JOIN Profesion pr ON p.ProfesionId = pr.ProfesionId
                             INNER JOIN Escolaridad e ON p.EscolaridadId = e.EscolaridadId
@@ -203,6 +214,8 @@ namespace apisam.repos
                             m.Nombre as 'Municipio',
                             dd.Nombre as 'DepartamentoResidencia',
                             mm.Nombre as 'MunicipioResidencia',
+							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId) AS 'PreclinicasPendientes',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,
@@ -210,7 +223,6 @@ namespace apisam.repos
                             p.ModificadoFecha,
                             p.Notas
                         FROM
-
                             Paciente p INNER JOIN Pais pa ON p.PaisId = pa.PaisId
                             INNER JOIN Profesion pr ON p.ProfesionId = pr.ProfesionId
                             INNER JOIN Escolaridad e ON p.EscolaridadId = e.EscolaridadId
@@ -226,8 +238,7 @@ namespace apisam.repos
             return await _db.SingleAsync<PacientesViewModel>(_qry);
         }
 
-        public async Task<PageResponse<PacientesViewModel>>
-            GetPacientes(int pageNo, int limit, string filter)
+        public async Task<PageResponse<PacientesViewModel>>   GetPacientes(int pageNo, int limit, string filter)
         {
             using var _db = dbFactory.Open();
             var _response = new PageResponse<PacientesViewModel>();
@@ -278,6 +289,8 @@ namespace apisam.repos
                             m.Nombre as 'Municipio',
                             dd.Nombre as 'DepartamentoResidencia',
                             mm.Nombre as 'MunicipioResidencia',
+							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId) AS 'PreclinicasPendientes',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,
@@ -285,7 +298,6 @@ namespace apisam.repos
                             p.ModificadoFecha,
                             p.Notas
                         FROM
-
                             Paciente p INNER JOIN Pais pa ON p.PaisId = pa.PaisId
                             INNER JOIN Profesion pr ON p.ProfesionId = pr.ProfesionId
                             INNER JOIN Escolaridad e ON p.EscolaridadId = e.EscolaridadId
@@ -295,8 +307,7 @@ namespace apisam.repos
                             LEFT JOIN Departamento d ON p.DepartamentoId = d.DepartamentoId
                             LEFT join Municipio m on p.MunicipioId = m.MunicipioId
                             LEFT JOIN Departamento dd ON p.DepartamentoResidenciaId = dd.DepartamentoId 
-                            LEFT JOIN Municipio mm on p.MunicipioResidenciaId = mm.MunicipioId
-                        ";
+                            LEFT JOIN Municipio mm on p.MunicipioResidenciaId = mm.MunicipioId";
 
 
             if (!string.IsNullOrEmpty(filter)) _qry += $" WHERE (p.Identificacion LIKE '%{filter}%' " +
@@ -312,6 +323,7 @@ namespace apisam.repos
             if (limit > 0)
             {
                 _response.TotalItems = _db.Select<PacientesViewModel>(_qry2).ToList().Count();
+              
 
                 _response.TotalPages
                     = (int)Math.Ceiling((decimal)_response.TotalItems / (decimal)limit);
@@ -331,7 +343,11 @@ namespace apisam.repos
 
 
 
-
+        public bool ExistsPaciente(Paciente paciente)
+        {
+            using var _db = dbFactory.Open();
+            return _db.Exists<Paciente>(x => x.Identificacion == paciente.Identificacion);
+        }
 
 
         private int CalculateAge(DateTime dateOfBirth)

@@ -14,6 +14,8 @@ namespace apisam.entities
         public int UsuarioId { get; set; }
         public string TokenDevice { get; set; }
         public string Platform { get; set; }
+        public DateTime CreadoFecha { get; set; }
+        public string Usuario { get; set; }
 
     }
 }

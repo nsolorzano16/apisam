@@ -50,6 +50,7 @@ namespace apisam.entities.ViewModels
         public string Municipio { get; set; }
         public string DepartamentoResidencia { get; set; }
         public string MunicipioResidencia { get; set; }
+        public int PreclinicasPendientes { get; set; }
 
 
     }
