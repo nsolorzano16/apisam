@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using apisam.entities;
 using apisam.interfaces;
 using apisam.repositories;
+using ServiceStack;
 using ServiceStack.OrmLite;
 
 namespace apisam.repos
@@ -32,7 +33,11 @@ namespace apisam.repos
                 if(!await ExistDevice( device.UsuarioId,device.TokenDevice))
                 {
                     device.CreadoFecha = dateTime_HN;
+                    if (!device.TokenDevice.IsEmpty())
+                    {
                     await _db.SaveAsync<Devices>(device);
+
+                    }
                    
                 }
 
