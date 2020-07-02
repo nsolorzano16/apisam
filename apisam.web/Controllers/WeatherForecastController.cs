@@ -13,7 +13,7 @@ namespace apisam.web.Controllers
     {
         private static readonly string[] Summaries = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Wamilito", "Balmy", "Hot", "Sweltering", "Scorching"
+            "Tegucigalpas", "Bracing", "Chilly", "Cool", "Mild", "Wamilito", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
