@@ -90,7 +90,7 @@
                 using var _db = dbFactory.Open();
                 preclinica.ModificadoFecha = dateTime_HN;
                 await _db.SaveAsync<Preclinica>(preclinica);
-                if (preclinica.Activo == false)
+                if (preclinica.Atendida || !preclinica.Activo)
                 {
                     await noti.RestaNotificacion(preclinica.DoctorId, 1);
                 }

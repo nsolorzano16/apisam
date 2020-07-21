@@ -154,7 +154,7 @@ namespace apisam.web.Controllers
             return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
-        [Authorize(Roles = "1,2")]
+        [Authorize(Roles = "1,2,3")]
         [HttpPut("")]
         public async Task<IActionResult> Update([FromBody] Usuario usuario)
         {

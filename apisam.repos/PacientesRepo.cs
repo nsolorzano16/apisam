@@ -132,7 +132,7 @@ namespace apisam.repos
                             dd.Nombre as 'DepartamentoResidencia',
                             mm.Nombre as 'MunicipioResidencia',
 							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
-							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId) AS 'PreclinicasPendientes',
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId and pre.Activo=1) AS 'PreclinicasPendientes',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,
@@ -215,7 +215,7 @@ namespace apisam.repos
                             dd.Nombre as 'DepartamentoResidencia',
                             mm.Nombre as 'MunicipioResidencia',
 							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
-							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId) AS 'PreclinicasPendientes',
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId and pre.Activo=1) AS 'PreclinicasPendientes',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,
@@ -290,7 +290,7 @@ namespace apisam.repos
                             dd.Nombre as 'DepartamentoResidencia',
                             mm.Nombre as 'MunicipioResidencia',
 							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
-							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId) AS 'PreclinicasPendientes',
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId and pre.Activo=1) AS 'PreclinicasPendientes',
                             p.Activo,
                             p.CreadoPor,
                             p.CreadoFecha,

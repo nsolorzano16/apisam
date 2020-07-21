@@ -7,6 +7,7 @@ using apisam.entities;
 using apisam.entities.ViewModels;
 using apisam.interfaces;
 using apisam.repositories;
+using ServiceStack;
 using ServiceStack.OrmLite;
 
 namespace apisam.repos
@@ -344,6 +345,21 @@ namespace apisam.repos
 
 
         }
+
+
+       
+        public string PacienteEstadoCivil(string estado)
+        {
+            if (estado.EqualsIgnoreCase("S")) return "Soltero(a)";
+            if (estado.EqualsIgnoreCase("C")) return "Casado(a)";
+            if (estado.EqualsIgnoreCase("D")) return "Divorciado(a)";
+            if (estado.EqualsIgnoreCase("V")) return "Viudo(a)";
+            if (estado.EqualsIgnoreCase("UL")) return "Union Libre";
+
+            return "";
+        }
+
+      
 
     }
 }

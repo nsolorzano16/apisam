@@ -140,7 +140,7 @@ namespace apisam.web
                     };
                 });
 
-            services.AddSignalR();
+            //services.AddSignalR();
 
 
         }
@@ -150,9 +150,9 @@ namespace apisam.web
         {
             app.UseResponseCompression();
             // Handles exceptions and generates a custom response body
-            app.UseExceptionHandler("/errors/500");
+           app.UseExceptionHandler("/errors/500");
             // Handles non-success status codes with empty body
-            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+           app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 
             if (env.IsDevelopment())
@@ -161,6 +161,7 @@ namespace apisam.web
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -182,7 +183,7 @@ namespace apisam.web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<PreclinicaHub>("/preclinicaHub");
+                //endpoints.MapHub<PreclinicaHub>("/preclinicaHub");
             });
         }
     }
