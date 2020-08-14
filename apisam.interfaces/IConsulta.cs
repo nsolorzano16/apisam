@@ -13,6 +13,10 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> UpdateConsultaGeneral(ConsultaGeneral consulta);
         Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId);
        Task<ExpedienteViewModel> GetExpediente(int pacienteId, int doctorId);
+       Task<List<ConsultaExpedienteViewModel>> GetConsultasByDoctorId(int doctorId);
+        
+        
+       
         string PacienteEstadoCivil(string sexo);
     }
 }

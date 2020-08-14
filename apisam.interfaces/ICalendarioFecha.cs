@@ -14,6 +14,8 @@ namespace apisam.interfaces
         Task<List<CalendarioFecha>> GetEventos(int doctorId);
         List<CalendarioMovilViewModel> GetEventosMovil(int doctorId);
 
+        Task<List<CalendarioFecha>> GetEventosDashboard(int doctorId);
+
 
     }
 }

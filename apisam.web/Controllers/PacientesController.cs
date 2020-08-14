@@ -52,8 +52,8 @@ namespace apisam.web.Controllers
             RespuestaMetodos _resp = await PacienteRepo.UpdatePaciente(_pac);
             if (_resp.Ok)
             {
-                var _pacienteRetorno = await PacienteRepo.GetInfoPaciente(paciente.PacienteId);
-                return Ok(_pacienteRetorno);
+              
+                return Ok(await PacienteRepo.GetInfoPaciente(paciente.PacienteId));
             }
 
             return BadRequest(new BadRequestError(_resp.Mensaje));
@@ -93,6 +93,14 @@ namespace apisam.web.Controllers
                 return BadRequest(e.Message);
 
             }
+
+        }
+
+        [Authorize(Roles = "2,3")]
+        [HttpGet("dashboard/creadopor/{creadoPor}", Name = "PacientesByCreadoPor")]
+        public async Task<IActionResult> PacientesByCreadoPor([FromRoute] string creadoPor)
+        {
+            return Ok(await PacienteRepo.PacientesByCreadoPor(creadoPor));
 
         }
     }

@@ -38,7 +38,7 @@ namespace apisam.repos
                 paciente.CreadoFecha = dateTime_HN;
                 paciente.ModificadoFecha = dateTime_HN;
                 paciente.Edad = CalculateAge(paciente.FechaNacimiento);
-                paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
+                paciente.FotoUrl = "https://storagedesam.blob.core.windows.net/containersam/assets/avatar-default.png";
 
                 if (!ExistsPaciente(paciente))
                 {
@@ -347,6 +347,77 @@ namespace apisam.repos
         {
             using var _db = dbFactory.Open();
             return _db.Exists<Paciente>(x => x.Identificacion == paciente.Identificacion);
+        }
+
+       public async Task<List<PacientesViewModel>> PacientesByCreadoPor(string creadoPor)
+        {
+            var _qry = $@"SELECT
+                            p.PacienteId,
+                            p.PaisId,
+                            p.ProfesionId,
+                            p.EscolaridadId,
+                            p.ReligionId,
+                            p.GrupoSanguineoId,
+                            p.GrupoEtnicoId,
+                            p.DepartamentoId,
+                            p.MunicipioId,
+                            p.DepartamentoResidenciaId,
+                            p.MunicipioResidenciaId,
+                            p.Nombres,
+                            p.PrimerApellido,
+                            p.SegundoApellido,
+                            p.Identificacion,
+                            p.Email,
+                            p.Sexo,
+                            p.FechaNacimiento,
+                            p.EstadoCivil,
+                            p.Edad,
+                            p.Direccion,
+                            p.Telefono1,
+                            p.Telefono2,
+                            p.NombreEmergencia,
+                            p.TelefonoEmergencia,
+                            p.Parentesco,
+                            p.MenorDeEdad,
+                            p.NombreMadre,
+                            p.IdentificacionMadre,
+                            p.NombrePadre,
+                            p.IdentificacionPadre,
+                            p.CarneVacuna,
+                            p.FotoUrl,
+                            pa.Nombre as 'Pais',
+                            pr.Nombre as 'Profesion',
+                            e.Nombre as 'Escolaridad',
+                            r.Nombre as 'Religion',
+                            gs.Nombre as 'Grupo Sanguineo',
+                            ge.Nombre as 'Grupo Etnico',
+                            d.Nombre as 'Departamento',
+                            m.Nombre as 'Municipio',
+                            dd.Nombre as 'DepartamentoResidencia',
+                            mm.Nombre as 'MunicipioResidencia',
+							(SELECT COUNT  ( pre.Atendida) FROM Preclinica pre 
+							WHERE  pre.Atendida = 0 and p.PacienteId = pre.PacienteId and pre.Activo=1) AS 'PreclinicasPendientes',
+                            p.Activo,
+                            p.CreadoPor,
+                            p.CreadoFecha,
+                            p.ModificadoPor,
+                            p.ModificadoFecha,
+                            p.Notas
+                        FROM
+                            Paciente p INNER JOIN Pais pa ON p.PaisId = pa.PaisId
+                            INNER JOIN Profesion pr ON p.ProfesionId = pr.ProfesionId
+                            INNER JOIN Escolaridad e ON p.EscolaridadId = e.EscolaridadId
+                            INNER JOIN Religion r ON p.ReligionId = r.ReligionId
+                            INNER JOIN GrupoSanguineo gs ON p.GrupoSanguineoId = gs.GrupoSanguineoId
+                            INNER JOIN GrupoEtnico ge ON p.GrupoEtnicoId = ge.GrupoEtnicoId
+                            LEFT JOIN Departamento d ON p.DepartamentoId = d.DepartamentoId
+                            LEFT join Municipio m on p.MunicipioId = m.MunicipioId
+                            LEFT JOIN Departamento dd ON p.DepartamentoResidenciaId = dd.DepartamentoId 
+                            LEFT JOIN Municipio mm on p.MunicipioResidenciaId = mm.MunicipioId
+							WHERE p.CreadoPor = '{creadoPor}'";
+
+            using var _db = dbFactory.Open();
+            return  await _db.SelectAsync<PacientesViewModel>(_qry);
         }
 
 

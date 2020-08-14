@@ -11,6 +11,8 @@ namespace apisam.repositories
         {
             return "Data Source=serversam.database.windows.net;Initial " +
                 "Catalog=samdb;Persist Security Info=True;User ID=adminsam;Password=2019Prism@Soft";
+
+            //return "Server=DESKTOP-EL76SJK;Database=testdb;Integrated Security=true;";
         }
 
         public String GetAzureDbConnection()

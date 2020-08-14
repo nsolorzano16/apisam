@@ -62,6 +62,14 @@ namespace apisam.web.Controllers
             return Ok(CalendarioRepo.GetEventosMovil(id));
         }
 
+        [Authorize(Roles = "2,3")]
+        [HttpGet("dashboard/doctorid/{id}", Name = "GetEventosDashboard")]
+        public async Task<IActionResult> GetEventosDashboard([FromRoute] int id)
+        {
+          
+            return Ok(await CalendarioRepo.GetEventosDashboard(id));
+        }
+
 
 
 

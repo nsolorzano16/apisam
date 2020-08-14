@@ -17,5 +17,7 @@ namespace apisam.interfaces
             (int pageNo, int limit, int doctorId, int atendida);
 
         Task<PreclinicaViewModel> GetInfoPreclinica(int id);
+
+        Task<int> GetTotalConsultasAtendidas(int doctorId);
     }
 }

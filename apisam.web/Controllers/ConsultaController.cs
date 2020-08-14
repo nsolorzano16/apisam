@@ -84,17 +84,19 @@ namespace apisam.web.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             return Ok(await ConsultaRepo.GetExpediente(pacienteId, doctorId));
+            
         }
 
+        [Authorize(Roles = "2")]
         [HttpGet("pdf/expediente/pacienteid/{pacienteId}/doctorid/{doctorId}", Name = "GetExpedientePdf")]
         [Produces(contentType: "application/pdf")]
         public IActionResult GetExpedientePdf([FromRoute] int pacienteId, [FromRoute] int doctorId)
         {
-            string pathLogo = "https://storagedesam.blob.core.windows.net/assets/logosam.png?sv=2019-02-02&st=2020-07-21T02%3A39%3A42Z&se=2020-07-22T02%3A39%3A42Z&sr=b&sp=r&sig=ffO%2BoHqwf%2B9xzqdyCX638auUUTzw04f02A%2BfYy8fE8M%3D";
+            //string pathLogo = "https://storagedesam.blob.core.windows.net/assets/logosam.png?sv=2019-02-02&st=2020-07-21T02%3A39%3A42Z&se=2020-07-22T02%3A39%3A42Z&sr=b&sp=r&sig=ffO%2BoHqwf%2B9xzqdyCX638auUUTzw04f02A%2BfYy8fE8M%3D";
 
            
         
-            Image img = new Image(ImageDataFactory.Create(pathLogo));
+            //Image img = new Image(ImageDataFactory.Create(pathLogo));
             var _expediente = ConsultaRepo.GetExpediente(pacienteId, doctorId).Result;
 
             string pass = "SuperSecret!";
@@ -124,7 +126,7 @@ namespace apisam.web.Controllers
 
             PdfFont helvetica = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             document.SetFont(helvetica);
-            pdf.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderPdfEventHandler(img));
+            pdf.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderPdfEventHandler());
             pdf.AddEventHandler(PdfDocumentEvent.END_PAGE, new FooterPdfEventHandler());
 
 
@@ -145,16 +147,16 @@ namespace apisam.web.Controllers
             Paragraph edad = new Paragraph(new Text($@"Edad: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Edad}"));
             Paragraph estadoCivil = new Paragraph(new Text($@"Estado Civil: ").SetBold()).Add(new Paragraph($"{ConsultaRepo.PacienteEstadoCivil(_expediente.Paciente.EstadoCivil)}"));
             Paragraph sexo = new Paragraph(new Text($@"Sexo: ").SetBold()).Add(new Paragraph($"{(_expediente.Paciente.Sexo == "M" ? "Masculino" : "Femenino")}"));
-            Paragraph telefono = new Paragraph(new Text($@"Telefono: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.Telefono1}"));
-            Paragraph telefono2 = new Paragraph(new Text($@"Telefono Alternativo: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Telefono2}"));
+            Paragraph telefono = new Paragraph(new Text($@"Teléfono: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.Telefono1}"));
+            Paragraph telefono2 = new Paragraph(new Text($@"Teléfono Alternativo: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Telefono2}"));
             Paragraph contactoEmergencia = new Paragraph(new Text($@"Contacto Emergencia: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.NombreEmergencia}"));
             Paragraph parentesco = new Paragraph(new Text($@"Parentesco: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Parentesco}"));
-            Paragraph pais = new Paragraph(new Text($@"Pais: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Pais}"));
+            Paragraph pais = new Paragraph(new Text($@"País: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Pais}"));
             Paragraph datosGenerales = new Paragraph("Datos Generales").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
             Paragraph escolaridad = new Paragraph(new Text($@"Escolaridad: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.Escolaridad}"));
             Paragraph religion = new Paragraph(new Text($@"Religion: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.Religion}"));
             Paragraph tipoSangre = new Paragraph(new Text($@"Tipo de Sangre: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.GrupoSanguineo}"));
-            Paragraph grupoEtnico = new Paragraph(new Text($@"Grupo Etnico: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.GrupoEtnico}"));
+            Paragraph grupoEtnico = new Paragraph(new Text($@"Grupo Étnico: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.GrupoEtnico}"));
             Paragraph profesion = new Paragraph(new Text($@"Profesión: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.Profesion}"));
             Paragraph datosReferenciales = new Paragraph("Datos Referenciales").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
             Paragraph deptoNacimiento = new Paragraph(new Text($@"Departamento de Nacimiento: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.Departamento}"));
@@ -167,40 +169,40 @@ namespace apisam.web.Controllers
             Paragraph nombreMadre = new Paragraph(new Text($@"Nombre Madre: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.NombreMadre}"));
             Paragraph identificacionMadre = new Paragraph(new Text($@"Identificación Madre: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.IdentificacionMadre}"));
             Paragraph nombrePadre = new Paragraph(new Text($@"Nombre Padre: ").SetBold()).Add(new Paragraph($" {_expediente.Paciente.NombrePadre}"));
-            Paragraph identificacionPadre = new Paragraph(new Text($@"Identificacion Padre: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.IdentificacionPadre}"));
+            Paragraph identificacionPadre = new Paragraph(new Text($@"Identificación Padre: ").SetBold()).Add(new Paragraph($"{_expediente.Paciente.IdentificacionPadre}"));
             Paragraph otrainformacion = new Paragraph("Otra Información").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
 
             Paragraph notasTitle = new Paragraph(new Text($@"Notas Adicionales:").SetBold());
             Paragraph notas = new Paragraph(new Text($@" { _expediente.Paciente.Notas}")).SetTextAlignment(TextAlignment.JUSTIFIED);
             Paragraph antecedentesFamiliares = new Paragraph("Antecedentes Familiares").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
 
-            Paragraph antecedentesPatologicosFamiliaresTitle = new Paragraph(new Text($@"Antecedentes Patologicos Familiares:").SetBold());
+            Paragraph antecedentesPatologicosFamiliaresTitle = new Paragraph(new Text($@"Antecedentes Patológicos Familiares:").SetBold());
             Paragraph antecedentesPatFamiliares = new Paragraph(new Text($@" { _expediente.AntecedentesFamiliaresPersonales.AntecedentesPatologicosFamiliares}")).SetTextAlignment(TextAlignment.JUSTIFIED);
 
-            Paragraph antecedentesPatologicosPersonalesTitle = new Paragraph(new Text($@"Antecedentes Patologicos Personales:").SetBold());
+            Paragraph antecedentesPatologicosPersonalesTitle = new Paragraph(new Text($@"Antecedentes Patológicos Personales:").SetBold());
             Paragraph antecedentesPatologicosPersonales = new Paragraph(new Text($@" { _expediente.AntecedentesFamiliaresPersonales.AntecedentesPatologicosPersonales}")).SetTextAlignment(TextAlignment.JUSTIFIED);
 
-            Paragraph antecedentesNoPatologicosFamiTitle = new Paragraph(new Text($@"Antecedentes No Patologicos Familiares:").SetBold());
+            Paragraph antecedentesNoPatologicosFamiTitle = new Paragraph(new Text($@"Antecedentes No Patológicos Familiares:").SetBold());
             Paragraph antecedentesNoPatFamiliares = new Paragraph(new Text($@" { _expediente.AntecedentesFamiliaresPersonales.AntecedentesNoPatologicosFamiliares}")).SetTextAlignment(TextAlignment.JUSTIFIED);
 
-            Paragraph antecedentesNoPatologicosPersonalesTitle = new Paragraph(new Text($@"Antecedentes No Patologicos Personales:").SetBold());
+            Paragraph antecedentesNoPatologicosPersonalesTitle = new Paragraph(new Text($@"Antecedentes No Patológicos Personales:").SetBold());
             Paragraph antecedentesNoPatologicosPersonales = new Paragraph(new Text($@" { _expediente.AntecedentesFamiliaresPersonales.AntecedentesNoPatologicosPersonales}")).SetTextAlignment(TextAlignment.JUSTIFIED);
 
-            Paragraph antecedentesInmunoAlergicosTitle = new Paragraph(new Text($@"Antecedentes Inmuno Alergicos:").SetBold());
+            Paragraph antecedentesInmunoAlergicosTitle = new Paragraph(new Text($@"Antecedentes Inmuno Alérgicos:").SetBold());
             Paragraph antecedentesInmunoAlergicos = new Paragraph(new Text($@" { _expediente.AntecedentesFamiliaresPersonales.AntecedentesInmunoAlergicosPersonales}")).SetTextAlignment(TextAlignment.JUSTIFIED);
 
             Paragraph habitos = new Paragraph("Habitos").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
             Paragraph cigarrillo = new Paragraph(new Text($@"Cigarrillo: ").SetBold()).Add(new Paragraph($" {((_expediente.Habitos.Cigarrillo) ? "Si" : "No")}"));
             Paragraph cafe = new Paragraph(new Text($@"Café: ").SetBold()).Add(new Paragraph($"{((_expediente.Habitos.Cafe) ? "Si" : "No")}"));
             Paragraph alcohol = new Paragraph(new Text($@"Alcohol: ").SetBold()).Add(new Paragraph($"{((_expediente.Habitos.Alcohol) ? "Si" : "No")}"));
-            Paragraph drogas = new Paragraph(new Text($@"Drogas: ").SetBold()).Add(new Paragraph($"{((_expediente.Habitos.DrogasEstupefaciente) ? "Si" : "X")}"));
+            Paragraph drogas = new Paragraph(new Text($@"Drogas: ").SetBold()).Add(new Paragraph($"{((_expediente.Habitos.DrogasEstupefaciente) ? "Si" : "No")}"));
             Paragraph notasHabitos = new Paragraph(new Text($@"Notas Adicionales: ").SetBold()).Add(new Paragraph($" {_expediente.Habitos.Notas}"));
 
-            Paragraph historialGinecologico = new Paragraph("Historial Ginecologico").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
+            Paragraph historialGinecologico = new Paragraph("Historial Ginecológico").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
 
-            Paragraph menarquia = new Paragraph(new Text($@"Fecha Menarquia: ").SetBold()).Add(new Paragraph($"{(_expediente.HistorialGinecoObstetra.FechaMenarquia.Value != null ? _expediente.HistorialGinecoObstetra.FechaMenarquia.Value.ToShortDateString() : "")}"));
-
-            Paragraph ultimaRegla = new Paragraph(new Text($@"Ultima Menstruación: ").SetBold()).Add(new Paragraph($"{(_expediente.HistorialGinecoObstetra.Fum.Value != null ? _expediente.HistorialGinecoObstetra.Fum.Value.ToShortDateString() : "")}"));
+            Paragraph menarquia = new Paragraph(new Text($@"Fecha Menarquía: ").SetBold()).Add(new Paragraph($"{(_expediente.HistorialGinecoObstetra.FechaMenarquia != null ? _expediente.HistorialGinecoObstetra.FechaMenarquia.Value.ToShortDateString() : "")}"));
+         
+            Paragraph ultimaRegla = new Paragraph(new Text($@"Ultima Menstruación: ").SetBold()).Add(new Paragraph($"{(_expediente.HistorialGinecoObstetra.Fum != null ? _expediente.HistorialGinecoObstetra.Fum.Value.ToShortDateString() : "")}"));
 
             Paragraph numeroGesta = new Paragraph(new Text($@"Numero de Gesta: ").SetBold()).Add(new Paragraph($"  {_expediente.HistorialGinecoObstetra.G}"));
             Paragraph cesareas = new Paragraph(new Text($@"Cesáreas: ").SetBold()).Add(new Paragraph($"{_expediente.HistorialGinecoObstetra.C}"));
@@ -209,7 +211,7 @@ namespace apisam.web.Controllers
             Paragraph hm = new Paragraph(new Text($@"Hijos Muertos: ").SetBold()).Add(new Paragraph($"{_expediente.HistorialGinecoObstetra.Hm}"));
             Paragraph anticonceptivo = new Paragraph(new Text($@"Anticonceptivo: ").SetBold()).Add(new Paragraph($"{_expediente.HistorialGinecoObstetra.AnticonceptivoTexto}"));
             Paragraph anticonceptivoDescripcion = new Paragraph(new Text($@"Anticonceptivo Descripción: ").SetBold()).Add(new Paragraph($"{_expediente.HistorialGinecoObstetra.DescripcionAnticonceptivos}"));
-            Paragraph fechamenopausia = new Paragraph(new Text($@"Fecha Menarquia: ").SetBold()).Add(new Paragraph($"{(_expediente.HistorialGinecoObstetra.FechaMenopausia.Value != null ? _expediente.HistorialGinecoObstetra.FechaMenopausia.Value.ToShortDateString() : "")}"));
+            Paragraph fechamenopausia = new Paragraph(new Text($@"Fecha Menopausia: ").SetBold()).Add(new Paragraph($"{(_expediente.HistorialGinecoObstetra.FechaMenopausia != null ? _expediente.HistorialGinecoObstetra.FechaMenopausia.Value.ToShortDateString() : "")}"));
             Paragraph notasGinecologias = new Paragraph(new Text($@"Notas Adicionales: ").SetBold()).Add(new Paragraph($" {_expediente.HistorialGinecoObstetra.Notas}"));
 
             Paragraph farmacos = new Paragraph("Farmacos").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
@@ -317,7 +319,7 @@ namespace apisam.web.Controllers
                 {
                     document.Add(ls);
                     Paragraph nombreTemp = new Paragraph(new Text($@"Nombre: ").SetBold()).Add(new Paragraph($"{f.Nombre}"));
-                    Paragraph concentracionTemp = new Paragraph(new Text($@"Concentracion: ").SetBold()).Add(new Paragraph($" {f.Concentracion}"));
+                    Paragraph concentracionTemp = new Paragraph(new Text($@"Concentración: ").SetBold()).Add(new Paragraph($" {f.Concentracion}"));
                     Paragraph dosisTemp = new Paragraph(new Text($@"Dosis: ").SetBold()).Add(new Paragraph($"{f.Dosis}"));
                     Paragraph tiempoTemp = new Paragraph(new Text($@"Tiempo: ").SetBold()).Add(new Paragraph($" {f.Tiempo}"));
                     document.Add(nombreTemp);
@@ -338,7 +340,7 @@ namespace apisam.web.Controllers
                 _expediente.Consultas.ForEach(consulta =>
                 {
 
-                    Paragraph preclinicaTitle = new Paragraph($"Preclinica - {consulta.Preclinica.CreadoFecha}").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
+                    Paragraph preclinicaTitle = new Paragraph($"Preclínica - {consulta.Preclinica.CreadoFecha}").SetTextAlignment(TextAlignment.CENTER).SetFontSize(16).SetBold();
 
 
 
@@ -351,11 +353,11 @@ namespace apisam.web.Controllers
                     Add(new Paragraph($"{consulta.Preclinica.Temperatura} ")).
                     Add(new Paragraph(new Text("Frecuencia Respiratoria/rpm: ").SetBold())).
                     Add(new Paragraph($"{consulta.Preclinica.FrecuenciaRespiratoria} ")).
-                    Add(new Paragraph(new Text("Ritmo Cardiaco/ppm: ").SetBold())).
+                    Add(new Paragraph(new Text("Ritmo Cardíaco/ppm: ").SetBold())).
                     Add(new Paragraph($"{consulta.Preclinica.RitmoCardiaco} ")).
-                    Add(new Paragraph(new Text("Presión Sistolica/mmHg :").SetBold())).
+                    Add(new Paragraph(new Text("Presión Sistólica/mmHg :").SetBold())).
                     Add(new Paragraph($"{consulta.Preclinica.PresionSistolica} ")).
-                    Add(new Paragraph(new Text("Presion Diastolica/mmHg: ").SetBold())).
+                    Add(new Paragraph(new Text("Presión Diastólica/mmHg: ").SetBold())).
                     Add(new Paragraph($"{consulta.Preclinica.PresionDiastolica} ")).
                     Add(new Paragraph(new Text("IMC: ").SetBold())).
                     Add(new Paragraph($"{consulta.Preclinica.IMC}"));
@@ -574,9 +576,14 @@ namespace apisam.web.Controllers
                         consulta.Diagnosticos.ForEach(d =>
                         {
                             indexDiagno++;
-                            Paragraph diagnoTitle = new Paragraph($"# {indexDiagno}-Problema Clinico :").SetTextAlignment(TextAlignment.LEFT).SetFontSize(12).SetBold();
+                            
+                            Paragraph diagnoTitle = new Paragraph($"# {indexDiagno}-Problema Clínico :").SetTextAlignment(TextAlignment.LEFT).SetFontSize(12).SetBold();
                             Paragraph diagnosticoItem = new Paragraph($"{d.ProblemasClinicos}").SetTextAlignment(TextAlignment.JUSTIFIED);
+                            Paragraph codigo = new Paragraph($"Codigo: {d.CodigoCie}").SetTextAlignment(TextAlignment.JUSTIFIED);
+                            Paragraph enfermedad = new Paragraph($"Enfermedad: {d.NombreCie}").SetTextAlignment(TextAlignment.JUSTIFIED);
                             document.Add(diagnoTitle);
+                            document.Add(codigo);
+                            document.Add(enfermedad);
                             document.Add(diagnosticoItem);
                         });
                         document.Add(ls);
@@ -607,14 +614,7 @@ namespace apisam.web.Controllers
                 });
 
             }
-
-
-
-
-
-
-
-
+           
             document.Close();
             byte[] byteStream = _ms.ToArray();
             _ms = new MemoryStream();
@@ -627,5 +627,13 @@ namespace apisam.web.Controllers
 
 
         }
+
+        [Authorize(Roles = "2,3")]
+        [HttpGet("dashboard/doctorid/{doctorId}", Name = "GetConsultasByDoctorId")]
+       public async Task<IActionResult> GetConsultasByDoctorId([FromRoute] int doctorId)
+        {
+            return Ok(await ConsultaRepo.GetConsultasByDoctorId(doctorId));
+        }
+
     }
 }

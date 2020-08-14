@@ -60,7 +60,7 @@ namespace apisam.repositories
                 usuario.ModificadoFecha = dateTime_HN;
                 usuario.Password = "";
                 usuario.Edad = CalculateAge(usuario.FechaNacimiento);
-                usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/profilesphotos/avatar-default.png";
+                usuario.FotoUrl = "https://storagedesam.blob.core.windows.net/containersam/assets/avatar-default.png";
                 await _db.SaveAsync<Usuario>(usuario);
                 _resp.Ok = true;
 

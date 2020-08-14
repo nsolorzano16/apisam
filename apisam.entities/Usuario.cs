@@ -14,6 +14,7 @@ namespace apisam.entities
         public int UsuarioId { get; set; }
         public int RolId { get; set; }
         public int AsistenteId { get; set; }
+        public int PlanId { get; set; }
         public string Nombres { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }

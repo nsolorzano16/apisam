@@ -110,6 +110,12 @@
             return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId && x.Activo == true);
         }
 
+        public async Task<List<CalendarioFecha>> GetEventosDashboard(int doctorId)
+        {
+            using var _db = dbFactory.Open();
+            return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId);
+        }
+
         public List<CalendarioMovilViewModel> GetEventosMovil(int doctorId)
         {
             var listCalendario = new List<CalendarioMovilViewModel>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
+using apisam.entities.ViewModels;
 using apisam.interfaces;
 using apisam.repositories;
 using ServiceStack.OrmLite;
@@ -113,12 +114,59 @@ namespace apisam.repos
 
             return _resp;
         }
-        public async Task<List<Diagnosticos>> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<DiagnosticosViewModel>> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
-            return await _db.SelectAsync<Diagnosticos>(
-                x => x.PacienteId == pacienteId
-                && x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
+            var _qry = $@"SELECT 
+                                    d.DiagnosticoId,
+                                    d.PacienteId,
+                                    d.DoctorId,
+                                    d.CieId,
+                                    d.ProblemasClinicos,
+                                    d.Activo,
+                                    d.CreadoPor,
+                                    d.CreadoFecha,
+                                    d.ModificadoPor,
+                                    d.ModificadoFecha,
+                                    d.Notas,
+                                    d.PreclinicaId,
+                                    c.Codigo as 'CodigoCie',
+                                    c.Nombre as 'NombreCie'
+                                    FROM 
+                                    Diagnosticos d 
+                                    INNER JOIN CIE c 
+                                    ON d.CieId = c.CieId
+                                    WHERE d.PacienteId = {pacienteId} AND d.DoctorId = {doctorId} AND d.PreclinicaId = {preclinicaId} AND d.Activo = 1";
+
+            return await _db.SelectAsync<DiagnosticosViewModel>(_qry);
+
+        }
+
+        public async Task<DiagnosticosViewModel> GetDiagnostico(int diagnosticoId)
+        {
+            using var _db = dbFactory.Open();
+            var _qry = $@"SELECT 
+                                    d.DiagnosticoId,
+                                    d.PacienteId,
+                                    d.DoctorId,
+                                    d.CieId,
+                                    d.ProblemasClinicos,
+                                    d.Activo,
+                                    d.CreadoPor,
+                                    d.CreadoFecha,
+                                    d.ModificadoPor,
+                                    d.ModificadoFecha,
+                                    d.Notas,
+                                    d.PreclinicaId,
+                                    c.Codigo as 'CodigoCie',
+                                    c.Nombre as 'NombreCie'
+                                    FROM 
+                                    Diagnosticos d 
+                                    INNER JOIN CIE c 
+                                    ON d.CieId = c.CieId
+                                    WHERE d.DiagnosticoId = {diagnosticoId}";
+
+            return await _db.SingleAsync<DiagnosticosViewModel>(_qry);
 
         }
     }

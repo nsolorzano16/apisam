@@ -18,10 +18,10 @@ namespace apisam.web.Events
 {
     public class HeaderPdfEventHandler : IEventHandler
     {
-        readonly Image Img;
-        public HeaderPdfEventHandler(Image img)
+        //readonly Image Img;
+        public HeaderPdfEventHandler()
         {
-            Img = img;
+            //Img = img;
         }
 
         public void HandleEvent(Event @event)
@@ -47,7 +47,8 @@ namespace apisam.web.Events
 
             Style styleCell = new Style().SetBorder(Border.NO_BORDER);
             Style styleText = new Style().SetTextAlignment(TextAlignment.RIGHT).SetFontSize(10f);
-            Cell cell = new Cell().Add(Img.SetAutoScale(true)).SetBorder(Border.NO_BORDER);
+            //Cell cell = new Cell().Add(Img.SetAutoScale(true)).SetBorder(Border.NO_BORDER);
+            Cell cell = new Cell().Add(new Paragraph("")).SetBorder(Border.NO_BORDER);
             tableEvent.AddCell(cell.AddStyle(styleCell).SetTextAlignment(TextAlignment.LEFT));
             PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
             cell = new Cell().Add(new Paragraph("Sistema de Administración Medica").SetFont(bold))

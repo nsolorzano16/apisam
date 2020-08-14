@@ -22,7 +22,7 @@ namespace apisam.entities.ViewModels
     {
         public Preclinica Preclinica { get; set; }
         public ExamenFisico ExamenFisico { get; set; }
-        public List<Diagnosticos> Diagnosticos { get; set; }
+        public List<DiagnosticosViewModel> Diagnosticos { get; set; }
         public List<Notas> Notas { get; set; }
         public ConsultaGeneral ConsultaGeneral { get; set; }
         public List<ExamenesIndicadosViewModel> ExamenesIndicados { get; set; }

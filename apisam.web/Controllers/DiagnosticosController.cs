@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apisam.entities;
+using apisam.entities.ViewModels;
 using apisam.interfaces;
 using apisam.web.HandleErrors;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -19,11 +21,13 @@ namespace apisam.web.Controllers
     public class DiagnosticosController : ControllerBase
     {
         public IDiagnosticos diagnosticosRepo;
+        private readonly IMapper _mapper;
 
         public DiagnosticosController(
-            IDiagnosticos diagnosticosRepository)
+            IDiagnosticos diagnosticosRepository, IMapper mapper)
         {
             diagnosticosRepo = diagnosticosRepository;
+            _mapper = mapper;
         }
 
 
@@ -49,31 +53,36 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPut("")]
-        public async Task<IActionResult> Update([FromBody] List<Diagnosticos> diagnosticos)
+        public async Task<IActionResult> Update([FromBody] List<DiagnosticosViewModel> diagnosticos)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
-            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnosticoLista(diagnosticos);
-            if (_resp.Ok) return Ok(diagnosticos);
+            var _diagnosticosMap = _mapper.Map<List<DiagnosticosViewModel>, List<Diagnosticos>>(diagnosticos);
+            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnosticoLista(_diagnosticosMap);
+
+            if (_resp.Ok) return Ok(await diagnosticosRepo.GetDiagnosticos(_diagnosticosMap[0].PacienteId,_diagnosticosMap[0].DoctorId,_diagnosticosMap[0].PreclinicaId));
             return BadRequest(new BadRequestError(_resp.Mensaje));
+
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("editar", Name = "UpdateDiagnostico")]
-        public async Task<IActionResult> UpdateDiagnostico([FromBody] Diagnosticos diagnostico)
+        public async Task<IActionResult> UpdateDiagnostico([FromBody] DiagnosticosViewModel diagnostico)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
-            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnostico(diagnostico);
-            if (_resp.Ok) return Ok(diagnostico);
+            var _diagnosticoMap = _mapper.Map<DiagnosticosViewModel, Diagnosticos>(diagnostico);
+            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnostico(_diagnosticoMap);
+            if (_resp.Ok) return Ok(await diagnosticosRepo.GetDiagnostico(diagnostico.DiagnosticoId));
             return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 
         [Authorize(Roles = "2")]
         [HttpPut("desactivar", Name = "DesactivarDiagnostico")]
-        public async Task<IActionResult> DesactivarDiagnostico([FromBody] Diagnosticos diagnostico)
+        public async Task<IActionResult> DesactivarDiagnostico([FromBody] DiagnosticosViewModel diagnostico)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
-            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnostico(diagnostico);
-            if (_resp.Ok) return Ok(diagnostico);
+            var _diagnosticoMap = _mapper.Map<DiagnosticosViewModel, Diagnosticos>(diagnostico);
+            RespuestaMetodos _resp = await diagnosticosRepo.UpdateDiagnostico(_diagnosticoMap);
+            if (_resp.Ok) return Ok(await diagnosticosRepo.GetDiagnostico(diagnostico.DiagnosticoId));
             return BadRequest(new BadRequestError(_resp.Mensaje));
         }
 

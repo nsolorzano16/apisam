@@ -261,5 +261,11 @@
 
             return _response;
         }
+
+        public async  Task<int> GetTotalConsultasAtendidas(int doctorId)
+        {
+            var _db = dbFactory.Open();
+            return (int)await _db.CountAsync<Preclinica>(x => x.Activo == true && x.Atendida == true && x.DoctorId == doctorId);
+        }
     }
 }

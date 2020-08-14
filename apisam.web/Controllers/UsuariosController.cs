@@ -31,15 +31,19 @@ namespace apisam.web.Controllers
     public class UsuariosController : ControllerBase
     {
         public IUsuario UsuariosRepo;
+        public IPlanes PlanesRepo;
+        public IPreclinica PreclinicaRepo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
         public UsuariosController(IUsuario usuariorepository, IConfiguration config,
-            IMapper mapper)
+            IMapper mapper, IPlanes planesrepository,IPreclinica preclinicarepository)
         {
             _config = config;
             _mapper = mapper;
             UsuariosRepo = usuariorepository;
+            PlanesRepo = planesrepository;
+            PreclinicaRepo = preclinicarepository;
 
         }
         [Authorize(Roles = "1")]
@@ -68,12 +72,14 @@ namespace apisam.web.Controllers
             string _newFileNameLogo = _user.UsuarioId.ToString() + "-";
             _newFileNameLogo += DateTime.Now.Ticks.ToString() + "-";
             _newFileNameLogo += Guid.NewGuid().ToString();
+            string _folderName = "profilephotos";
+
             var _connString = _config.GetValue<string>("ConnectionStrings:azure_storage");
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_connString);
             // Create a blob client.
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             // Get a reference to a container named "mycontainer."
-            CloudBlobContainer container = blobClient.GetContainerReference("profilesphotos");
+            CloudBlobContainer container = blobClient.GetContainerReference("containersam");
             // If "mycontainer" doesn't exist, create it.
             await container.CreateIfNotExistsAsync();
             await container.SetPermissionsAsync(new BlobContainerPermissions
@@ -92,7 +98,7 @@ namespace apisam.web.Controllers
                     {
 
                         CloudBlockBlob blockBlob =
-                            container.GetBlockBlobReference(_newFileNameLogo + fileExtension);
+                            container.GetBlockBlobReference($"{_folderName}/" + _newFileNameLogo + fileExtension);
                         using (var _fileStream = logoImage.OpenReadStream())
                         {
                             using (var image = new MagickImage(_fileStream))
@@ -109,7 +115,7 @@ namespace apisam.web.Controllers
 
                             _resp.Ok = true;
                         }
-                        var _urlStorage = _config.GetValue<string>("UrlsWebSites:urlStorage");
+                        var _urlStorage = "https://storagedesam.blob.core.windows.net/containersam/";
                         _user.FotoUrl = _urlStorage + blockBlob.Name;
 
                     }
@@ -194,12 +200,28 @@ namespace apisam.web.Controllers
             {
                 rolDescripcion = "Operador";
             }
+
+           
+            Planes plan = await PlanesRepo.GetPlanById(usuario.PlanId);
+            int consultasAtendidas = 0;
+            if(usuario.RolId == 2)
+            {
+                consultasAtendidas = await PreclinicaRepo.GetTotalConsultasAtendidas(usuario.UsuarioId);
+            }else if (usuario.RolId == 3)
+            {
+                consultasAtendidas = await PreclinicaRepo.GetTotalConsultasAtendidas(usuario.AsistenteId);
+            }
+
+
+
             return Ok(
                 new
                 {
                     token = GenerarToken(claims),
                     usuario,
-                    rolDescripcion
+                    rolDescripcion,
+                    plan,
+                    consultasAtendidas
 
                 });
 

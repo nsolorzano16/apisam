@@ -73,7 +73,7 @@ namespace apisam.web
 
 
 
-            #region
+            #region Transients
             services.AddTransient<IUsuario, UsuariosRepo>();
             services.AddTransient<IPaciente, PacientesRepo>();
             services.AddTransient<IAntecedentesFamiliaresPersonales, AntecedentesRepo>();
@@ -104,6 +104,10 @@ namespace apisam.web
             services.AddTransient<IDevices, DevicesRepo>();
             services.AddTransient<ICalendarioFecha, CalendarioFechaRepo>();
             services.AddTransient<IAnticonceptivos, AnticonceptivosRepo>();
+            services.AddTransient<ICie, CieRepo>();
+            services.AddTransient<IFotosPaciente, FotosPacienteRepo>();
+            services.AddTransient<IPlanes, PlanesRepo>();
+            services.AddTransient<IDashboard, DashboardRepo>();
 
 
 
