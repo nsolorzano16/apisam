@@ -311,7 +311,7 @@ namespace apisam.repos
 
 
             if (!string.IsNullOrEmpty(filter)) _qry += $" WHERE (p.Identificacion LIKE '%{filter}%' " +
-                    $"OR p.IdentificacionMadre LIKE '%{filter}%' OR p.IdentificacionPadre LIKE '%{filter}%' )";
+                    $"OR p.IdentificacionMadre LIKE '%{filter}%' OR p.IdentificacionPadre LIKE '%{filter}%' OR p.CreadoPor LIKE '%{filter}%' )";
 
             var _qry2 = _qry;
             _qry += " ORDER BY p.PacienteId DESC";
