@@ -54,10 +54,10 @@ namespace apisam.repos
 
 
 
-        public async Task<bool> ExistDevice(int usuarioid,string token)
+        public async Task<bool> ExistDevice(string usuarioid,string token)
         {
             using var _db = dbFactory.Open();
-            var _qry = $@"SELECT *  FROM Devices d WHERE  CONVERT(VARCHAR(MAX), d.TokenDevice) ='{token}' AND d.UsuarioId = {usuarioid} ";
+            var _qry = $@"SELECT *  FROM Devices d WHERE  CONVERT(VARCHAR(MAX), d.TokenDevice) ='{token}' AND d.UsuarioId = '{usuarioid}' ";
             return await  _db.ExistsAsync<Devices>(_qry);
         }
     }

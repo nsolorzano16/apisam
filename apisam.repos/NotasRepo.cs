@@ -113,7 +113,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public async Task<List<Notas>> GetNotas(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<Notas>> GetNotas(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             return await _db.SelectAsync<Notas>(

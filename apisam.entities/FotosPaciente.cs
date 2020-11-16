@@ -9,6 +9,8 @@ namespace apisam.entities
     {
         [PrimaryKey,AutoIncrement]
         public int FotoId { get; set; }
+        public string UsuarioId { get; set; }
+        public string AsistenteId { get; set; }
         public int PacienteId { get; set; }
         public string FotoUrl { get; set; }
 

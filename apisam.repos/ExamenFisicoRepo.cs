@@ -64,7 +64,7 @@ namespace apisam.repos
             return _resp;
 
         }
-        public async Task<List<ExamenFisico>> GetExamenes(int pacienteId, int doctorId)
+        public async Task<List<ExamenFisico>> GetExamenes(int pacienteId, string doctorId)
         {
             using var _db = dbFactory.Open();
             return await _db.SelectAsync<ExamenFisico>(
@@ -72,7 +72,7 @@ namespace apisam.repos
                 && x.DoctorId == doctorId);
         }
 
-        public async Task<ExamenFisico> GetExamenFisico(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<ExamenFisico> GetExamenFisico(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             return await _db.SingleAsync<ExamenFisico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId

@@ -12,7 +12,7 @@ namespace apisam.entities
         [PrimaryKey, AutoIncrement]
         public int ConsultaId { get; set; }
         public int PacienteId { get; set; }
-        public int DoctorId { get; set; }
+        public string DoctorId { get; set; }
         public int PreclinicaId { get; set; }
         public string MotivoConsulta { get; set; }
         public string Fog { get; set; }

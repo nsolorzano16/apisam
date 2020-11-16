@@ -11,6 +11,6 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> UpdateNota(Notas nota);
         Task<RespuestaMetodos> AddNotaLista(List<Notas> notas);
         Task<RespuestaMetodos> UpdateNotaLista(List<Notas> notas);
-        Task<List<Notas>> GetNotas(int pacienteId, int doctorId, int preclinicaId);
+        Task<List<Notas>> GetNotas(int pacienteId, string doctorId, int preclinicaId);
     }
 }

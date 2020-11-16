@@ -13,7 +13,7 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> UpdateDiagnostico(Diagnosticos diagnostico);
         Task<RespuestaMetodos> AddDiagnosticoLista(List<Diagnosticos> diagnosticos);
         Task<RespuestaMetodos> UpdateDiagnosticoLista(List<Diagnosticos> diagnosticos);
-        Task<List<DiagnosticosViewModel>> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId);
+        Task<List<DiagnosticosViewModel>> GetDiagnosticos(int pacienteId, string doctorId, int preclinicaId);
 
         Task<DiagnosticosViewModel> GetDiagnostico(int diagnosticoId);
 

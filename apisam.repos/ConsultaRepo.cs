@@ -28,12 +28,12 @@
             hondurasTime = TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time");
         }
 
-        public async Task<ConsultaViewModel> GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId)
+        public async Task<ConsultaViewModel> GetDetalleConsulta(string doctorId, int pacienteId, int preclinicaId)
         {
             ConsultaViewModel _resp = new ConsultaViewModel();
             using var _db = dbFactory.Open();
             var _preclinica = await _db.SingleAsync<Preclinica>(x => x.PreclinicaId ==
-            preclinicaId && x.PacienteId == pacienteId && x.DoctorId == doctorId
+            preclinicaId && x.PacienteId == pacienteId && x.DoctorId==doctorId
             && x.Activo == true && x.Atendida == true);
 
             var _antecedentesPersonales = await _db.SingleAsync<AntecedentesFamiliaresPersonales>
@@ -97,7 +97,7 @@
                                     Diagnosticos d 
                                     INNER JOIN CIE c 
                                     ON d.CieId = c.CieId
-                                    WHERE d.PacienteId = {pacienteId} AND d.DoctorId = {doctorId} AND d.PreclinicaId = {preclinicaId} AND d.Activo = 1";
+                                    WHERE d.PacienteId = {pacienteId} AND d.DoctorId = '{doctorId}' AND d.PreclinicaId = {preclinicaId} AND d.Activo = 1";
 
 
             var _diagnosticos = await _db.SelectAsync<DiagnosticosViewModel>(_qryDiagnosticos);
@@ -130,7 +130,7 @@
                                                 INNER JOIN ExamenCategoria ec on ei.ExamenCategoriaId = ec.ExamenCategoriaId
                                                 INNER JOIN ExamenTipo et on ei.ExamenTipoId = et.ExamenTipoId
                                                 LEFT JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId
-                                                WHERE ei.PacienteId ={pacienteId} and ei.DoctorId = {doctorId}
+                                                WHERE ei.PacienteId ={pacienteId} and ei.DoctorId = '{doctorId}'
                                                 and ei.PreclinicaId = {preclinicaId} and ei.activo = 1";
 
             var _listaExamenes = await _db.SelectAsync<ExamenesIndicadosViewModel>(_qry);
@@ -154,7 +154,7 @@
                                         v.Nombre as 'ViaAdministracion'
                                     FROM PlanTerapeutico p
                                         INNER JOIN ViaAdministracion v on p.ViaAdministracionId = v.ViaAdministracionId
-                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = {doctorId} AND p.PreclinicaId = {preclinicaId}
+                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = '{doctorId}' AND p.PreclinicaId = {preclinicaId}
                                           AND p.Activo = 1";
             var _planTerapeutico = await _db.SelectAsync<PlanTerapeuticoViewModel>(_qryPlanes);
 
@@ -214,7 +214,7 @@
             return _resp;
         }
 
-        public async Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             var consulta = await _db.SingleAsync<ConsultaGeneral>(x => x.PacienteId == pacienteId
@@ -222,7 +222,7 @@
             return consulta;
         }
 
-        public async Task<ExpedienteViewModel> GetExpediente(int pacienteId, int doctorId)
+        public async Task<ExpedienteViewModel> GetExpediente(int pacienteId, string doctorId)
         {
             var _expediente = new ExpedienteViewModel();
             List<ConsultaExpedienteViewModel> listaConsultas = new List<ConsultaExpedienteViewModel>();
@@ -296,7 +296,7 @@
                                     Diagnosticos d 
                                     INNER JOIN CIE c 
                                     ON d.CieId = c.CieId
-                                    WHERE d.PacienteId = {item.PacienteId} AND d.DoctorId = {item.DoctorId} AND d.PreclinicaId = {item.PreclinicaId} AND d.Activo = 1";
+                                    WHERE d.PacienteId = {item.PacienteId} AND d.DoctorId = '{item.DoctorId}' AND d.PreclinicaId = {item.PreclinicaId} AND d.Activo = 1";
 
                 var _diagnosticos = await _db.SelectAsync<DiagnosticosViewModel>(_qryDiagnosticos);
 
@@ -328,7 +328,7 @@
                                                 INNER JOIN ExamenCategoria ec on ei.ExamenCategoriaId = ec.ExamenCategoriaId
                                                 INNER JOIN ExamenTipo et on ei.ExamenTipoId = et.ExamenTipoId
                                                 LEFT JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId
-                                                WHERE ei.PacienteId ={item.PacienteId} and ei.DoctorId = {item.DoctorId}
+                                                WHERE ei.PacienteId ={item.PacienteId} and ei.DoctorId = '{item.DoctorId}'
                                                 and ei.PreclinicaId = {item.PreclinicaId} and ei.activo = 1";
 
                 var _listaExamenes = await _db.SelectAsync<ExamenesIndicadosViewModel>(_qry);
@@ -352,7 +352,7 @@
                                         v.Nombre as 'ViaAdministracion'
                                     FROM PlanTerapeutico p
                                         INNER JOIN ViaAdministracion v on p.ViaAdministracionId = v.ViaAdministracionId
-                                        WHERE p.PacienteId = {item.PacienteId} AND p.DoctorId = {item.DoctorId} AND p.PreclinicaId = {item.PreclinicaId}
+                                        WHERE p.PacienteId = {item.PacienteId} AND p.DoctorId = '{item.DoctorId}' AND p.PreclinicaId = {item.PreclinicaId}
                                           AND p.Activo = 1";
                 var _planTerapeutico = await _db.SelectAsync<PlanTerapeuticoViewModel>(_qryPlanes);
       var _consultaTemp = new ConsultaExpedienteViewModel
@@ -378,7 +378,7 @@
             return _expediente;
         }
 
-        public async Task<List<ConsultaExpedienteViewModel>> GetConsultasByDoctorId(int doctorId)
+        public async Task<List<ConsultaExpedienteViewModel>> GetConsultasByDoctorId(string doctorId)
         {
             List<ConsultaExpedienteViewModel> listaConsultas = new List<ConsultaExpedienteViewModel>();
             using var _db = dbFactory.Open();
@@ -438,7 +438,7 @@
                                                 INNER JOIN ExamenCategoria ec on ei.ExamenCategoriaId = ec.ExamenCategoriaId
                                                 INNER JOIN ExamenTipo et on ei.ExamenTipoId = et.ExamenTipoId
                                                 LEFT JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId
-                                                WHERE ei.DoctorId = {preclinica.DoctorId}";
+                                                WHERE ei.DoctorId = '{preclinica.DoctorId}'";
 
                 var _listaExamenes = await _db.SelectAsync<ExamenesIndicadosViewModel>(_qry);
                 var _qryPlanes = $@"SELECT
@@ -461,7 +461,7 @@
                                         v.Nombre as 'ViaAdministracion'
                                     FROM PlanTerapeutico p
                                         INNER JOIN ViaAdministracion v on p.ViaAdministracionId = v.ViaAdministracionId
-                                        WHERE p.DoctorId = {preclinica.DoctorId}";
+                                        WHERE p.DoctorId = '{preclinica.DoctorId}'";
 
                 var _planTerapeutico = await _db.SelectAsync<PlanTerapeuticoViewModel>(_qryPlanes);
 

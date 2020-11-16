@@ -48,7 +48,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("doctorid/{id}", Name = "GetEventos")]
-        public async Task<IActionResult> GetEventos([FromRoute] int id)
+        public async Task<IActionResult> GetEventos([FromRoute] string id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await CalendarioRepo.GetEventos(id));
@@ -56,7 +56,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("movil/doctorid/{id}", Name = "GetEventosMovil")]
-        public IActionResult GetEventosMovil([FromRoute] int id)
+        public IActionResult GetEventosMovil([FromRoute] string id)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(CalendarioRepo.GetEventosMovil(id));
@@ -64,7 +64,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("dashboard/doctorid/{id}", Name = "GetEventosDashboard")]
-        public async Task<IActionResult> GetEventosDashboard([FromRoute] int id)
+        public async Task<IActionResult> GetEventosDashboard([FromRoute] string id)
         {
           
             return Ok(await CalendarioRepo.GetEventosDashboard(id));

@@ -11,7 +11,7 @@ namespace apisam.entities
 
         [PrimaryKey, AutoIncrement]
         public int CalendarioFechaId { get; set; }
-        public int DoctorId { get; set; }
+        public string DoctorId { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
         public bool TodoElDia { get; set; }

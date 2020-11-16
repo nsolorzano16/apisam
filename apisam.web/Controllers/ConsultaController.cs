@@ -38,7 +38,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteId/{pacienteId}/doctorId/{doctorId}/preclinicaId/{preclinicaId}", Name = "GetDetalleConsulta")]
-        public async Task<IActionResult> GetDetalleConsulta([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetDetalleConsulta([FromRoute] int pacienteId, [FromRoute] string doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var resp = await ConsultaRepo.GetDetalleConsulta(doctorId, pacienteId, preclinicaId);
@@ -67,7 +67,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("getconsultageneral/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetConsultaGeneral")]
-        public async Task<IActionResult> GetConsultaGeneral([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetConsultaGeneral([FromRoute] int pacienteId, [FromRoute] string doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             return Ok(await ConsultaRepo.GetConsultaGeneral(pacienteId, doctorId, preclinicaId));
@@ -75,7 +75,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("expediente/pacienteid/{pacienteId}/doctorid/{doctorId}", Name = "GetExpediente")]
-        public async Task<IActionResult> GetExpediente([FromRoute] int pacienteId, [FromRoute] int doctorId)
+        public async Task<IActionResult> GetExpediente([FromRoute] int pacienteId, [FromRoute] string doctorId)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             return Ok(await ConsultaRepo.GetExpediente(pacienteId, doctorId));
@@ -84,7 +84,7 @@ namespace apisam.web.Controllers
         [Authorize(Roles = "2")]
         [HttpGet("pdf/expediente/pacienteid/{pacienteId}/doctorid/{doctorId}", Name = "GetExpedientePdf")]
         [Produces(contentType: "application/pdf")]
-        public IActionResult GetExpedientePdf([FromRoute] int pacienteId, [FromRoute] int doctorId)
+        public IActionResult GetExpedientePdf([FromRoute] int pacienteId, [FromRoute] string doctorId)
         {
             //string pathLogo = "https://storagedesam.blob.core.windows.net/assets/logosam.png?sv=2019-02-02&st=2020-07-21T02%3A39%3A42Z&se=2020-07-22T02%3A39%3A42Z&sr=b&sp=r&sig=ffO%2BoHqwf%2B9xzqdyCX638auUUTzw04f02A%2BfYy8fE8M%3D";
 
@@ -623,7 +623,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2,3")]
         [HttpGet("dashboard/doctorid/{doctorId}", Name = "GetConsultasByDoctorId")]
-        public async Task<IActionResult> GetConsultasByDoctorId([FromRoute] int doctorId)
+        public async Task<IActionResult> GetConsultasByDoctorId([FromRoute] string doctorId)
         {
             return Ok(await ConsultaRepo.GetConsultasByDoctorId(doctorId));
         }

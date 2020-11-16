@@ -47,7 +47,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetExamenFisico")]
-        public async Task<IActionResult> GetExamenFisico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetExamenFisico([FromRoute] int pacienteId, [FromRoute] string doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await ExamenFisicoRepo.GetExamenFisico(pacienteId, doctorId, preclinicaId));

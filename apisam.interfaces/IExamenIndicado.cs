@@ -11,8 +11,8 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> AddExamenIndicado(ExamenIndicado examen);
         Task<RespuestaMetodos> UpdateExamenIndicado(ExamenIndicado examen);
         Task<ExamenIndicado> GetExamenIndicadoById(int examenId);
-        Task<List<ExamenIndicado>> GetExamenes(int pacienteId, int doctorId, int preclinicaId);
-        Task<List<ExamenesIndicadosViewModel>> GetDetalleExamenesIndicados(int pacienteId, int doctorId, int preclinicaId);
+        Task<List<ExamenIndicado>> GetExamenes(int pacienteId, string doctorId, int preclinicaId);
+        Task<List<ExamenesIndicadosViewModel>> GetDetalleExamenesIndicados(int pacienteId, string doctorId, int preclinicaId);
         Task<ExamenesIndicadosViewModel> GetInfoExamenIndicado(int id);
     }
 }

@@ -103,25 +103,25 @@
             return _resp;
         }
 
-        public async Task<List<CalendarioFecha>> GetEventos(int doctorId)
+        public async Task<List<CalendarioFecha>> GetEventos(string doctorId)
         {
 
             using var _db = dbFactory.Open();
             return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId && x.Activo == true);
         }
 
-        public async Task<List<CalendarioFecha>> GetEventosDashboard(int doctorId)
+        public async Task<List<CalendarioFecha>> GetEventosDashboard(string doctorId)
         {
             using var _db = dbFactory.Open();
-            return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId);
+            return await _db.SelectAsync<CalendarioFecha>(x => x.DoctorId == doctorId && x.Activo==true);
         }
 
-        public List<CalendarioMovilViewModel> GetEventosMovil(int doctorId)
+        public List<CalendarioMovilViewModel> GetEventosMovil(string doctorId)
         {
             var listCalendario = new List<CalendarioMovilViewModel>();
 
             using var _db = dbFactory.Open();
-            var _qry = $@"SELECT DISTINCT c.FechaFiltro FROM calendariofecha c WHERE c.DoctorId = {doctorId} AND c.Activo = 1 ";
+            var _qry = $@"SELECT DISTINCT c.FechaFiltro FROM calendariofecha c WHERE c.DoctorId = '{doctorId}' AND c.Activo = 1 ";
             var listaFechas = _db.Select<CalendarioFecha>(_qry).ToList();
 
             listaFechas.ForEach(x =>

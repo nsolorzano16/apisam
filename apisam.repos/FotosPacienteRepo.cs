@@ -104,5 +104,11 @@ namespace apisam.repos
 
             return _response;
         }
+
+        public async Task<int> ImagenesConsumidas(string userid)
+        {
+            using var _db = dbFactory.Open();
+            return Convert.ToInt32(await _db.CountAsync<FotosPaciente>(x => x.Activo == true && x.UsuarioId==userid));
+        }
     }
 }

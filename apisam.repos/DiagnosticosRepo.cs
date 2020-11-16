@@ -114,7 +114,7 @@ namespace apisam.repos
 
             return _resp;
         }
-        public async Task<List<DiagnosticosViewModel>> GetDiagnosticos(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<DiagnosticosViewModel>> GetDiagnosticos(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             var _qry = $@"SELECT 
@@ -136,7 +136,7 @@ namespace apisam.repos
                                     Diagnosticos d 
                                     INNER JOIN CIE c 
                                     ON d.CieId = c.CieId
-                                    WHERE d.PacienteId = {pacienteId} AND d.DoctorId = {doctorId} AND d.PreclinicaId = {preclinicaId} AND d.Activo = 1";
+                                    WHERE d.PacienteId = {pacienteId} AND d.DoctorId = '{doctorId}' AND d.PreclinicaId = {preclinicaId} AND d.Activo = 1";
 
             return await _db.SelectAsync<DiagnosticosViewModel>(_qry);
 

@@ -9,7 +9,7 @@ namespace apisam.entities.ViewModels
 
         public int PreclinicaId { get; set; }
         public int PacienteId { get; set; }
-        public int DoctorId { get; set; }
+        public string DoctorId { get; set; }
         public double Peso { get; set; }
         public double Altura { get; set; }
         public double Temperatura { get; set; }

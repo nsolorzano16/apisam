@@ -11,10 +11,10 @@ namespace apisam.interfaces
 
         Task<RespuestaMetodos> AddCalendarioFecha(CalendarioFecha evento);
         Task<RespuestaMetodos> UpdateCalendarioFecha(CalendarioFecha evento);
-        Task<List<CalendarioFecha>> GetEventos(int doctorId);
-        List<CalendarioMovilViewModel> GetEventosMovil(int doctorId);
+        Task<List<CalendarioFecha>> GetEventos(string doctorId);
+        List<CalendarioMovilViewModel> GetEventosMovil(string doctorId);
 
-        Task<List<CalendarioFecha>> GetEventosDashboard(int doctorId);
+        Task<List<CalendarioFecha>> GetEventosDashboard(string doctorId);
 
 
     }

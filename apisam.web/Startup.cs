@@ -1,34 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
-using apisam.entities;
-//using apisam.entities.ViewModels.UsuariosTable;
-using apisam.interfaces;
-using apisam.repos;
-using apisam.repositories;
-using apisam.web.Hubs;
-using apisam.web.Mapping;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-
-
-
 namespace apisam.web
 {
+    using apisam.entities;
+    using apisam.interfaces;
+    using apisam.repos;
+    using apisam.repositories;
+    using apisam.web.Data;
+    using apisam.web.Mapping;
+    using AutoMapper;
+    using iText.Kernel.Geom;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.ResponseCompression;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
+    using Microsoft.OpenApi.Models;
+    using System;
+    using System.IO.Compression;
+
+   
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -41,21 +35,66 @@ namespace apisam.web
         // This method gets called by the runtime. Use this method to add services to the container test.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            
+          //  var _conn = Configuration.GetConnectionString("local");
             var _conn = Configuration.GetConnectionString("azure_dbcon");
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(_conn)
+
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_conn));
+
+            IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
+            {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequiredLength = 6;
+                opt.User.RequireUniqueEmail = true;
+                opt.Lockout.AllowedForNewUsers = true;
+                opt.Lockout.MaxFailedAccessAttempts = 3;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5.0);
+
+
+            }
             );
 
-            
+            builder = new IdentityBuilder(builder.UserType, typeof(UserRole), builder.Services);
+            builder.AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.AddSignInManager<SignInManager<User>>();
+            builder.AddRoleManager<RoleManager<UserRole>>();
+            builder.AddDefaultTokenProviders();
+
+         
 
 
-            services.AddControllers();
             services.AddCors(options =>
             {
                 options.AddPolicy("Todos",
                 builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+
+       
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
+           AddJwtBearer(options =>
+           {
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuer = false,
+                   ValidateAudience = false,
+                   IssuerSigningKey =
+                   new SymmetricSecurityKey(
+                       System.Text.Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                   ValidateIssuerSigningKey = true,
+                   
+               };
+           });
+
+            //services.AddAuthorization(options => options.AddPolicy("AppPolicy", policy => policy.RequireRole("1", "2", "3")));
+
+
+            services.AddControllers();
+
 
             var _license = @"6543-e1JlZjo2NTQzLE5hbWU6Sm9zZSBCb25pbGxhLFR5cG
                             U6SW5kaWUsTWV0YTowLEhhc2g6YUhKaXAzVk01V0JuVXZpa
@@ -68,12 +107,12 @@ namespace apisam.web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SAM-API", Version = "v1" });
+        
 
             });
 
 
 
-            #region Transients
             services.AddTransient<IUsuario, UsuariosRepo>();
             services.AddTransient<IPaciente, PacientesRepo>();
             services.AddTransient<IAntecedentesFamiliaresPersonales, AntecedentesRepo>();
@@ -108,11 +147,11 @@ namespace apisam.web
             services.AddTransient<IFotosPaciente, FotosPacienteRepo>();
             services.AddTransient<IPlanes, PlanesRepo>();
             services.AddTransient<IDashboard, DashboardRepo>();
+            services.AddSingleton<IEmail, EmailRepo>();
 
 
 
-
-            #endregion
+            services.Configure<MailJet>(Configuration.GetSection("MailJet"));
 
             services.AddResponseCompression(options =>
             {
@@ -126,27 +165,6 @@ namespace apisam.web
             });
 
             services.AddAutoMapper(typeof(MappinProfile));
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
-                AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            System.Text.Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                });
-
-            //services.AddSignalR();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -154,7 +172,7 @@ namespace apisam.web
         {
             app.UseResponseCompression();
             // Handles exceptions and generates a custom response body
-           app.UseExceptionHandler("/errors/500");
+          app.UseExceptionHandler("/errors/500");
             // Handles non-success status codes with empty body
            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
@@ -164,9 +182,9 @@ namespace apisam.web
                 app.UseDeveloperExceptionPage();
             }
 
+           
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -181,6 +199,7 @@ namespace apisam.web
 
             app.UseRouting();
             app.UseCors("Todos");
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

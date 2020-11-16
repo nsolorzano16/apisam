@@ -7,6 +7,6 @@ namespace apisam.interfaces
     public interface IDevices
     {
         Task<RespuestaMetodos> AddDevice(Devices device);
-        Task<bool> ExistDevice(int usuarioId,string token);
+        Task<bool> ExistDevice(string usuarioId,string token);
     }
 }

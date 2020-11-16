@@ -64,7 +64,7 @@ namespace apisam.repos
             return _resp;
         }
 
-        public async Task<PlanTerapeutico> GetPlanTerapeutico(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<PlanTerapeutico> GetPlanTerapeutico(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             return await _db.SingleAsync<PlanTerapeutico>(x =>
@@ -73,14 +73,14 @@ namespace apisam.repos
         }
 
 
-        public async Task<List<PlanTerapeutico>> GetPlanes(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<PlanTerapeutico>> GetPlanes(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             return await _db.SelectAsync<PlanTerapeutico>(x => x.PacienteId == pacienteId && x.DoctorId == doctorId
             && x.PreclinicaId == preclinicaId && x.Activo == true);
         }
 
-        public async Task<List<PlanTerapeuticoViewModel>> GetPlanesLista(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<PlanTerapeuticoViewModel>> GetPlanesLista(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             var _qry = $@"SELECT
@@ -103,7 +103,7 @@ namespace apisam.repos
                                         v.Nombre as 'ViaAdministracion'
                                     FROM PlanTerapeutico p
                                         INNER JOIN ViaAdministracion v on p.ViaAdministracionId = v.ViaAdministracionId
-                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = {doctorId} AND p.PreclinicaId = {preclinicaId}
+                                        WHERE p.PacienteId = {pacienteId} AND p.DoctorId = '{doctorId}' AND p.PreclinicaId = {preclinicaId}
                                           AND p.Activo = 1";
 
             return await _db.SelectAsync<PlanTerapeuticoViewModel>(_qry);

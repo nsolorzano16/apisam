@@ -12,5 +12,7 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> UpdateFoto(FotosPaciente foto);
         Task<PageResponse<FotosPaciente>> GetFotos(int pageNo, int limit, string filter,int pacienteId);
 
+        Task<int> ImagenesConsumidas(string userid);
+
     }
 }

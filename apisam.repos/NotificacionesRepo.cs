@@ -112,7 +112,7 @@
             }
         }
 
-        public async Task<bool> Exists(int doctorId, int esPreclinica)
+        public async Task<bool> Exists(string doctorId, int esPreclinica)
         {
             try
             {
@@ -187,7 +187,7 @@
             }
         }
 
-        public async Task SumaNotificacion(int doctorId, int esPreclinica)
+        public async Task SumaNotificacion(string doctorId, int esPreclinica)
         {
             var hhtp = new HttpClient();
             string _url;
@@ -216,7 +216,7 @@
             }
         }
 
-        public async Task RestaNotificacion(int doctorId, int esPreclinica)
+        public async Task RestaNotificacion(string doctorId, int esPreclinica)
         {
             var hhtp = new HttpClient();
             string _url;

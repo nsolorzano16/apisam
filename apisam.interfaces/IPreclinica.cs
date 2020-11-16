@@ -11,13 +11,13 @@ namespace apisam.interfaces
         Task<RespuestaMetodos> UpdatePreclinica(Preclinica preclinica);
 
         Task<PageResponse<Preclinica>>
-            GetPreclinicasPaginado(int pageNo, int limit, int doctorId);
+            GetPreclinicasPaginado(int pageNo, int limit, string doctorId);
 
         Task<PageResponse<PreclinicaViewModel>> GetPreclinicasSinAtender
-            (int pageNo, int limit, int doctorId, int atendida);
+            (int pageNo, int limit, string doctorId, int atendida);
 
         Task<PreclinicaViewModel> GetInfoPreclinica(int id);
 
-        Task<int> GetTotalConsultasAtendidas(int doctorId);
+        Task<int> GetTotalConsultasAtendidas(string doctorId);
     }
 }

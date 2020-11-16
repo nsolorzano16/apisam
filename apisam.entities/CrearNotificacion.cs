@@ -6,8 +6,9 @@ namespace apisam.entities
 {
    public  class CrearNotificacionModel
     {
-        public int id { get; set; }
-        public int doctorId { get; set; }
+        
+        public string id { get; set; }
+        public string doctorId { get; set; }
         public int total { get; set; }
 
     }

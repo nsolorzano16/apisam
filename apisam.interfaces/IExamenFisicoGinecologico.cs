@@ -9,7 +9,7 @@ namespace apisam.interfaces
     {
         Task<RespuestaMetodos> AddExamenFisicoGinecologico(ExamenFisicoGinecologico examen);
         Task<RespuestaMetodos> UpdateExamenFisicoGinecologico(ExamenFisicoGinecologico examen);
-        Task<List<ExamenFisicoGinecologico>> GetExamenesGinecologicos(int pacienteId, int doctorId);
-        Task<ExamenFisicoGinecologico> GetExamenGinecologico(int pacienteId, int doctorId, int preclinicaId);
+        Task<List<ExamenFisicoGinecologico>> GetExamenesGinecologicos(int pacienteId, string doctorId);
+        Task<ExamenFisicoGinecologico> GetExamenGinecologico(int pacienteId, string doctorId, int preclinicaId);
     }
 }

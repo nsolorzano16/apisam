@@ -73,14 +73,14 @@ namespace apisam.repos
             return antecedente;
         }
 
-        public async Task<List<ExamenIndicado>> GetExamenes(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<ExamenIndicado>> GetExamenes(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             return await _db.SelectAsync<ExamenIndicado>(x => x.PacienteId == pacienteId &&
             x.DoctorId == doctorId && x.PreclinicaId == preclinicaId && x.Activo == true);
         }
 
-        public async Task<List<ExamenesIndicadosViewModel>> GetDetalleExamenesIndicados(int pacienteId, int doctorId, int preclinicaId)
+        public async Task<List<ExamenesIndicadosViewModel>> GetDetalleExamenesIndicados(int pacienteId, string doctorId, int preclinicaId)
         {
             using var _db = dbFactory.Open();
             var _qry = $@"SELECT
@@ -105,7 +105,7 @@ namespace apisam.repos
                                                 INNER JOIN ExamenCategoria ec on ei.ExamenCategoriaId = ec.ExamenCategoriaId
                                                 INNER JOIN ExamenTipo et on ei.ExamenTipoId = et.ExamenTipoId
                                                 LEFT JOIN ExamenDetalle ed on ei.ExamenDetalleId = ed.ExamenDetalleId
-                                                WHERE ei.PacienteId ={pacienteId} and ei.DoctorId = {doctorId}
+                                                WHERE ei.PacienteId ={pacienteId} and ei.DoctorId = '{doctorId}'
                                                 and ei.PreclinicaId = {preclinicaId} and ei.activo = 1";
 
             return await _db.SelectAsync<ExamenesIndicadosViewModel>(_qry);

@@ -152,7 +152,7 @@
         }
 
         public async Task<PageResponse<Preclinica>> GetPreclinicasPaginado
-            (int pageNo, int limit, int doctorId)
+            (int pageNo, int limit, string doctorId)
         {
             var _response = new PageResponse<Preclinica>();
             var _skip = limit * (pageNo - 1);
@@ -190,7 +190,7 @@
         }
 
         public async Task<PageResponse<PreclinicaViewModel>>
-            GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
+            GetPreclinicasSinAtender(int pageNo, int limit, string doctorId, int atendida)
         {
 
             var _response = new PageResponse<PreclinicaViewModel>();
@@ -234,7 +234,7 @@
                             pc.FotoUrl
                         FROM Preclinica p
                             INNER JOIN Paciente pc ON p.PacienteId = pc.PacienteId
-                            WHERE p.DoctorId = ${doctorId} AND p.Atendida = {atendida} AND p.Activo = 1";
+                            WHERE p.DoctorId = '{doctorId}' AND p.Atendida = {atendida} AND p.Activo = 1";
 
             var _qry2 = _qry;
             _qry += " ORDER BY p.PreclinicaId DESC";
@@ -262,7 +262,7 @@
             return _response;
         }
 
-        public async  Task<int> GetTotalConsultasAtendidas(int doctorId)
+        public async Task<int> GetTotalConsultasAtendidas(string doctorId)
         {
             var _db = dbFactory.Open();
             return (int)await _db.CountAsync<Preclinica>(x => x.Activo == true && x.Atendida == true && x.DoctorId == doctorId);

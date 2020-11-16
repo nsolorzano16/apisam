@@ -11,7 +11,7 @@ namespace apisam.entities
 
         [PrimaryKey, AutoIncrement]
         public int DeviceId { get; set; }
-        public int UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public string TokenDevice { get; set; }
         public string Platform { get; set; }
         public DateTime CreadoFecha { get; set; }

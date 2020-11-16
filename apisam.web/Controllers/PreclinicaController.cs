@@ -39,7 +39,7 @@ namespace apisam.web.Controllers
         [Authorize(Roles = "2,3")]
         [HttpGet("page/{pageNo}/limit/{limit}/doctorId/{doctorId}/atendida/{atendida}",
             Name = "GetPreclinicasSinAtender")]
-        public async Task<IActionResult> GetPreclinicasSinAtender(int pageNo, int limit, int doctorId, int atendida)
+        public async Task<IActionResult> GetPreclinicasSinAtender(int pageNo, int limit, string doctorId, int atendida)
         {
             string a;
             try

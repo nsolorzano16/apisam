@@ -65,7 +65,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanTerapeutico")]
-        public async Task<IActionResult> GetPlanTerapeutico([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetPlanTerapeutico([FromRoute] int pacienteId, [FromRoute] string doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await PlanRepo.GetPlanTerapeutico(pacienteId, doctorId, preclinicaId));
@@ -76,7 +76,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("listar/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanes")]
-        public async Task<IActionResult> GetPlanes([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetPlanes([FromRoute] int pacienteId, [FromRoute] string doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await PlanRepo.GetPlanes(pacienteId, doctorId, preclinicaId));
@@ -85,7 +85,7 @@ namespace apisam.web.Controllers
 
         [Authorize(Roles = "2")]
         [HttpGet("movil/listar/pacienteid/{pacienteId}/doctorid/{doctorId}/preclinicaid/{preclinicaId}", Name = "GetPlanesLista")]
-        public async Task<IActionResult> GetPlanesLista([FromRoute] int pacienteId, [FromRoute] int doctorId, [FromRoute] int preclinicaId)
+        public async Task<IActionResult> GetPlanesLista([FromRoute] int pacienteId, [FromRoute] string doctorId, [FromRoute] int preclinicaId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return Ok(await PlanRepo.GetPlanesLista(pacienteId, doctorId, preclinicaId));

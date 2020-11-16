@@ -8,12 +8,12 @@ namespace apisam.interfaces
 {
     public interface IConsulta
     {
-        Task<ConsultaViewModel> GetDetalleConsulta(int doctorId, int pacienteId, int preclinicaId);
+        Task<ConsultaViewModel> GetDetalleConsulta(string doctorId, int pacienteId, int preclinicaId);
         Task<RespuestaMetodos> AddConsultaGeneral(ConsultaGeneral consulta);
         Task<RespuestaMetodos> UpdateConsultaGeneral(ConsultaGeneral consulta);
-        Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, int doctorId, int preclinicaId);
-       Task<ExpedienteViewModel> GetExpediente(int pacienteId, int doctorId);
-       Task<List<ConsultaExpedienteViewModel>> GetConsultasByDoctorId(int doctorId);
+        Task<ConsultaGeneral> GetConsultaGeneral(int pacienteId, string doctorId, int preclinicaId);
+       Task<ExpedienteViewModel> GetExpediente(int pacienteId, string doctorId);
+       Task<List<ConsultaExpedienteViewModel>> GetConsultasByDoctorId(string doctorId);
         
         
        

@@ -31,8 +31,8 @@
         }
 
         [Authorize(Roles = "2")]
-        [HttpPost("pacienteid/{pacienteid}/username/{username}", Name = "Add")]
-        public async Task<IActionResult> Add([FromRoute] int pacienteid, [FromRoute] string username, [FromForm] IFormFile foto, [FromForm] string notas)
+        [HttpPost("pacienteid/{pacienteid}/username/{username}/usuarioid/{userid}/asistenteid/{asistenteid}", Name = "Add")]
+        public async Task<IActionResult> Add([FromRoute] int pacienteid, [FromRoute] string username, [FromForm] IFormFile foto, [FromForm] string notas, [FromRoute] string userid, [FromRoute] string asistenteid)
         {
             if (!ModelState.IsValid) return BadRequest(new BadRequestError("Modelo no valido"));
             var _resp = new RespuestaMetodos();
@@ -94,6 +94,8 @@
                 }
                 if (_resp.Ok)
                 {
+                    _fotoPaciente.UsuarioId = userid;
+                    _fotoPaciente.AsistenteId = asistenteid;
                     _fotoPaciente.PacienteId = pacienteid;
                     _fotoPaciente.Activo = true;
                     _fotoPaciente.CreadoPor = username;
